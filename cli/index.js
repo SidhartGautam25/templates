@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { execSync } from "node:child_process";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";

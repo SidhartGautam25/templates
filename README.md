@@ -79,9 +79,16 @@ When templates exist locally under `templates/`, the CLI uses them directly (fas
 
 ### Global install (npm)
 
+To install the CLI for the first time:
 ```bash
 npm install -g @navneet_25/tempjs
 ```
+
+To update an existing installation to the absolute latest version (bypassing local NPM caches):
+```bash
+npm install -g @navneet_25/tempjs@latest
+```
+*Use the `@latest` flag when you have recently pushed a new template or updated configuration, to ensure NPM fetches the updated `templates.json` mapping configuration immediately.*
 
 ### From this repository
 
