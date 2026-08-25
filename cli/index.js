@@ -10,6 +10,8 @@ import {
   applyThemeAndFont,
   getSavedConfig,
 } from "./theme-manager.js";
+import { promptAndApplyBrand } from "./brand-manager.js";
+import { promptAndSetupDb } from "./db-setup.js";
 import {
   copyTemplate,
   findConflictingPaths,
@@ -26,13 +28,15 @@ tempjs — instantiate project templates from GitHub
 USAGE
   tempjs list
   tempjs <template-id> [options]
-  tempjs <template-id> config     Initialize with interactive theme & typography setup
+  tempjs <template-id> config     Initialize with interactive theme, typography, brand & database setup
   tempjs theme                    Change the project's theme in an initialized directory
   tempjs font                     Change the project's font styling in an initialized directory
+  tempjs brand                    Configure the brand & contact info in an initialized directory
+  tempjs init-db                  Configure .env and sync database schema in an initialized directory
   tempjs --help
 
 OPTIONS
-  --config      Prompt for theme and font pairings during initialization
+  --config      Prompt for full interactive setup (theme, font, brand, db) during initialization
   --force       Overwrite existing files in the current directory
   --remote      Fetch from GitHub even if a local template copy exists
   --init-git    Run git init after copying the template
@@ -41,7 +45,8 @@ OPTIONS
 EXAMPLES
   mkdir hotel-client && cd hotel-client
   tempjs hotel config
-  tempjs theme
+  tempjs brand
+  tempjs init-db
 
 ENVIRONMENT
   TEMPLATES_REPO_URL       GitHub repo URL or owner/repo (overrides templates.json)
@@ -216,6 +221,12 @@ async function runTemplate(targetDir, templateId, flags, runWithConfig = false) 
       const selectedTheme = await promptTheme("theme1");
       const selectedFont = await promptFont("default");
       await applyThemeAndFont(targetDir, selectedTheme, selectedFont);
+
+      // Interactive Brand & Contact Details configuration
+      await promptAndApplyBrand(targetDir);
+
+      // Environment & Database auto-setup
+      await promptAndSetupDb(targetDir);
     }
 
     console.log(`\nTemplate "${entry.name}" created successfully in ${targetDir}`);
@@ -254,16 +265,20 @@ async function main(argv) {
     return;
   }
 
-  if (command === "theme" || command === "font") {
+  if (command === "theme" || command === "font" || command === "brand" || command === "init-db") {
     const targetDir = process.cwd();
     const currentConfig = getSavedConfig(targetDir);
 
     if (command === "theme") {
       const selectedTheme = await promptTheme(currentConfig.theme || "theme1");
       await applyThemeAndFont(targetDir, selectedTheme, currentConfig.font || "default");
-    } else {
+    } else if (command === "font") {
       const selectedFont = await promptFont(currentConfig.font || "default");
       await applyThemeAndFont(targetDir, currentConfig.theme || "theme1", selectedFont);
+    } else if (command === "brand") {
+      await promptAndApplyBrand(targetDir);
+    } else if (command === "init-db") {
+      await promptAndSetupDb(targetDir);
     }
     return;
   }

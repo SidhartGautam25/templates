@@ -1,6 +1,6 @@
 {
   "name": "@navneet_25/tempjs",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "CLI to instantiate website project templates from a single GitHub repository",
   "type": "module",
   "bin": {

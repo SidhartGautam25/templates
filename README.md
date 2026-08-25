@@ -35,9 +35,11 @@ tempjs list
 ```bash
 tempjs list                  # show available templates
 tempjs hotel                 # create project from hotel template using default theme
-tempjs hotel config          # create project and run interactive theme/font setup
+tempjs hotel config          # create project and run full interactive configuration (theme, font, brand, database)
 tempjs theme                 # change/reset the theme of an initialized project
 tempjs font                  # change/reset the font pairing of an initialized project
+tempjs brand                 # configure brand identity & contact info of an initialized project
+tempjs init-db               # set up .env file and run database schema sync on an initialized project
 tempjs real-estate --force   # overwrite existing files
 tempjs --help                # show help
 ```
@@ -46,7 +48,7 @@ tempjs --help                # show help
 
 | Option        | Description |
 |---------------|-------------|
-| `--config`    | Prompt for theme and font pairings during template initialization |
+| `--config`    | Prompt for full configuration (theme, font, brand, db) during template initialization |
 | `--force`     | Overwrite files in the current directory without prompting |
 | `--remote`    | Fetch from GitHub even when a local template copy exists |
 | `--init-git`  | Run `git init` after copying (optional) |

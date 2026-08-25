@@ -316,8 +316,12 @@ export async function applyThemeAndFont(targetDir, themeId, fontId) {
     if (!globalsContent.includes("tempjs-theme.css")) {
       // Prepend import at the top of the file
       globalsContent = `@import "./tempjs-theme.css";\n` + globalsContent;
-      await writeFile(globalsPath, globalsContent, "utf8");
     }
+
+    // Always append/update a timestamp touch comment to force bundler/Tailwind CSS recompilation
+    globalsContent = globalsContent.replace(/\/\* tempjs-touch: \d+ \*\/\s*$/, "");
+    globalsContent = globalsContent.trim() + `\n/* tempjs-touch: ${Date.now()} */\n`;
+    await writeFile(globalsPath, globalsContent, "utf8");
   } else {
     console.warn("Could not locate globals.css file in the project. CSS variables and font imports were not applied.");
   }

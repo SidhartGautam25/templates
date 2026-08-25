@@ -205,3 +205,28 @@ To add a new font pairing:
    }
    ```
 
+---
+
+## 7. Interactive Brand Configuration
+
+The interactive brand configuration (`tempjs brand`) allows developers to customize brand identities and contact details of a template without diving manually into `site.ts`.
+
+### How it Works (Under the Hood)
+1. **Interactive Prompt:** The CLI prompts for inputs including Brand Name, Display Name, Base URL, Contact Phone, Display Phone, Country Code, Contact Email, and Full Address.
+2. **Regex Parsing & Replacements:**
+   - The CLI loads `constants/site.ts`.
+   - It replaces the `brand`, `domain`, and `contact` configuration blocks with updated details.
+   - It dynamically extracts the `locality` and `region` from the address list and parses the `wwwHost` from the provided `baseUrl` automatically.
+
+---
+
+## 8. Environment & Database Auto-Setup
+
+The database auto-setup command (`tempjs init-db`) handles the setup of environment files (`.env`) and database tables/schemas via Prisma.
+
+### How it Works (Under the Hood)
+1. **Prompt for Credentials:** Prompts for MySQL connection details (Host, Port, User, Password, Database Name), using the current directory name as a baseline for the database name.
+2. **NextAuth Security:** Automatically generates a cryptographically secure random base64 string for `AUTH_SECRET` to prevent NextAuth from throwing errors.
+3. **Environment Setup:** Reads `.env.example`, replaces variables, and writes out `.env`.
+4. **Schema Initialization:** Runs `npx prisma db push` inside the directory using Node's `execSync` to synchronize the MySQL database table structure with the Prisma schema.
+
