@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+.yarn/
+.pnp
+.pnp.*
+
+# Build output
+dist/
+build/
+.next/
+out/
+coverage/
+
+# Caches and temp
+.cache/
+.tmp/
+temp/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment (keep examples)
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Nested git repositories (templates must not contain .git)
+**/.git/
+
+# Prisma generated client in template working copies
+**/generated/

@@ -1,0 +1,20 @@
+{
+  "repository": {
+    "owner": "SidhartGautam25",
+    "repo": "templates",
+    "branch": "main",
+    "templatesPath": "templates"
+  },
+  "templates": {
+    "hotel": {
+      "directory": "hotel-website-template",
+      "name": "Hotel Website",
+      "description": "Modern hotel and resort website with admin panel, gallery, and booking features"
+    },
+    "real-estate": {
+      "directory": "real-estate-website-template",
+      "name": "Real Estate Website",
+      "description": "Real estate and property listing website with admin panel and property management"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@navneet_25/tempjs",
+  "version": "1.0.1",
+  "description": "CLI to instantiate website project templates from a single GitHub repository",
+  "type": "module",
+  "bin": {
+    "tempjs": "./cli/index.js"
+  },
+  "files": [
+    "cli",
+    "templates.json"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "navneet_25 <navneetnishchal1420@gmail.com>",
+  "keywords": [
+    "template",
+    "cli",
+    "website",
+    "nextjs"
+  ],
+  "license": "MIT"
+}
