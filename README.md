@@ -5,8 +5,8 @@ A single repository containing multiple website project templates, plus a small 
 ## Quick start
 
 ```bash
-# Install the CLI globally (after publishing or linking locally)
-npm install -g tempjs
+# Install the CLI globally
+npm install -g @navneet_25/tempjs
 
 # Create a new project
 mkdir hotel-client
@@ -80,7 +80,7 @@ When templates exist locally under `templates/`, the CLI uses them directly (fas
 ### Global install (npm)
 
 ```bash
-npm install -g tempjs
+npm install -g @navneet_25/tempjs
 ```
 
 ### From this repository
