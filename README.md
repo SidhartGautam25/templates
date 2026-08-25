@@ -141,14 +141,13 @@ tempjs hotel --remote
 
 ## How fetching works
 
-`tempjs hotel` does **not** clone the entire repository.
+`tempjs hotel` does **not** run `git clone` and does **not** call the GitHub REST API per file.
 
-1. The CLI reads the GitHub API tree for the configured branch.
-2. It filters files under `templates/hotel-website-template/`.
-3. Only those files are downloaded (via blob API or raw content).
-4. Files are validated in a temporary directory, then copied to your project.
+1. The CLI downloads **one** repository archive from `codeload.github.com` (a single HTTP request — no API rate-limit issues for public repos).
+2. It extracts only `templates/hotel-website-template/` from that archive into a temp directory.
+3. Files are validated, then copied into your project directory.
 
-Other templates are not transferred.
+The archive contains the whole templates repo on the wire, but only the requested template folder is extracted locally. No `GITHUB_TOKEN` is required for public repositories.
 
 ## Repository structure
 

@@ -39,7 +39,7 @@ ENVIRONMENT
   TEMPLATES_REPO_REPO      GitHub repository name
   TEMPLATES_REPO_BRANCH    Branch name (default: main)
   TEMPLATE_USE_REMOTE=1    Always fetch from GitHub
-  GITHUB_TOKEN / GH_TOKEN    GitHub token for API rate limits
+  GITHUB_TOKEN / GH_TOKEN    Optional — required only for private repositories
 
 CONFIGURATION
   Repository and template mappings live in templates.json at the package root.
