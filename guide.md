@@ -139,3 +139,69 @@ In your `templates.json`, the `"repository"` settings currently point to placeho
 ```
 
 Make sure to edit `templates.json` to replace `"your-username"` and `"templates"` with your actual GitHub username and repository name so that the CLI fetches templates from the correct place automatically!
+
+---
+
+## 6. Theme and Font Configuration System
+
+`tempjs` features a centralized, modular theme and font configuration system. This allows developers to customize the visual styling of templates during initialization or modify them post-initialization.
+
+### How it Works (Under the Hood)
+1. **Centralized Registry:** Theme definitions (colors, hover states) and Font pairings (Google Font imports, Serif/Sans font family overrides) are centrally managed inside [cli/theme-manager.js](file:///home/sidharthg/sid/project/free/templates/cli/theme-manager.js).
+2. **Metadata Tracking:** When styling is applied, a `.tempjsrc` JSON file is written to the root of the project to track the current configuration:
+   ```json
+   {
+     "theme": "theme2",
+     "font": "lora-montserrat",
+     "updatedAt": "2026-08-25T10:34:42.756Z"
+   }
+   ```
+3. **CSS Variables Override (`tempjs-theme.css`):**
+   - The CLI recursively searches for the template's stylesheet entry file (e.g. `globals.css`).
+   - It writes/overwrites a file called `tempjs-theme.css` in the same directory. This file `@import`s the correct Google Font URL and defines `:root` custom properties marked with `!important` (e.g., `--primary: #58812F !important;`, `--font-sans: 'Montserrat', sans-serif !important;`).
+   - The CLI automatically prepends `@import "./tempjs-theme.css";` to the top of `globals.css` if it's not already present. Because of `!important`, these values override baseline rules and inline styles.
+4. **JavaScript/TypeScript Configuration Sync:**
+   - The CLI scans for `constants/site.ts` (or `site.js`) containing the JavaScript-driven theme variables.
+   - It runs a regex replacement to update the `colors: { ... }` block inside `SITE.theme` to match the exact hex codes of the chosen theme, ensuring metadata, admin portals, and server-side components stay synchronized.
+
+### Adding New Themes
+To add a new theme to the system:
+1. Open [cli/theme-manager.js](file:///home/sidharthg/sid/project/free/templates/cli/theme-manager.js).
+2. Add a new object to the `THEMES` array:
+   ```javascript
+   {
+     id: "my-teal-theme",
+     name: "Theme 6 (Teal / Ocean)",
+     colors: {
+       primary: "#0D9488",
+       primaryHover: "#0F766E",
+       accent: "#2DD4BF",
+       accentDark: "#0D9488",
+       accentLight: "#F0FDFA",
+       textMain: "#111827",
+       textMuted: "#4B5563",
+       bgMain: "#F0FDFA",
+       bgLight: "#E6FFFA",
+       bgCard: "#FFFFFF",
+       footerBg: "#CCFBF1",
+       ctaPrimary: "#0D9488",
+       ctaPrimaryHover: "#0F766E",
+     }
+   }
+   ```
+3. No edits are required on the template side. The CLI will automatically display your new theme in the prompts and apply it!
+
+### Adding New Font Pairs
+To add a new font pairing:
+1. Open [cli/theme-manager.js](file:///home/sidharthg/sid/project/free/templates/cli/theme-manager.js).
+2. Add a new object to the `FONTS` array:
+   ```javascript
+   {
+     id: "lato-merriweather",
+     name: "Merriweather (Serif) + Lato (Sans-serif)",
+     serif: "'Merriweather', Georgia, serif",
+     sans: "'Lato', sans-serif",
+     importUrl: "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap"
+   }
+   ```
+

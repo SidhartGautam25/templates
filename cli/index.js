@@ -5,6 +5,12 @@ import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { loadManifest, getPackageRoot, resolveRepositoryConfig } from "./config.js";
 import {
+  promptTheme,
+  promptFont,
+  applyThemeAndFont,
+  getSavedConfig,
+} from "./theme-manager.js";
+import {
   copyTemplate,
   findConflictingPaths,
   isDirectoryEmpty,
@@ -20,9 +26,13 @@ tempjs — instantiate project templates from GitHub
 USAGE
   tempjs list
   tempjs <template-id> [options]
+  tempjs <template-id> config     Initialize with interactive theme & typography setup
+  tempjs theme                    Change the project's theme in an initialized directory
+  tempjs font                     Change the project's font styling in an initialized directory
   tempjs --help
 
 OPTIONS
+  --config      Prompt for theme and font pairings during initialization
   --force       Overwrite existing files in the current directory
   --remote      Fetch from GitHub even if a local template copy exists
   --init-git    Run git init after copying the template
@@ -30,8 +40,8 @@ OPTIONS
 
 EXAMPLES
   mkdir hotel-client && cd hotel-client
-  tempjs hotel
-  git init
+  tempjs hotel config
+  tempjs theme
 
 ENVIRONMENT
   TEMPLATES_REPO_URL       GitHub repo URL or owner/repo (overrides templates.json)
@@ -72,6 +82,7 @@ function parseArgs(argv) {
     remote: false,
     initGit: false,
     help: false,
+    config: false,
   };
   const positionals = [];
 
@@ -80,6 +91,7 @@ function parseArgs(argv) {
     else if (arg === "--remote") flags.remote = true;
     else if (arg === "--init-git") flags.initGit = true;
     else if (arg === "--help" || arg === "-h") flags.help = true;
+    else if (arg === "--config") flags.config = true;
     else if (arg.startsWith("-")) {
       throw new Error(`Unknown option: ${arg}`);
     } else {
@@ -124,8 +136,9 @@ async function confirmOverwrite(force) {
  * @param {string} targetDir
  * @param {string} templateId
  * @param {{ force: boolean, remote: boolean, initGit: boolean }} flags
+ * @param {boolean} runWithConfig
  */
-async function runTemplate(targetDir, templateId, flags) {
+async function runTemplate(targetDir, templateId, flags, runWithConfig = false) {
   const manifest = loadManifest();
   const entry = manifest.templates[templateId];
 
@@ -198,6 +211,13 @@ async function runTemplate(targetDir, templateId, flags) {
       execSync("git init", { cwd: targetDir, stdio: "inherit" });
     }
 
+    if (runWithConfig) {
+      console.log("\nConfiguring project theme and typography...");
+      const selectedTheme = await promptTheme("theme1");
+      const selectedFont = await promptFont("default");
+      await applyThemeAndFont(targetDir, selectedTheme, selectedFont);
+    }
+
     console.log(`\nTemplate "${entry.name}" created successfully in ${targetDir}`);
     console.log("\nNext steps:");
     console.log("  pnpm install   # or npm install");
@@ -227,22 +247,37 @@ async function runTemplate(targetDir, templateId, flags) {
  */
 async function main(argv) {
   const { flags, positionals } = parseArgs(argv);
-  const command = positionals[0];
+  let command = positionals[0];
 
   if (flags.help || command === "help" || (!command && argv.length === 0)) {
     console.log(HELP_TEXT.trim());
     return;
   }
 
-  const manifest = loadManifest();
+  if (command === "theme" || command === "font") {
+    const targetDir = process.cwd();
+    const currentConfig = getSavedConfig(targetDir);
 
-  if (command === "list") {
-    printTemplateList(manifest.templates);
+    if (command === "theme") {
+      const selectedTheme = await promptTheme(currentConfig.theme || "theme1");
+      await applyThemeAndFont(targetDir, selectedTheme, currentConfig.font || "default");
+    } else {
+      const selectedFont = await promptFont(currentConfig.font || "default");
+      await applyThemeAndFont(targetDir, currentConfig.theme || "theme1", selectedFont);
+    }
     return;
   }
 
+  const manifest = loadManifest();
+
+  let runWithConfig = flags.config;
+  if (positionals.length >= 2 && positionals[1] === "config") {
+    runWithConfig = true;
+    positionals.splice(1, 1);
+  }
+
   const targetDir = process.cwd();
-  await runTemplate(targetDir, command, flags);
+  await runTemplate(targetDir, command, flags, runWithConfig);
 }
 
 main(process.argv.slice(2)).catch((error) => {
