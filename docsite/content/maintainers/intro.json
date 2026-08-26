@@ -1,0 +1,38 @@
+{
+  "title": "Maintainer overview",
+  "description": "Develop and release tempjs CLI and website templates from the monorepo.",
+  "blocks": [
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "Monorepo layout",
+      "text": "packages/core (shared) + templates/overlays/* (per template) → pnpm sync-templates → templates/*-website-template (what tempjs copies)."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Daily loop"
+    },
+    {
+      "type": "code",
+      "code": "edit packages/core OR templates/overlays/hotel/\npnpm sync-templates\npnpm dev:hotel\ntempjs version check\ntempjs version inc patch hotel\ngit commit"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Two version numbers"
+    },
+    {
+      "type": "table",
+      "headers": ["Version", "File", "Meaning"],
+      "rows": [
+        ["CLI", "package.json", "npm package @navneet_25/tempjs"],
+        ["Template", "templates.json per id", "Stamped into client .tempjs.json"]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Bump them independently. See the Versioning page for tempjs version check / inc."
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "title": "Commands",
+  "description": "Complete reference for tempjs CLI commands. Copy examples directly into your terminal.",
+  "commandIds": [
+    "list",
+    "info",
+    "generate",
+    "theme",
+    "font",
+    "brand",
+    "init-db",
+    "doctor",
+    "update-check",
+    "update-merge"
+  ],
+  "blocks": [
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Run commands inside your client project folder unless noted. Maintainer commands live in the Maintainers section."
+    }
+  ]
+}

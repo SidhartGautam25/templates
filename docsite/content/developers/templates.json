@@ -1,0 +1,54 @@
+{
+  "title": "Templates",
+  "description": "Available website templates and what each includes.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Templates are full Next.js 16 apps with admin portal, Prisma + MariaDB, lead capture, optional FTP uploads, and Docker Compose for local database."
+    },
+    {
+      "type": "template-cards"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What you get"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Flat copy into current directory (no nested template folder)",
+        ".tempjs.json version stamp and file hash baseline",
+        "Admin at /admin with ADMIN_USER / ADMIN_PASSWORD from .env",
+        "GET /api/health for DB and env checks",
+        "GETTING_STARTED.md linear checklist in the project"
+      ]
+    },
+    {
+      "type": "command-ref",
+      "id": "info"
+    },
+    {
+      "type": "command-ref",
+      "id": "generate"
+    }
+  ],
+  "templates": [
+    {
+      "id": "hotel",
+      "name": "Hotel Website",
+      "version": "1.3.0",
+      "description": "Resort/hotel site with rooms, gallery, facilities, reviews, and enquiry flows.",
+      "tags": ["admin", "gallery", "booking", "leads"],
+      "features": ["Room types & detail pages", "Gallery", "Facilities & reviews CMS", "Promo banner", "LeadRat optional"]
+    },
+    {
+      "id": "real-estate",
+      "name": "Real Estate Website",
+      "version": "1.3.0",
+      "description": "Property listings with slug pages, admin CRM, and new-launch badges.",
+      "tags": ["admin", "properties", "leads"],
+      "features": ["Property grid & detail pages", "RERA fields", "Lead export", "Promo banner", "LeadRat optional"]
+    }
+  ]
+}

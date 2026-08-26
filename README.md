@@ -17,6 +17,8 @@ git add .
 git commit -m "Initial project"
 ```
 
+**Documentation site:** [`webdoc/`](webdoc/) — JSON-driven docs for developers and maintainers. Run `pnpm docs:dev` from repo root.
+
 ## Available templates
 
 | ID            | Name                 | Description                                      |

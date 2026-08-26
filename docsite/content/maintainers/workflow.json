@@ -1,0 +1,42 @@
+{
+  "title": "Daily workflow",
+  "description": "Commands and checks after editing templates.",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "After editing core or overlay"
+    },
+    {
+      "type": "command-ref",
+      "id": "sync-templates"
+    },
+    {
+      "type": "command-ref",
+      "id": "dev-hotel"
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "text": "Never commit stale merged templates. pre-commit runs pnpm sync-templates:check when hooks are enabled (pnpm setup-hooks)."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Root package scripts"
+    },
+    {
+      "type": "table",
+      "headers": ["Script", "Purpose"],
+      "rows": [
+        ["pnpm sync-templates", "Merge core + overlays into templates/*"],
+        ["pnpm sync-templates:check", "Verify merged output without writing"],
+        ["pnpm dev:hotel", "Sync + hotel dev server"],
+        ["pnpm dev:real-estate", "Sync + real-estate dev server"],
+        ["pnpm new-template", "Scaffold new overlay + templates.json entry"],
+        ["pnpm setup-hooks", "Enable git pre-commit sync check"],
+        ["pnpm version:check", "Alias for tempjs version check"]
+      ]
+    }
+  ]
+}

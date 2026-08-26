@@ -1,0 +1,47 @@
+{
+  "title": "Updates & doctor",
+  "description": "Stay current with template releases and verify local setup.",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Project health"
+    },
+    {
+      "type": "command-ref",
+      "id": "doctor"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Template updates"
+    },
+    {
+      "type": "paragraph",
+      "text": "Your .tempjs.json stores templateVersion and a hash baseline. When maintainers publish a new template version, use update commands inside the client project."
+    },
+    {
+      "type": "command-ref",
+      "id": "update-check"
+    },
+    {
+      "type": "command-ref",
+      "id": "update-merge"
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "title": "Protected files",
+      "text": "Merge never overwrites .env, constants/site.ts, .tempjsrc, or your brand customizations. Conflicts are listed for manual review."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "CHANGELOG in your project"
+    },
+    {
+      "type": "paragraph",
+      "text": "Generated projects include CHANGELOG.md describing template releases. Read it after tempjs update --check shows a version gap."
+    }
+  ]
+}

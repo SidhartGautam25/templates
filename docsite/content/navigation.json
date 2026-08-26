@@ -1,0 +1,32 @@
+{
+  "audiences": [
+    {
+      "id": "developers",
+      "label": "Developers",
+      "description": "Use tempjs to generate and customize client projects",
+      "home": "/developers"
+    },
+    {
+      "id": "maintainers",
+      "label": "Maintainers",
+      "description": "Develop templates, sync core/overlays, and release versions",
+      "home": "/maintainers"
+    }
+  ],
+  "developers": [
+    { "id": "intro", "label": "Introduction", "path": "/developers" },
+    { "id": "commands", "label": "Commands", "path": "/developers/commands" },
+    { "id": "templates", "label": "Templates", "path": "/developers/templates" },
+    { "id": "customization", "label": "Customization", "path": "/developers/customization" },
+    { "id": "updates", "label": "Updates & doctor", "path": "/developers/updates" },
+    { "id": "docker", "label": "Docker & database", "path": "/developers/docker" }
+  ],
+  "maintainers": [
+    { "id": "intro", "label": "Overview", "path": "/maintainers" },
+    { "id": "architecture", "label": "Architecture", "path": "/maintainers/architecture" },
+    { "id": "workflow", "label": "Daily workflow", "path": "/maintainers/workflow" },
+    { "id": "new-template", "label": "New template", "path": "/maintainers/new-template" },
+    { "id": "versioning", "label": "Versioning", "path": "/maintainers/versioning" },
+    { "id": "commands", "label": "Maintainer commands", "path": "/maintainers/commands" }
+  ]
+}

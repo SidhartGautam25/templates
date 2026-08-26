@@ -1,0 +1,8 @@
+{
+  "title": "tempjs",
+  "tagline": "Instantiate website templates from GitHub",
+  "description": "CLI and template system for hotel, real estate, and custom Next.js client sites.",
+  "npmPackage": "@navneet_25/tempjs",
+  "repository": "https://github.com/SidhartGautam25/templates",
+  "installCommand": "npm install -g @navneet_25/tempjs"
+}

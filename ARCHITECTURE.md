@@ -16,6 +16,7 @@ templates/                          # Repo root
 │   └── real-estate-website-template/
 ├── scripts/
 │   └── sync-templates.mjs
+├── webdoc/                         # JSON-driven documentation site
 └── cli/                            # tempjs CLI
 ```
 

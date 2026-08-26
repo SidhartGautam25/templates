@@ -1,0 +1,42 @@
+{
+  "title": "Introduction",
+  "description": "Generate production-ready Next.js client sites from maintained templates.",
+  "blocks": [
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "Who this is for",
+      "text": "Developers who install tempjs via npm and generate hotel, real estate, or future client websites. You do not need the templates monorepo unless you maintain templates."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Install"
+    },
+    {
+      "type": "code",
+      "code": "npm install -g @navneet_25/tempjs\ntempjs --help\ntempjs list"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Typical flow"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Create an empty folder for the client project",
+        "Run tempjs <template-id> with --config for theme, brand, and database",
+        "pnpm install && pnpm dev",
+        "Customize constants/site.ts, .env, and hero images",
+        "Deploy; use tempjs update --check later for template fixes"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Generated project docs",
+      "text": "Each template ships GETTING_STARTED.md, ARCHITECTURE.md, and README in the client folder after generation."
+    }
+  ]
+}

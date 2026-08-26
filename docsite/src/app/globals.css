@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  --color-doc-bg: #f8fafc;
+  --color-doc-surface: #ffffff;
+  --color-doc-border: #e2e8f0;
+  --color-doc-accent: #0f766e;
+  --color-doc-accent-soft: #ccfbf1;
+  --color-doc-text: #0f172a;
+  --color-doc-muted: #64748b;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-[var(--color-doc-bg)] text-[var(--color-doc-text)] antialiased;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+code,
+pre {
+  font-family: ui-monospace, "Cascadia Code", "SF Mono", Menlo, monospace;
+}

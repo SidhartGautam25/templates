@@ -1,0 +1,58 @@
+{
+  "title": "Docker & database",
+  "description": "Local MariaDB and environment setup for generated projects.",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Docker Compose (local DB)"
+    },
+    {
+      "type": "code",
+      "code": "cp .env.example .env\n# DATABASE_URL=\"mysql://root:password@localhost:3306/app_db\"\ndocker compose up -d\npnpm prisma db push\npnpm prisma db seed\npnpm dev"
+    },
+    {
+      "type": "paragraph",
+      "text": "Default container: tempjs-mariadb on port 3306, database app_db, root password password."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "tempjs database setup"
+    },
+    {
+      "type": "command-ref",
+      "id": "init-db"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Required .env variables"
+    },
+    {
+      "type": "table",
+      "headers": ["Variable", "Purpose"],
+      "rows": [
+        ["DATABASE_URL", "MySQL/MariaDB connection for Prisma"],
+        ["AUTH_SECRET", "NextAuth secret — openssl rand -base64 33"],
+        ["ADMIN_USER", "Login for /admin"],
+        ["ADMIN_PASSWORD", "Admin password"],
+        ["FTP_HOST (optional)", "Remote asset uploads; local public/ if empty"],
+        ["LEADRAT_API_KEY (optional)", "Forward leads to CRM; still saved locally"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Health endpoint"
+    },
+    {
+      "type": "code",
+      "code": "curl -s http://localhost:3000/api/health | jq"
+    },
+    {
+      "type": "paragraph",
+      "text": "Returns status ok when env vars are set and database responds. Same checks as tempjs doctor."
+    }
+  ]
+}

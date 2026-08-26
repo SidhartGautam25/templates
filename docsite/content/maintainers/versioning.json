@@ -1,0 +1,53 @@
+{
+  "title": "Versioning",
+  "description": "CLI and template release tracking with git baselines.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": ".tempjs-version.json records the git commit at each bump. tempjs version check diffs watched paths since that commit."
+    },
+    {
+      "type": "command-ref",
+      "id": "version-check"
+    },
+    {
+      "type": "command-ref",
+      "id": "version-inc"
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Template inc + sync",
+      "text": "When overlay or packages/core changed since last bump, tempjs version inc <template> automatically runs sync-templates:check. Bump is aborted if merged output is stale — run pnpm sync-templates first."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Semver guide"
+    },
+    {
+      "type": "table",
+      "headers": ["Level", "CLI example", "Template example"],
+      "rows": [
+        ["patch", "Bugfix, docs", "Copy fix, seed tweak"],
+        ["minor", "New command (doctor)", "New page, non-breaking API"],
+        ["major", "Breaking CLI flags", "Breaking schema or removed files"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Release checklist"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Edit CHANGELOG.md in overlay",
+        "pnpm sync-templates",
+        "tempjs version check",
+        "tempjs version inc minor hotel (or patch cli)",
+        "git commit; npm publish for CLI when needed"
+      ]
+    }
+  ]
+}
