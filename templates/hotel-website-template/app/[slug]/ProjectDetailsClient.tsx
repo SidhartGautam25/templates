@@ -239,7 +239,7 @@ export default function ProjectDetailsClient({ project }: ProjectDetailsClientPr
             {/* Badges */}
             <div className="flex flex-wrap gap-2">
               <span className="bg-accent-gold text-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md">
-                Chanakya Resort Gaya
+                {SITE.brand.name}
               </span>
               {project.view && (
                 <span className="bg-black/40 text-accent-gold text-[10px] font-bold px-3 py-1 rounded-full border border-accent-gold/20 backdrop-blur-sm">

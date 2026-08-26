@@ -1,4 +1,5 @@
 import { loadManifest, resolveRepositoryConfig } from "./config.js";
+import { getTemplateBrandFields } from "./init-options.js";
 
 /**
  * @param {string} templateId
@@ -63,9 +64,22 @@ export function printTemplateInfo(templateId, entry, repo) {
   lines.push(`  pnpm install && pnpm dev`);
   lines.push("");
   lines.push("Non-interactive:");
+  const brandFields = getTemplateBrandFields(entry);
+  const flagPreview = brandFields
+    .slice(0, 4)
+    .map((f) => f.flag)
+    .join(" ");
   lines.push(
-    `  tempjs ${templateId} --config --yes --theme theme1 --name "My Brand" --db-host localhost`
+    `  tempjs ${templateId} --config --yes --theme theme1 ${flagPreview} --db-host localhost`
   );
+
+  if (entry.init?.brandFields?.length) {
+    lines.push("");
+    lines.push("Init options for this template:");
+    for (const field of brandFields) {
+      lines.push(`  ${field.flag.padEnd(22)} ${field.description}`);
+    }
+  }
 
   if (entry.docs) {
     lines.push("");

@@ -1,6 +1,6 @@
 {
   "name": "@navneet_25/tempjs",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "CLI to instantiate website project templates from a single GitHub repository",
   "type": "module",
   "bin": {
@@ -23,6 +23,16 @@
   "license": "MIT",
   "scripts": {
     "sync-templates": "node scripts/sync-templates.mjs",
-    "sync-templates:check": "node scripts/sync-templates.mjs --check"
+    "sync-templates:check": "node scripts/sync-templates.mjs --check",
+    "new-template": "node scripts/new-template.mjs",
+    "setup-hooks": "git config core.hooksPath .githooks && chmod +x .githooks/pre-commit",
+    "dev:hotel": "pnpm sync-templates && cd templates/hotel-website-template && pnpm dev",
+    "dev:real-estate": "pnpm sync-templates && cd templates/real-estate-website-template && pnpm dev",
+    "docs:dev": "cd docsite && pnpm dev",
+    "docs:build": "cd docsite && pnpm build",
+    "docsite:dev": "cd docsite && pnpm dev",
+    "docsite:build": "cd docsite && pnpm build",
+    "version:check": "node cli/index.js version check",
+    "version:inc": "node cli/index.js version inc"
   }
 }

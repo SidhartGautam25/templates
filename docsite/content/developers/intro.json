@@ -1,0 +1,75 @@
+{
+  "title": "Introduction",
+  "description": "Understand what tempjs does, how client projects are created, and the path from install to a running site.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "tempjs is a command-line tool that copies a complete, production-oriented website into your folder — not a skeleton with missing pieces, but a full Next.js app with admin panel, database layer, and deployment-ready structure. You use it when you need to spin up a client site (hotel, real estate, or future verticals) without rebuilding shared features like lead capture, admin auth, or Docker database setup from scratch every time."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What happens when you run tempjs?"
+    },
+    {
+      "type": "paragraph",
+      "text": "Think of it in three layers. First, the CLI resolves a template package (from npm or GitHub) and copies files flat into your current directory — no nested template folder. Second, it writes .tempjs.json, a stamp that records which template version you used so you can compare updates later. Third, optionally, it runs setup: theme colors, fonts, brand/contact fields in constants/site.ts, and database credentials in .env. After that, you own the project — edit code, deploy, and customize like any Next.js app."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "Who this guide is for",
+      "text": "Developers who install tempjs via npm and generate client websites. You do not need the templates monorepo unless you maintain templates themselves."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Install and verify"
+    },
+    {
+      "type": "paragraph",
+      "text": "Install globally so tempjs is available in any client folder. list shows template ids you can use as commands (e.g. hotel, real-estate)."
+    },
+    {
+      "type": "code",
+      "code": "npm install -g @navneet_25/tempjs\ntempjs --help\ntempjs list"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "The usual workflow (explained)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Each step below is intentional — skipping one often causes confusion later."
+    },
+    {
+      "type": "list",
+      "items": [
+        "Create an empty folder for the client — this becomes the project root (tempjs does not create a subfolder for you).",
+        "Run tempjs <template-id> — use config for guided setup, or flags for automation (see template pages for the command builder).",
+        "pnpm install — dependencies are not installed by the CLI; the template expects pnpm.",
+        "Configure .env — copy .env.example or use tempjs init-db; DATABASE_URL and ADMIN_* must exist before Prisma works.",
+        "Start MariaDB — docker compose up -d is the usual local path; then pnpm prisma db push && pnpm prisma db seed.",
+        "pnpm dev — open /admin with credentials from .env; use GET /api/health to verify database connectivity.",
+        "Customize constants/site.ts for copy, images, and colors; deploy when ready.",
+        "Later: tempjs update --check in the project folder to see if the upstream template has fixes you can merge."
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Docs inside the generated project",
+      "text": "Every template ships GETTING_STARTED.md (linear checklist), ARCHITECTURE.md (how the app is structured), and README in the client folder after generation. Start there when onboarding a teammate."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Interactive vs non-interactive setup"
+    },
+    {
+      "type": "paragraph",
+      "text": "tempjs hotel config asks questions in the terminal — good for first-time setup. tempjs hotel --config --yes --name \"...\" --db-host localhost ... runs the same steps without prompts, which is what you want in scripts or when you already know every value. Template pages include a command generator that builds the non-interactive command for you field by field."
+    }
+  ]
+}

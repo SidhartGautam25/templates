@@ -1,0 +1,18 @@
+{
+  "title": "Maintainer commands",
+  "description": "Monorepo and release commands (run from templates repo root).",
+  "commandIds": [
+    "sync-templates",
+    "dev-hotel",
+    "new-template",
+    "version-check",
+    "version-inc"
+  ],
+  "blocks": [
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Developer-facing commands (hotel, update, doctor) are documented in the Developers → Commands section."
+    }
+  ]
+}

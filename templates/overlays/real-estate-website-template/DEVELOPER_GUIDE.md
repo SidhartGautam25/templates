@@ -1,4 +1,4 @@
-# Developer Guide: Chanakya Resort / Godrej Pune Project
+# Developer Guide: Greenfield Properties (Real Estate Template)
 
 Welcome to the developers' setup and maintenance guide. This document outlines the stack, database integration, asset management pipeline, and step-by-step instructions to get the application up and running successfully.
 
@@ -84,7 +84,7 @@ pnpm prisma db push
 > The database URL and FTP server in the default `.env` point to live production environments from an earlier project. Do not overwrite, wipe, or push modifications to it until you have updated `.env` to target your new/staging database.
 
 ### Step 3: Run Seed Data (Optional)
-If you want to seed the database with initial developer mock data (e.g. Godrej projects list):
+If you want to seed the database with demo property listings (Baner, Hinjewadi, etc.):
 ```bash
 pnpm prisma db seed
 ```
@@ -137,7 +137,7 @@ docker-compose up --build
 ```
 
 ### What happens under the hood?
-1. `docker-compose` launches a MariaDB instance named `godrej-mariadb` exposing port `3306`.
+1. `docker compose up -d` launches MariaDB (`tempjs-mariadb`) on port `3306` with database `app_db`.
 2. The web application container waits for the database container to accept TCP requests.
 3. The custom entrypoint script `entrypoint.sh` executes database sync automatically:
    ```bash

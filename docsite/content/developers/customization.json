@@ -1,0 +1,64 @@
+{
+  "title": "Customization",
+  "description": "What to change first in a generated client project.",
+  "blocks": [
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Customize first (in order)",
+      "text": "1) constants/site.ts — brand, SEO, hero copy, colors. 2) .env — database and admin credentials. 3) public/ logo and hero images. 4) Hero component if layout needs change."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "constants/site.ts"
+    },
+    {
+      "type": "paragraph",
+      "text": "Single source of truth for brand name, contact, legal text, navigation labels, hero copy, theme colors, and admin display names. Most UI strings read from SITE.*."
+    },
+    {
+      "type": "table",
+      "headers": ["Section", "What to edit"],
+      "rows": [
+        ["brand.name / shortName", "Business name on site and admin"],
+        ["domain.baseUrl", "Canonical URL for SEO and sitemap"],
+        ["contact.phone / email / address", "Footer, enquiry modal, sticky widgets"],
+        ["hero.*", "Homepage headline, CTAs, feature bullets"],
+        ["theme.colors", "CSS variables mapped in globals.css"],
+        ["admin.*", "Admin portal title and export prefix"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "CLI brand setup"
+    },
+    {
+      "type": "command-ref",
+      "id": "brand"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Theme & typography"
+    },
+    {
+      "type": "command-ref",
+      "id": "theme"
+    },
+    {
+      "type": "command-ref",
+      "id": "font"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Demo content"
+    },
+    {
+      "type": "paragraph",
+      "text": "constants/default-*.ts and prisma/seed.ts provide demo rooms or listings. Re-run pnpm prisma db seed after editing defaults, or use the admin UI."
+    }
+  ]
+}

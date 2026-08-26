@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Chanakya Resort — soft light theme (override via constants/site.ts values) */
+  /* Lakeside Haven — soft light theme (override via constants/site.ts values) */
   --primary: #3d5a52;
   --primary-hover: #2f4841;
   --accent-gold: #c4a574;

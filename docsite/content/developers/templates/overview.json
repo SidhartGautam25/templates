@@ -1,0 +1,78 @@
+{
+  "title": "Templates",
+  "description": "How templates work, what they share, and how to pick the right one for your client.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "A template in tempjs is a complete Next.js application — not a snippet or theme zip. Each template shares core infrastructure (admin auth, leads, health check, Docker database, FTP uploads) while the overlay layer adds vertical-specific pages and models: rooms for hotels, properties for real estate."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "How copying works"
+    },
+    {
+      "type": "paragraph",
+      "text": "When you run tempjs hotel inside an empty folder, files land directly in that folder. The CLI does not create hotel-website-template as a subdirectory. That design keeps deployment and git repos simple: your client folder is the app root. .tempjs.json records template id and version so tempjs update can diff against upstream later."
+    },
+    {
+      "type": "template-cards"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Shared vs template-specific options"
+    },
+    {
+      "type": "paragraph",
+      "text": "All templates support theme presets, font pairings, database flags, and core brand fields. Template-specific flags (e.g. hotel landmark line vs real-estate RERA) are declared in templates.json and mirrored in each template's docs page and command builder. You are not forced to pass every flag — only what you configure appears in non-interactive commands."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What every template includes"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Flat copy into current directory",
+        ".tempjs.json version stamp and file hashes",
+        "/admin portal (ADMIN_USER / ADMIN_PASSWORD from .env)",
+        "GET /api/health for environment and DB checks",
+        "GETTING_STARTED.md checklist in the generated project"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Open a template guide",
+      "text": "Use the sidebar under Templates for per-template explanations and the interactive command generator."
+    },
+    {
+      "type": "command-ref",
+      "id": "list"
+    },
+    {
+      "type": "command-ref",
+      "id": "info"
+    }
+  ],
+  "templates": [
+    {
+      "id": "hotel",
+      "name": "Hotel Website",
+      "version": "1.3.0",
+      "description": "Resort/hotel site with rooms, gallery, facilities, reviews, and enquiry flows.",
+      "tags": ["admin", "gallery", "booking", "leads"],
+      "features": ["Room types & detail pages", "Gallery", "Facilities & reviews CMS", "Promo banner", "LeadRat optional"]
+    },
+    {
+      "id": "real-estate",
+      "name": "Real Estate Website",
+      "version": "1.3.0",
+      "description": "Property listings with slug pages, admin CRM, and new-launch badges.",
+      "tags": ["admin", "properties", "leads"],
+      "features": ["Property grid & detail pages", "RERA fields", "Lead export", "Promo banner", "LeadRat optional"]
+    }
+  ]
+}

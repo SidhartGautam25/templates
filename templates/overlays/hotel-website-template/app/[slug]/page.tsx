@@ -1,6 +1,6 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { roomTypeService } from "@/lib/services/RoomTypeService";
+import { roomTypeService } from "@/lib/features/room-types";
 import { defaultRoomTypes } from "@/constants/default-room-types";
 import ProjectDetailsClient from "./ProjectDetailsClient";
 import { slugify } from "@/lib/utils/slugify";

@@ -1,38 +1,38 @@
 /**
- * Site configuration — edit this file when setting up a new hotel, resort, or real estate project.
+ * Site configuration — edit this file when setting up a new hotel or resort project.
  * All UI-facing brand, contact, SEO, theme, and copy values live here.
  */
 
 export const SITE = {
-  id: "chanakya-resort",
+  id: "lakeside-haven-resort",
 
   brand: {
-    name: "Chanakya Resort",
-    shortName: "Chanakya",
+    name: "Lakeside Haven Resort",
+    shortName: "Lakeside Haven",
     tagline: "Where Nature Meets Refined Comfort",
-    developerName: "Chanakya Resort",
-    channelPartner: "Chanakya Hospitality Pvt. Ltd.",
-    copyright: "Chanakya Resort. All Rights Reserved.",
-    managedBy: "Managed by Chanakya Hospitality.",
+    developerName: "Lakeside Haven Resort",
+    channelPartner: "Lakeside Hospitality Partners",
+    copyright: "Lakeside Haven Resort. All Rights Reserved.",
+    managedBy: "Managed by Lakeside Hospitality.",
   },
 
   domain: {
-    baseUrl: "https://chanakyaresort.com",
-    wwwHost: "www.chanakyaresort.com",
+    baseUrl: "https://lakesidehaven.example.com",
+    wwwHost: "www.lakesidehaven.example.com",
   },
 
   contact: {
     phone: "9876543210",
     phoneDisplay: "+91 98765 43210",
     countryCode: "91",
-    email: "reservations@chanakyaresort.com",
+    email: "reservations@lakesidehaven.example.com",
     address: {
-      locality: "Gaya",
-      region: "Bihar",
+      locality: "Lonavala",
+      region: "Maharashtra",
       country: "IN",
-      full: "KHATA No.- 2, KHESARA No.- 6, BHAG VARTMAN- 6, Sadar Hospital, Anchal Sadar Dhansir, Gaya, Bihar, India",
+      full: "Lake View Road, Lonavala, Maharashtra 410401, India",
     },
-    templeDistance: "12.1 km drive to Mahabodhi Temple",
+    templeDistance: "5 min walk to Lonavala Lake viewpoint",
   },
 
   legal: {
@@ -40,22 +40,22 @@ export const SITE = {
     privacyPolicyPath: "/privacy-policy",
     termsPath: "/terms-and-conditions",
     consentText:
-      "I authorize Chanakya Hospitality Pvt. Ltd. and its representatives to Call, SMS, Email or WhatsApp me about its products and benefits. This consent overrides any registration for DNC/NDNC.",
+      "I authorize Lakeside Hospitality Partners and its representatives to call, SMS, email, or WhatsApp me about offers and services.",
     shortConsentText:
-      "I authorize company representatives to Call, SMS, Email or WhatsApp me about its products and offers. This consent overrides any registration for DNC/NDNC.",
+      "I authorize company representatives to contact me about products and offers.",
     disclaimer: [
-      "Disclaimer: The information provided on this website is for informational purposes only and does not constitute an offer or contract. All renderings, specifications, layouts, dimensions, pricing, and project highlights are representative and subject to change without prior notice.",
-      "Images, amenities, and availability are subject to change. Please contact our reservations team for the latest details and confirmed pricing.",
+      "Rates and availability are subject to change. Images are representative.",
+      "Please contact reservations for confirmed pricing and seasonal offers.",
     ],
   },
 
   seo: {
-    defaultTitle: "Chanakya Resort | Hotel & Luxury Rooms in Gaya, Bihar",
+    defaultTitle: "Lakeside Haven Resort | Boutique Hotel in Lonavala",
     defaultDescription:
-      "Discover Chanakya Resort — a serene premium retreat in Gaya near Sadar Hospital and 12.1 km from Mahabodhi Temple. Offering Deluxe AC rooms, Family suites, and exceptional service.",
+      "Lakeside Haven Resort — boutique rooms and suites in Lonavala with lake views, modern amenities, and warm hospitality. Book direct for the best rates.",
     keywords:
-      "Chanakya Resort Gaya, hotel in Gaya, hotel near Mahabodhi Temple, resort booking Gaya, family room Gaya, Bodhgaya hotel, deluxe room Gaya",
-    priceRange: "₹2,100 - ₹6,375 per night",
+      "Lonavala hotel, resort booking, weekend getaway Maharashtra, family suite Lonavala, boutique resort",
+    priceRange: "₹3,500 - ₹12,000 per night",
     locale: "en_IN",
     schemaType: "Resort" as const,
   },
@@ -94,12 +94,12 @@ export const SITE = {
 
   hero: {
     eyebrow: "SERENE ESCAPES. TIMELESS COMFORT.",
-    headline: "Premium Rooms at Chanakya Resort",
+    headline: "Your Lakeside Retreat in Lonavala",
     subheadline:
-      "Unwind in Gaya with our modern, fully-equipped rooms and suites located near Mahabodhi Temple. Starting from ₹2,100* per night. Your perfect stay awaits.",
-    startingPrice: "₹2,100*",
+      "Wake up to misty hills and curated comfort. Deluxe rooms, family suites, and lake-view stays — from ₹3,500* per night.",
+    startingPrice: "₹3,500*",
     features: [
-      { icon: "map", label: "Central Gaya Location" },
+      { icon: "map", label: "Lonavala Lake Nearby" },
       { icon: "sparkles", label: "Premium Comfort" },
       { icon: "shield", label: "Trusted Hospitality" },
       { icon: "tag", label: "Best Rates Guaranteed" },
@@ -111,11 +111,10 @@ export const SITE = {
     ],
     locationsTitle: "Explore Our Accommodations",
     locations: [
-      { label: "Deluxe AC Rooms", enquiryLabel: "Deluxe AC Rooms Enquiry" },
-      { label: "Twin Deluxe Rooms", enquiryLabel: "Twin Deluxe Rooms Enquiry" },
-      { label: "Standard Rooms", enquiryLabel: "Standard Rooms Enquiry" },
-      { label: "Family Deluxe Suites", enquiryLabel: "Family Deluxe Suites Enquiry" },
-      { label: "Events & Dining", enquiryLabel: "Events & Dining Enquiry" },
+      { label: "Deluxe Lake View", enquiryLabel: "Deluxe Lake View Enquiry" },
+      { label: "Garden Suites", enquiryLabel: "Garden Suites Enquiry" },
+      { label: "Family Rooms", enquiryLabel: "Family Rooms Enquiry" },
+      { label: "Wellness Packages", enquiryLabel: "Wellness Packages Enquiry" },
     ],
     carouselImages: [
       "/hero/hero-image-1.avif",
@@ -135,7 +134,7 @@ export const SITE = {
 
   projectGrid: {
     eyebrow: "Our Accommodations",
-    title: "Discover Rooms & Suites at Chanakya Resort",
+    title: "Rooms & Suites at Lakeside Haven",
     tabs: {
       all: "All Rooms",
       apartments: "Deluxe & Suites",
@@ -145,48 +144,48 @@ export const SITE = {
 
   promoBanner: {
     imageUrl: "",
-    sec1Title: "Deluxe AC Rooms",
-    sec1Sub: "Starting At ₹2,100*",
-    sec2Title: "Sadar Hospital, Gaya",
-    sec2Sub: "12.1 km to Mahabodhi Temple",
-    sec3Title: "Premium Comfort",
-    sec3Sub: "Free Wi-Fi & Services",
-    sec4Title: "Best Price Guarantee",
-    sec4Sub: "Book Direct & Save",
+    sec1Title: "Deluxe Lake View",
+    sec1Sub: "From ₹3,500*",
+    sec2Title: "Lonavala, Maharashtra",
+    sec2Sub: "Weekend getaway ready",
+    sec3Title: "Complimentary Wi-Fi",
+    sec3Sub: "Breakfast options available",
+    sec4Title: "Book Direct & Save",
+    sec4Sub: "Best price guarantee",
   },
 
   about: {
     eyebrow: "Our Story",
-    title: "About Chanakya Resort",
+    title: "About Lakeside Haven Resort",
     paragraphs: [
-      "Chanakya Resort is a sanctuary where convenience meets exceptional hospitality. Located in the heart of Gaya, Bihar, near Sadar Hospital and a short 12.1 km drive from the world-famous Mahabodhi Temple in Bodhgaya, our hotel offers beautifully designed room types and modern amenities to ensure a comfortable stay.",
-      "From deluxe AC options with premium bathrooms to spacious family suites, Chanakya Resort provides the perfect resting place for pilgrims, tourists, and business guests alike. We combine modern amenities with warm, dedicated service to make your stay memorable.",
+      "Lakeside Haven Resort is a boutique retreat nestled in Lonavala where modern design meets the calm of the Western Ghats. Whether you are planning a family weekend, a corporate offsite, or a quiet escape, our rooms are designed for rest and recharge.",
+      "From lake-view deluxe rooms to spacious family suites, every stay includes attentive service, fast Wi-Fi, and easy access to Lonavala's top attractions.",
     ],
     callLabel: "Talk to Reservations",
   },
 
   enquiry: {
-    modalTitle: "Chanakya Resort",
-    modalSubtitle: "Register Here And Avail The Best Benefits!!",
-    formTitle: "Get a Call Back from Our Expert:",
+    modalTitle: "Lakeside Haven Resort",
+    modalSubtitle: "Register for exclusive offers and availability updates.",
+    formTitle: "Get a call back from our reservations team:",
     successMessage:
-      "Thank you for your interest. A representative will contact you shortly on your mobile number.",
+      "Thank you! A reservations specialist will contact you shortly.",
     aboutSuccessMessage:
-      "We have received your enquiry. An expert will reach out to you within 24 hours.",
+      "We received your enquiry. Our team will reach out within 24 hours.",
   },
 
   admin: {
-    displayName: "Chanakya Resort",
-    portalTitle: "Chanakya Admin Portal",
-    portalSubtitle: "Enter administrator credentials to manage listings.",
-    defaultUserName: "Chanakya Admin",
-    defaultUserEmail: "admin@chanakyaresort.com",
-    leadsExportPrefix: "chanakya_leads",
+    displayName: "Lakeside Haven",
+    portalTitle: "Lakeside Haven Admin",
+    portalSubtitle: "Sign in to manage rooms, leads, and site content.",
+    defaultUserName: "Resort Admin",
+    defaultUserEmail: "admin@lakesidehaven.example.com",
+    leadsExportPrefix: "lakeside_leads",
     projectForm: {
-      addTitle: "Add New Listing",
-      editTitle: "Edit Listing",
-      namePlaceholder: "e.g. Garden View Suite",
-      reraPlaceholder: "e.g. Registration / License ID",
+      addTitle: "Add Room Type",
+      editTitle: "Edit Room Type",
+      namePlaceholder: "e.g. Deluxe Lake View",
+      reraPlaceholder: "Internal reference / license ID",
     },
   },
 
@@ -196,17 +195,14 @@ export const SITE = {
   },
 } as const;
 
-/** Tel link for click-to-call */
 export function getTelLink(phone = SITE.contact.phone) {
   return `tel:+${SITE.contact.countryCode}${phone}`;
 }
 
-/** WhatsApp link */
 export function getWhatsAppLink(phone = SITE.contact.phone) {
   return `https://wa.me/${SITE.contact.countryCode}${phone}`;
 }
 
-/** Full URL helper */
 export function getSiteUrl(path = "") {
   const base = SITE.domain.baseUrl.replace(/\/$/, "");
   const normalized = path.startsWith("/") ? path : path ? `/${path}` : "";

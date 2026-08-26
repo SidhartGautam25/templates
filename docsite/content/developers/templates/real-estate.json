@@ -1,0 +1,71 @@
+{
+  "title": "Real Estate Website",
+  "description": "Property listings with admin CRM — how it works, RERA fields, and commands to generate your project.",
+  "templateId": "real-estate",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "The real-estate template is built for agencies and developers who list apartments, plots, and villas with RERA-aware consent text, slug-based property pages, and lead export. Unlike a hotel site, the primary content is projects/properties with pricing hints, location tabs, and new-launch badges — all editable from /admin."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Why this template exists"
+    },
+    {
+      "type": "paragraph",
+      "text": "Property microsites need trustworthy legal text, RERA references, enquiry capture per listing, and fast updates when inventory changes. This template separates marketing copy (constants/site.ts) from inventory (database + admin) so sales teams can add properties without redeploying."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Demo brand",
+      "text": "Default content uses Greenfield Properties in Pune (Baner). Swap branding and seed data for your client."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What you get technically"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Property grid with apartments / plots tabs",
+        "Slug detail pages per property with media and enquiry forms",
+        "RERA fields on listings and legal.agentRera for site-wide consent",
+        "Lead export and enquiry widgets",
+        "Promo banner CMS and optional LeadRat integration",
+        "Same Prisma + MariaDB + Docker stack as other templates"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Real-estate-specific configuration"
+    },
+    {
+      "type": "paragraph",
+      "text": "Init supports --agent-rera for the agency RERA number used in consent and footer text. Hotel templates use --temple-distance for landmark copy instead. Both share core brand flags; the difference is which optional fields appear in prompts and in the command builder for this template."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Generate your command"
+    },
+    {
+      "type": "paragraph",
+      "text": "Build a command for first-time generation, or for later phases (theme, brand, database) inside an existing project. Fields with dropdowns list CLI-supported presets; text fields can be left empty and will not appear in the final command."
+    },
+    {
+      "type": "command-builder"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Flag reference"
+    },
+    {
+      "type": "template-command"
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "flagGroups": {
+    "generate": [
+      { "flag": "--yes, -y", "description": "Skip all confirmation prompts", "example": "tempjs hotel --yes" },
+      { "flag": "--force, -f", "description": "Overwrite existing files without asking", "example": "tempjs hotel --force" },
+      { "flag": "--config", "description": "Run theme, font, brand, and database setup after copy", "example": "tempjs hotel --config" },
+      { "flag": "--remote", "description": "Fetch template tarball from GitHub instead of local copy", "example": "tempjs hotel --remote" },
+      { "flag": "--init-git", "description": "Run git init in the new project", "example": "tempjs hotel --init-git" }
+    ],
+    "theme": [
+      { "flag": "--theme <id>", "description": "Theme preset (theme1, theme2, theme3)", "example": "--theme theme2" },
+      { "flag": "--font <id>", "description": "Font preset (default, modern, elegant)", "example": "--font modern" }
+    ],
+    "brand": [
+      { "flag": "--name", "description": "Brand / business name shown on the site", "example": "--name \"Lakeside Haven Resort\"" },
+      { "flag": "--short-name", "description": "Short brand label for compact UI", "example": "--short-name \"Lakeside Haven\"" },
+      { "flag": "--base-url", "description": "Production site URL (SEO, sitemap)", "example": "--base-url https://lakesidehaven.com" },
+      { "flag": "--phone", "description": "Raw phone digits (no spaces)", "example": "--phone 9876543210" },
+      { "flag": "--phone-display", "description": "Formatted phone for display", "example": "--phone-display \"+91 98765 43210\"" },
+      { "flag": "--country-code", "description": "Phone country code", "example": "--country-code 91" },
+      { "flag": "--email", "description": "Public contact email", "example": "--email reservations@example.com" },
+      { "flag": "--address", "description": "Full address string", "example": "--address \"Lonavala, Maharashtra\"" }
+    ],
+    "database": [
+      { "flag": "--db-host", "description": "Database host", "example": "--db-host localhost" },
+      { "flag": "--db-port", "description": "Database port", "example": "--db-port 3306" },
+      { "flag": "--db-user", "description": "Database user", "example": "--db-user root" },
+      { "flag": "--db-password", "description": "Database password", "example": "--db-password secret" },
+      { "flag": "--db-name", "description": "Database name", "example": "--db-name my_client_db" },
+      { "flag": "--admin-user", "description": "Admin login username for /admin", "example": "--admin-user admin" },
+      { "flag": "--admin-password", "description": "Admin login password", "example": "--admin-password changeme" },
+      { "flag": "--skip-db-push", "description": "Write .env only; do not run prisma db push", "example": "--skip-db-push" },
+      { "flag": "--db-push", "description": "Force prisma db push after .env setup", "example": "--db-push" }
+    ],
+    "update": [
+      { "flag": "--check", "description": "Read-only diff vs latest template", "example": "tempjs update --check" },
+      { "flag": "--merge", "description": "Apply safe non-conflicting template updates", "example": "tempjs update --merge --yes" },
+      { "flag": "--yes", "description": "Skip merge confirmation", "example": "tempjs update --merge --yes" }
+    ]
+  },
+  "commands": {
+    "list": {
+      "syntax": "tempjs list",
+      "title": "List templates",
+      "description": "Shows all template ids, names, versions, and short descriptions from templates.json.",
+      "audience": ["developers", "maintainers"],
+      "examples": [
+        { "label": "List available templates", "command": "tempjs list" }
+      ]
+    },
+    "info": {
+      "syntax": "tempjs info <template-id>",
+      "title": "Template details",
+      "description": "Print stack, features, setup time, and quick-start commands for one template.",
+      "audience": ["developers"],
+      "arguments": [
+        { "name": "template-id", "required": true, "description": "CLI id from list (e.g. hotel, real-estate)" }
+      ],
+      "examples": [
+        { "label": "Hotel template metadata", "command": "tempjs info hotel" },
+        { "label": "Real estate metadata", "command": "tempjs info real-estate" }
+      ]
+    },
+    "generate": {
+      "syntax": "tempjs <template-id> [options]",
+      "title": "Generate a project",
+      "description": "Copies the template into the current directory (flat, no nested folder). Creates .tempjs.json with version stamp and file hashes.",
+      "audience": ["developers"],
+      "arguments": [
+        { "name": "template-id", "required": true, "description": "hotel | real-estate" }
+      ],
+      "flagGroups": ["generate", "theme", "brand", "database"],
+      "examples": [
+        { "label": "Interactive full setup", "command": "tempjs hotel config" },
+        { "label": "Non-interactive with brand + DB", "command": "tempjs hotel --config --yes --name \"Mi Plaza\" --base-url https://miplaza.com --db-host localhost --db-name mi_plaza_db" },
+        { "label": "Quick copy only", "command": "mkdir client-site && cd client-site && tempjs hotel --yes" }
+      ]
+    },
+    "theme": {
+      "syntax": "tempjs theme [options]",
+      "title": "Change theme",
+      "description": "Updates theme colors in an existing generated project (requires .tempjsrc or prior setup).",
+      "audience": ["developers"],
+      "flagGroups": ["theme"],
+      "examples": [
+        { "label": "Switch theme non-interactively", "command": "tempjs theme --theme theme3 --yes" }
+      ]
+    },
+    "font": {
+      "syntax": "tempjs font [options]",
+      "title": "Change font",
+      "description": "Updates typography preset in a generated project.",
+      "audience": ["developers"],
+      "flagGroups": ["theme"],
+      "examples": [
+        { "label": "Elegant font preset", "command": "tempjs font --font elegant --yes" }
+      ]
+    },
+    "brand": {
+      "syntax": "tempjs brand [options]",
+      "title": "Update brand & contact",
+      "description": "Rewrites constants/site.ts with brand name, URL, phone, and email.",
+      "audience": ["developers"],
+      "flagGroups": ["brand"],
+      "examples": [
+        { "label": "Set brand without prompts", "command": "tempjs brand --yes --name \"Greenfield Properties\" --base-url https://greenfield.example.com --phone 9123456780 --email hello@greenfield.example.com" }
+      ]
+    },
+    "init-db": {
+      "syntax": "tempjs init-db [options]",
+      "title": "Configure database",
+      "description": "Creates or updates .env with DATABASE_URL and admin credentials. Optionally runs prisma db push.",
+      "audience": ["developers"],
+      "flagGroups": ["database"],
+      "examples": [
+        { "label": "Local MariaDB via Docker defaults", "command": "tempjs init-db --yes --db-host localhost --db-user root --db-password password --db-name app_db" }
+      ]
+    },
+    "doctor": {
+      "syntax": "tempjs doctor",
+      "title": "Project health check",
+      "description": "Answers \"Can I run this project?\" — checks Node, node_modules, .env, database, .tempjs.json version, optional /api/health.",
+      "audience": ["developers"],
+      "examples": [
+        { "label": "Run inside generated project", "command": "tempjs doctor" }
+      ]
+    },
+    "update-check": {
+      "syntax": "tempjs update --check",
+      "title": "Check template updates",
+      "description": "Compares your project to the latest template: new files, safe updates, and conflicts. Read-only.",
+      "audience": ["developers"],
+      "flagGroups": ["update"],
+      "examples": [
+        { "label": "See what changed upstream", "command": "tempjs update --check" }
+      ]
+    },
+    "update-merge": {
+      "syntax": "tempjs update --merge [--yes]",
+      "title": "Apply safe updates",
+      "description": "Merges non-conflicting files from the latest template. Protects .env, constants/site.ts, and brand files.",
+      "audience": ["developers"],
+      "flagGroups": ["update"],
+      "examples": [
+        { "label": "Merge without prompt", "command": "tempjs update --merge --yes" }
+      ]
+    },
+    "sync-templates": {
+      "syntax": "pnpm sync-templates",
+      "title": "Sync merged templates",
+      "description": "Merges packages/core + overlays into templates/*-website-template. Maintainer-only.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "After editing core or overlay", "command": "pnpm sync-templates" },
+        { "label": "Verify without writing", "command": "pnpm sync-templates:check" }
+      ]
+    },
+    "dev-hotel": {
+      "syntax": "pnpm dev:hotel",
+      "title": "Dev server (hotel)",
+      "description": "Runs sync-templates then pnpm dev in the merged hotel template.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "Preview hotel template", "command": "pnpm dev:hotel" }
+      ]
+    },
+    "version-check": {
+      "syntax": "tempjs version check [cli|all|<template-id>]",
+      "title": "Check unreleased changes",
+      "description": "Compares git changes since last version bump for CLI or templates. Monorepo root only.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "Check everything", "command": "tempjs version check" },
+        { "label": "One template", "command": "tempjs version check hotel" }
+      ]
+    },
+    "version-inc": {
+      "syntax": "tempjs version inc <patch|minor|major> [cli|all|<template-id>]",
+      "title": "Bump version",
+      "description": "Increments CLI package.json or templates.json. Template bumps run sync-templates:check when overlay/core changed.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "CLI patch", "command": "tempjs version inc patch cli" },
+        { "label": "Hotel minor release", "command": "tempjs version inc minor hotel" },
+        { "label": "Bump all", "command": "tempjs version inc patch all" }
+      ]
+    },
+    "new-template": {
+      "syntax": "pnpm new-template <id> [directory]",
+      "title": "Scaffold new template",
+      "description": "Creates overlay folder, package.json stub, prisma schema, CHANGELOG, and templates.json entry.",
+      "audience": ["maintainers"],
+      "arguments": [
+        { "name": "id", "required": true, "description": "CLI id (e.g. bakery)" },
+        { "name": "directory", "required": false, "description": "Defaults to <id>-website-template" }
+      ],
+      "examples": [
+        { "label": "New bakery template", "command": "pnpm new-template bakery bakery-website-template" }
+      ]
+    }
+  }
+}

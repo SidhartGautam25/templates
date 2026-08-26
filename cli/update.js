@@ -62,6 +62,13 @@ export function printUpdateReport(diff, meta) {
     console.log("");
   }
 
+  if (meta.projectVersion !== meta.latestVersion) {
+    console.log(
+      `Version ${meta.projectVersion} → ${meta.latestVersion}: see CHANGELOG.md for release notes.`
+    );
+    console.log("");
+  }
+
   if (diff.removedFromTemplate.length > 0) {
     console.log(`Removed from template (${diff.removedFromTemplate.length}) — not deleted locally:`);
     diff.removedFromTemplate.slice(0, 15).forEach((p) => console.log(`  - ${p}`));
@@ -147,7 +154,15 @@ export async function runUpdate(projectDir, flags, mode) {
 
     if (mode.checkOnly) {
       if (stamp.templateVersion !== latestVersion) {
+        const changelogPath = join(projectDir, "CHANGELOG.md");
         console.log("Run `tempjs update --merge` to apply non-conflicting template updates.");
+        if (existsSync(changelogPath)) {
+          console.log(`See CHANGELOG.md for what changed in v${latestVersion}.`);
+        } else {
+          console.log(
+            `After updating, read CHANGELOG.md in the template for v${latestVersion} changes.`
+          );
+        }
       }
       return;
     }

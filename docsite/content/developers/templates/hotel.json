@@ -1,0 +1,72 @@
+{
+  "title": "Hotel Website",
+  "description": "A full resort or hotel site — how it works, what you configure, and commands to generate your project.",
+  "templateId": "hotel",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "The hotel template targets boutique hotels, resorts, and homestays that need room listings, gallery, facilities, reviews, and enquiry flows — not a generic landing page. Visitors browse room types, open enquiry modals, and see contact details driven from a single config file. Staff manage content through /admin without touching code for day-to-day updates."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Why this template exists"
+    },
+    {
+      "type": "paragraph",
+      "text": "Hotel sites repeat the same patterns: hero with property story, room grid with categories, gallery, amenities list, guest reviews, sticky phone/WhatsApp, and lead capture. This template encodes those patterns so you focus on brand copy, photography, and pricing — not rebuilding admin CRUD and enquiry plumbing."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Demo brand",
+      "text": "The default content models Lakeside Haven Resort in Lonavala. Replace names, URLs, and images — the structure stays the same."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What you get technically"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Next.js 16 App Router with React 19 and TypeScript",
+        "Room types with slug pages (e.g. /rooms/deluxe-lake-view) and enquiry modals",
+        "Gallery and facilities managed in admin",
+        "Guest reviews CMS",
+        "Promo banner and optional LeadRat CRM hook",
+        "Prisma + MariaDB with Docker Compose for local dev",
+        "FTP pipeline for uploading room and hero assets"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Hotel-specific configuration"
+    },
+    {
+      "type": "paragraph",
+      "text": "Besides standard brand fields (name, URL, phone, email, address), hotel init supports tagline, operator/developer name, channel partner label, and templeDistance — a short line about a nearby landmark (lake, temple, viewpoint) shown in contact sections. Real-estate templates use RERA instead; you won't see --temple-distance there."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Generate your command"
+    },
+    {
+      "type": "paragraph",
+      "text": "Use the builder below to produce a copy-paste command for quick copy, interactive setup, or a fully customized non-interactive run. Pick generate new project, then walk through options, theme, brand, and database — skip any field you don't need yet."
+    },
+    {
+      "type": "command-builder"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Flag reference"
+    },
+    {
+      "type": "template-command"
+    }
+  ]
+}

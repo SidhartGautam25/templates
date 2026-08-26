@@ -13,6 +13,11 @@ import { promptAndSetupDb } from "./db-setup.js";
 import { printTemplateInfo } from "./info.js";
 import { parseArgs, toCliOptions } from "./parse-args.js";
 import {
+  pickBrandOptionsForTemplate,
+  resolveTemplateInitConfig,
+} from "./init-options.js";
+import { readProjectStamp } from "./project-stamp.js";
+import {
   copyTemplate,
   findConflictingPaths,
   isDirectoryEmpty,
@@ -24,6 +29,12 @@ import { printFetchComplete } from "./progress.js";
 import { confirmYesNo } from "./prompt.js";
 import { resolveTemplateSource } from "./template-resolver.js";
 import { runUpdate } from "./update.js";
+import { runDoctor } from "./doctor.js";
+import {
+  resolveMonorepoRoot,
+  runVersionCheck,
+  runVersionInc,
+} from "./version-manager.js";
 
 const HELP_TEXT = `
 tempjs — instantiate project templates from GitHub
@@ -38,7 +49,16 @@ USAGE
   tempjs font                     Change font styling in an initialized project
   tempjs brand                    Configure brand & contact info
   tempjs init-db                  Configure .env and sync database schema
+  tempjs doctor                   Check if this project can run (env, DB, deps)
+  tempjs version check [cli|all|<template-id>]
+  tempjs version inc <patch|minor|major> [cli|all|<template-id>]
   tempjs --help
+
+VERSION (maintainers — run from monorepo root)
+  tempjs version check            Compare git changes since last version bump
+  tempjs version check hotel      Check one template only
+  tempjs version inc patch cli    Bump @navneet_25/tempjs in package.json
+  tempjs version inc minor hotel  Bump template in templates.json + CHANGELOG stub
 
 UPDATE
   tempjs update --check           Show diff vs latest template (read-only)
@@ -61,6 +81,8 @@ EXAMPLES
 
   tempjs update --check
   tempjs update --merge --yes
+
+  tempjs doctor
 
 ENVIRONMENT
   TEMPLATES_REPO_URL       GitHub repo URL or owner/repo
@@ -196,23 +218,33 @@ async function runTemplate(targetDir, templateId, flags, runWithConfig = false) 
     }
 
     if (runWithConfig) {
+      const initConfig = resolveTemplateInitConfig(entry);
       console.log("\nConfiguring project theme and typography...");
       const selectedTheme = await promptTheme("theme1", cliOptions);
       const selectedFont = await promptFont("default", cliOptions);
       await applyThemeAndFont(targetDir, selectedTheme, selectedFont);
 
-      await promptAndApplyBrand(targetDir, cliOptions);
-      await promptAndSetupDb(targetDir, cliOptions);
+      if (!initConfig.skipBrand) {
+        const brandOpts = pickBrandOptionsForTemplate(templateId, entry, cliOptions);
+        await promptAndApplyBrand(targetDir, brandOpts, templateId);
+      }
+
+      if (!initConfig.skipDatabase) {
+        await promptAndSetupDb(targetDir, cliOptions);
+      }
     }
 
     console.log(`\nTemplate "${entry.name}" created successfully in ${targetDir}`);
     console.log(`Stamped .tempjs.json (template v${entry.version ?? "0.0.0"})`);
-    console.log("\nNext steps:");
-    console.log("  pnpm install   # or npm install");
-    console.log("  pnpm dev       # start development server");
-    if (!flags.initGit && !targetHasGitRepo(targetDir)) {
-      console.log("  git init       # optional: initialize a new repository");
-    }
+    console.log("\nNext steps — see GETTING_STARTED.md:");
+    console.log("  1. pnpm install");
+    console.log("  2. cp .env.example .env");
+    console.log("  3. docker compose up -d   # or: tempjs init-db");
+    console.log("  4. pnpm prisma db push && pnpm prisma db seed");
+    console.log("  5. pnpm dev");
+    console.log("  6. Open /admin — login with ADMIN_USER / ADMIN_PASSWORD");
+    console.log("\n  curl http://localhost:3000/api/health   # verify DB + env");
+    console.log("  tempjs doctor                           # full readiness check");
   } catch (error) {
     if (error instanceof Error && error.message === "TARGET_NOT_EMPTY") {
       printConflictWarning(error.conflicts ?? []);
@@ -285,13 +317,77 @@ async function main(argv) {
     return;
   }
 
+  if (command === "version") {
+    const repoRoot = resolveMonorepoRoot(process.cwd());
+    if (!repoRoot) {
+      console.error("tempjs version commands must run from the templates monorepo root.");
+      console.error("(Directory containing templates.json and cli/)");
+      process.exitCode = 1;
+      return;
+    }
+
+    const sub = positionals[1];
+
+    if (sub === "check") {
+      runVersionCheck(repoRoot, { scope: positionals[2] });
+      return;
+    }
+
+    if (sub === "inc") {
+      const level = positionals[2];
+      const target = positionals[3] ?? "cli";
+
+      if (!level || !["patch", "minor", "major"].includes(level)) {
+        console.error("Usage: tempjs version inc <patch|minor|major> [cli|all|<template-id>]");
+        process.exitCode = 1;
+        return;
+      }
+
+      runVersionInc(repoRoot, level, target);
+      return;
+    }
+
+    console.log(`
+tempjs version — release tracking for CLI and templates (maintainers)
+
+USAGE
+  tempjs version check [cli|all|<template-id>]
+  tempjs version inc <patch|minor|major> [cli|all|<template-id>]
+
+HOW IT WORKS
+  .tempjs-version.json stores the git commit recorded at each version bump.
+  "check" diffs tracked paths since that commit (+ uncommitted changes).
+
+CLI tracks: cli/, package.json, templates.json
+Templates track: packages/core/, overlay, merged output, sync script
+
+EXAMPLES
+  tempjs version check
+  tempjs version check hotel
+  tempjs version inc patch cli
+  tempjs version inc minor hotel
+  tempjs version inc patch all
+
+See VERSIONING.md in the repo for the full maintainer guide.
+`.trim());
+    return;
+  }
+
   if (
     command === "theme" ||
     command === "font" ||
     command === "brand" ||
-    command === "init-db"
+    command === "init-db" ||
+    command === "doctor"
   ) {
     const targetDir = process.cwd();
+
+    if (command === "doctor") {
+      const code = await runDoctor(targetDir);
+      if (code !== 0) process.exitCode = 1;
+      return;
+    }
+
     const currentConfig = getSavedConfig(targetDir);
 
     if (command === "theme") {
@@ -309,7 +405,8 @@ async function main(argv) {
         selectedFont
       );
     } else if (command === "brand") {
-      await promptAndApplyBrand(targetDir, cliOptions);
+      const stamp = readProjectStamp(targetDir);
+      await promptAndApplyBrand(targetDir, cliOptions, stamp?.template);
     } else if (command === "init-db") {
       await promptAndSetupDb(targetDir, cliOptions);
     }

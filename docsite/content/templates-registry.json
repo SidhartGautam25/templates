@@ -1,0 +1,337 @@
+{
+  "templates": [
+    {
+      "id": "hotel",
+      "label": "Hotel Website",
+      "version": "1.3.0",
+      "cliId": "hotel",
+      "flagGroups": ["generate", "theme", "brand", "database"],
+      "brandFields": [
+        "name",
+        "shortName",
+        "baseUrl",
+        "phone",
+        "phoneDisplay",
+        "countryCode",
+        "email",
+        "address",
+        "tagline",
+        "developerName",
+        "channelPartner",
+        "templeDistance"
+      ],
+      "commandBuilder": {
+        "presets": [
+          {
+            "id": "quick-copy",
+            "label": "Quick copy",
+            "description": "Copy template files only — you configure theme, brand, and database yourself later.",
+            "command": "tempjs hotel --yes"
+          },
+          {
+            "id": "interactive",
+            "label": "Interactive setup",
+            "description": "CLI walks you through theme, brand, and database with prompts. Best when learning the tool.",
+            "command": "tempjs hotel config"
+          }
+        ],
+        "modes": [
+          {
+            "id": "generate",
+            "label": "Generate new project",
+            "description": "Create a new client site from the hotel template in the current folder.",
+            "baseCommand": "tempjs hotel",
+            "wizardSteps": [
+              {
+                "id": "options",
+                "title": "How should tempjs run?",
+                "description": "Choose how the CLI behaves when copying files. You can skip any toggle you don't need.",
+                "fieldKeys": ["config", "yes", "force", "remote", "initGit"]
+              },
+              {
+                "id": "theme",
+                "title": "Theme & typography",
+                "description": "Pick colors and fonts. Leave blank to skip — you can run tempjs theme later.",
+                "fieldKeys": ["theme", "font"]
+              },
+              {
+                "id": "brand",
+                "title": "Brand & contact",
+                "description": "Hotel-specific fields include a nearby landmark line. Every field is optional — skip what you don't have yet.",
+                "fieldKeys": [
+                  "name",
+                  "shortName",
+                  "baseUrl",
+                  "phone",
+                  "phoneDisplay",
+                  "countryCode",
+                  "email",
+                  "address",
+                  "tagline",
+                  "developerName",
+                  "channelPartner",
+                  "templeDistance"
+                ]
+              },
+              {
+                "id": "database",
+                "title": "Database & admin",
+                "description": "MariaDB connection and /admin credentials. Typical local setup uses Docker on localhost.",
+                "fieldKeys": [
+                  "dbHost",
+                  "dbPort",
+                  "dbUser",
+                  "dbPassword",
+                  "dbName",
+                  "adminUser",
+                  "adminPassword",
+                  "skipDbPush",
+                  "dbPush"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "theme",
+            "label": "Change theme (existing project)",
+            "description": "Run inside a generated project to update colors and fonts.",
+            "baseCommand": "tempjs theme --yes",
+            "wizardSteps": [
+              {
+                "id": "theme",
+                "title": "Theme & font",
+                "description": "Select the new preset. Run from your project root (where .tempjs.json exists).",
+                "fieldKeys": ["theme", "font"]
+              }
+            ]
+          },
+          {
+            "id": "font",
+            "label": "Change font only",
+            "description": "Update typography without changing color theme.",
+            "baseCommand": "tempjs font --yes",
+            "wizardSteps": [
+              {
+                "id": "font",
+                "title": "Font pairing",
+                "fieldKeys": ["font"]
+              }
+            ]
+          },
+          {
+            "id": "brand",
+            "label": "Update brand & contact",
+            "description": "Rewrite constants/site.ts with new business details.",
+            "baseCommand": "tempjs brand --yes",
+            "wizardSteps": [
+              {
+                "id": "brand",
+                "title": "Brand & contact",
+                "fieldKeys": [
+                  "name",
+                  "shortName",
+                  "baseUrl",
+                  "phone",
+                  "phoneDisplay",
+                  "countryCode",
+                  "email",
+                  "address",
+                  "tagline",
+                  "developerName",
+                  "channelPartner",
+                  "templeDistance"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "init-db",
+            "label": "Configure database",
+            "description": "Create or update .env with DATABASE_URL and admin credentials.",
+            "baseCommand": "tempjs init-db --yes",
+            "wizardSteps": [
+              {
+                "id": "database",
+                "title": "Database & admin",
+                "fieldKeys": [
+                  "dbHost",
+                  "dbPort",
+                  "dbUser",
+                  "dbPassword",
+                  "dbName",
+                  "adminUser",
+                  "adminPassword",
+                  "skipDbPush",
+                  "dbPush"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "real-estate",
+      "label": "Real Estate Website",
+      "version": "1.3.0",
+      "cliId": "real-estate",
+      "flagGroups": ["generate", "theme", "brand", "database"],
+      "brandFields": [
+        "name",
+        "shortName",
+        "baseUrl",
+        "phone",
+        "phoneDisplay",
+        "countryCode",
+        "email",
+        "address",
+        "tagline",
+        "developerName",
+        "channelPartner",
+        "agentRera"
+      ],
+      "commandBuilder": {
+        "presets": [
+          {
+            "id": "quick-copy",
+            "label": "Quick copy",
+            "description": "Copy template files only — configure everything manually after.",
+            "command": "tempjs real-estate --yes"
+          },
+          {
+            "id": "interactive",
+            "label": "Interactive setup",
+            "description": "Guided prompts for theme, brand, and database.",
+            "command": "tempjs real-estate config"
+          }
+        ],
+        "modes": [
+          {
+            "id": "generate",
+            "label": "Generate new project",
+            "description": "Create a new property listing site in the current folder.",
+            "baseCommand": "tempjs real-estate",
+            "wizardSteps": [
+              {
+                "id": "options",
+                "title": "How should tempjs run?",
+                "fieldKeys": ["config", "yes", "force", "remote", "initGit"]
+              },
+              {
+                "id": "theme",
+                "title": "Theme & typography",
+                "description": "Optional — skip fields you want to set later.",
+                "fieldKeys": ["theme", "font"]
+              },
+              {
+                "id": "brand",
+                "title": "Brand & contact",
+                "description": "Real-estate templates include RERA number for consent text. All fields optional.",
+                "fieldKeys": [
+                  "name",
+                  "shortName",
+                  "baseUrl",
+                  "phone",
+                  "phoneDisplay",
+                  "countryCode",
+                  "email",
+                  "address",
+                  "tagline",
+                  "developerName",
+                  "channelPartner",
+                  "agentRera"
+                ]
+              },
+              {
+                "id": "database",
+                "title": "Database & admin",
+                "fieldKeys": [
+                  "dbHost",
+                  "dbPort",
+                  "dbUser",
+                  "dbPassword",
+                  "dbName",
+                  "adminUser",
+                  "adminPassword",
+                  "skipDbPush",
+                  "dbPush"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "theme",
+            "label": "Change theme (existing project)",
+            "baseCommand": "tempjs theme --yes",
+            "wizardSteps": [
+              {
+                "id": "theme",
+                "title": "Theme & font",
+                "fieldKeys": ["theme", "font"]
+              }
+            ]
+          },
+          {
+            "id": "font",
+            "label": "Change font only",
+            "baseCommand": "tempjs font --yes",
+            "wizardSteps": [
+              {
+                "id": "font",
+                "title": "Font pairing",
+                "fieldKeys": ["font"]
+              }
+            ]
+          },
+          {
+            "id": "brand",
+            "label": "Update brand & contact",
+            "baseCommand": "tempjs brand --yes",
+            "wizardSteps": [
+              {
+                "id": "brand",
+                "title": "Brand & contact",
+                "fieldKeys": [
+                  "name",
+                  "shortName",
+                  "baseUrl",
+                  "phone",
+                  "phoneDisplay",
+                  "countryCode",
+                  "email",
+                  "address",
+                  "tagline",
+                  "developerName",
+                  "channelPartner",
+                  "agentRera"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "init-db",
+            "label": "Configure database",
+            "baseCommand": "tempjs init-db --yes",
+            "wizardSteps": [
+              {
+                "id": "database",
+                "title": "Database & admin",
+                "fieldKeys": [
+                  "dbHost",
+                  "dbPort",
+                  "dbUser",
+                  "dbPassword",
+                  "dbName",
+                  "adminUser",
+                  "adminPassword",
+                  "skipDbPush",
+                  "dbPush"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

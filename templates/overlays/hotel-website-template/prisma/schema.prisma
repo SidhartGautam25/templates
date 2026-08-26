@@ -1,11 +1,4 @@
-datasource db {
-  provider = "mysql"
-}
-
-generator client {
-  provider   = "prisma-client-js"
-  engineType = "library"
-}
+// Hotel-specific models — Lead and PromoBanner are merged from packages/core on sync.
 
 model RoomType {
   id            String   @id @default(uuid())
@@ -15,22 +8,12 @@ model RoomType {
   view          String
   bedType       String
   bathrooms     String
-  amenities     Json     // holds categorized list: popular, features, basic, media, bathroom
-  ratePlans     Json     // holds list of rate plans (cancellation, breakfast options, prices)
+  amenities     Json
+  ratePlans     Json
   image         String   @db.Text
   sortOrder     Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-}
-
-model Lead {
-  id          String   @id @default(uuid())
-  projectName String
-  name        String
-  email       String
-  phone       String
-  message     String?
-  createdAt   DateTime @default(now())
 }
 
 model HotelConfig {
@@ -40,21 +23,6 @@ model HotelConfig {
   phone          String?
   email          String?
   updatedAt      DateTime @updatedAt
-}
-
-model PromoBanner {
-  id               String   @id @default("global")
-  imageUrl         String   @db.Text
-  sec1Title        String
-  sec1Sub          String
-  sec2Title        String
-  sec2Sub          String
-  sec3Title        String
-  sec3Sub          String
-  sec4Title        String
-  sec4Sub          String
-  newLaunchLogoUrl String?  @db.Text
-  updatedAt        DateTime @updatedAt
 }
 
 model Facility {
@@ -76,4 +44,3 @@ model Review {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
-

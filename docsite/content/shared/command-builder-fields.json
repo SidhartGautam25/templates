@@ -1,0 +1,233 @@
+{
+  "fields": {
+    "config": {
+      "flag": "--config",
+      "label": "Run full setup after copy",
+      "description": "Applies theme, font, brand, and database configuration after copying files.",
+      "type": "toggle",
+      "default": true
+    },
+    "yes": {
+      "flag": "--yes",
+      "label": "Skip confirmation prompts",
+      "description": "Non-interactive mode — no y/N questions.",
+      "type": "toggle",
+      "default": true
+    },
+    "force": {
+      "flag": "--force",
+      "label": "Overwrite existing files",
+      "description": "Use when the folder already has files you want to replace.",
+      "type": "toggle",
+      "default": false
+    },
+    "remote": {
+      "flag": "--remote",
+      "label": "Fetch from GitHub",
+      "description": "Download template tarball instead of using the local npm copy.",
+      "type": "toggle",
+      "default": false
+    },
+    "initGit": {
+      "flag": "--init-git",
+      "label": "Initialize git repository",
+      "description": "Runs git init in the new project folder.",
+      "type": "toggle",
+      "default": false
+    },
+    "theme": {
+      "flag": "--theme",
+      "label": "Color theme",
+      "description": "Preset palette applied to the generated site.",
+      "type": "select",
+      "optionSet": "themes",
+      "placeholder": "Choose a theme"
+    },
+    "font": {
+      "flag": "--font",
+      "label": "Font pairing",
+      "description": "Typography preset for headings and body text.",
+      "type": "select",
+      "optionSet": "fonts",
+      "placeholder": "Choose fonts"
+    },
+    "name": {
+      "flag": "--name",
+      "label": "Business name",
+      "description": "Primary name shown in the header, footer, and SEO titles.",
+      "type": "text",
+      "placeholder": "Lakeside Haven Resort",
+      "quote": true
+    },
+    "shortName": {
+      "flag": "--short-name",
+      "label": "Short name",
+      "description": "Compact label used where space is limited.",
+      "type": "text",
+      "placeholder": "Lakeside Haven",
+      "quote": true
+    },
+    "baseUrl": {
+      "flag": "--base-url",
+      "label": "Website URL",
+      "description": "Production URL used for SEO, sitemap, and canonical links.",
+      "type": "text",
+      "placeholder": "https://example.com",
+      "quote": true
+    },
+    "phone": {
+      "flag": "--phone",
+      "label": "Phone (digits only)",
+      "description": "Raw phone number without spaces — used for tel: and WhatsApp links.",
+      "type": "text",
+      "placeholder": "9876543210"
+    },
+    "phoneDisplay": {
+      "flag": "--phone-display",
+      "label": "Phone (display format)",
+      "description": "Formatted number shown to visitors.",
+      "type": "text",
+      "placeholder": "+91 98765 43210",
+      "quote": true
+    },
+    "countryCode": {
+      "flag": "--country-code",
+      "label": "Country code",
+      "description": "Phone country code without the plus sign.",
+      "type": "text",
+      "placeholder": "91"
+    },
+    "email": {
+      "flag": "--email",
+      "label": "Contact email",
+      "description": "Public email shown on the site and enquiry forms.",
+      "type": "text",
+      "placeholder": "hello@example.com",
+      "quote": true
+    },
+    "address": {
+      "flag": "--address",
+      "label": "Full address",
+      "description": "Complete address string; city and region are parsed for structured fields.",
+      "type": "text",
+      "placeholder": "Lonavala, Maharashtra, India",
+      "quote": true
+    },
+    "tagline": {
+      "flag": "--tagline",
+      "label": "Tagline",
+      "description": "Short line under the logo.",
+      "type": "text",
+      "placeholder": "Where Nature Meets Refined Comfort",
+      "quote": true
+    },
+    "developerName": {
+      "flag": "--developer-name",
+      "label": "Developer / operator name",
+      "description": "Legal entity or operator name on legal and consent text.",
+      "type": "text",
+      "placeholder": "Greenfield Properties",
+      "quote": true
+    },
+    "channelPartner": {
+      "flag": "--channel-partner",
+      "label": "Channel partner",
+      "description": "Partner name used in consent and authorization text.",
+      "type": "text",
+      "placeholder": "Greenfield Realty Partners",
+      "quote": true
+    },
+    "agentRera": {
+      "flag": "--agent-rera",
+      "label": "Agent RERA number",
+      "description": "RERA registration for real-estate consent (legal.agentRera).",
+      "type": "text",
+      "placeholder": "A52100012345"
+    },
+    "templeDistance": {
+      "flag": "--temple-distance",
+      "label": "Nearby landmark",
+      "description": "Hotel-specific distance line (e.g. lake or temple walk time).",
+      "type": "text",
+      "placeholder": "5 min walk to Lonavala Lake",
+      "quote": true
+    },
+    "dbHost": {
+      "flag": "--db-host",
+      "label": "Database host",
+      "description": "MariaDB/MySQL hostname — usually localhost with Docker.",
+      "type": "text",
+      "placeholder": "localhost"
+    },
+    "dbPort": {
+      "flag": "--db-port",
+      "label": "Database port",
+      "description": "MariaDB port (default 3306).",
+      "type": "text",
+      "placeholder": "3306"
+    },
+    "dbUser": {
+      "flag": "--db-user",
+      "label": "Database user",
+      "description": "MariaDB username.",
+      "type": "text",
+      "placeholder": "root"
+    },
+    "dbPassword": {
+      "flag": "--db-password",
+      "label": "Database password",
+      "description": "MariaDB password.",
+      "type": "text",
+      "placeholder": "password",
+      "quote": true
+    },
+    "dbName": {
+      "flag": "--db-name",
+      "label": "Database name",
+      "description": "Database/schema name for this client project.",
+      "type": "text",
+      "placeholder": "my_client_db"
+    },
+    "adminUser": {
+      "flag": "--admin-user",
+      "label": "Admin username",
+      "description": "Login for /admin portal.",
+      "type": "text",
+      "placeholder": "admin"
+    },
+    "adminPassword": {
+      "flag": "--admin-password",
+      "label": "Admin password",
+      "description": "Password for /admin login.",
+      "type": "text",
+      "placeholder": "changeme",
+      "quote": true
+    },
+    "skipDbPush": {
+      "flag": "--skip-db-push",
+      "label": "Skip prisma db push",
+      "description": "Only write .env — do not run prisma db push.",
+      "type": "toggle",
+      "default": false
+    },
+    "dbPush": {
+      "flag": "--db-push",
+      "label": "Force prisma db push",
+      "description": "Run prisma db push after writing .env.",
+      "type": "toggle",
+      "default": false
+    }
+  },
+  "databaseFieldKeys": [
+    "dbHost",
+    "dbPort",
+    "dbUser",
+    "dbPassword",
+    "dbName",
+    "adminUser",
+    "adminPassword",
+    "skipDbPush",
+    "dbPush"
+  ],
+  "generateToggleKeys": ["config", "yes", "force", "remote", "initGit"]
+}

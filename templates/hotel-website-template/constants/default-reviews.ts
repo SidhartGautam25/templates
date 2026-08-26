@@ -10,29 +10,33 @@ export const defaultReviews: DefaultReview[] = [
   {
     id: "review-1",
     name: "Aman Sharma",
-    otherInfo: "Patna, Bihar",
-    description: "The rooms are extremely clean, spacious, and well-designed. The staff is polite and helpful. Excellent location near Gaya town, very easy to travel to Mahabodhi temple.",
+    otherInfo: "Mumbai, Maharashtra",
+    description:
+      "Our weekend at Lakeside Haven was exactly what we needed — calm lake views, spotless rooms, and staff who genuinely cared. The garden cottage felt private and peaceful.",
     sortOrder: 10,
   },
   {
     id: "review-2",
     name: "Priya Mukherjee",
-    otherInfo: "Kolkata, West Bengal",
-    description: "We stayed here for two nights during our pilgrimage. Highly impressed by the fast Wi-Fi and 24/7 reception support. The family deluxe room was perfect for us.",
+    otherInfo: "Pune, Maharashtra",
+    description:
+      "We booked the family lake suite for a reunion. Spacious layout, reliable Wi-Fi, and breakfast on the terrace made it effortless. Easy drive from Pune too.",
     sortOrder: 9,
   },
   {
     id: "review-3",
     name: "Vikram Rathore",
     otherInfo: "New Delhi",
-    description: "Great value for money. Air conditioning works perfectly, and rooms are very cozy. The room service delivery was prompt and polite.",
+    description:
+      "Well-maintained property with thoughtful amenities. Room service was prompt and the hill-view deluxe room had a beautiful sunset every evening.",
     sortOrder: 8,
   },
   {
     id: "review-4",
     name: "Rajesh Kumar",
     otherInfo: null,
-    description: "One of the best resorts in the area. Secure parking space and 24/7 power backup made our stay smooth and hassle-free. Highly recommended!",
+    description:
+      "Secure parking, smooth check-in, and a relaxed atmosphere throughout the resort. Would happily return for another Lonavala getaway.",
     sortOrder: 7,
   },
 ];

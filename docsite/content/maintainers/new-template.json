@@ -1,0 +1,36 @@
+{
+  "title": "New template",
+  "description": "Add a new template to the monorepo and CLI manifest.",
+  "blocks": [
+    {
+      "type": "command-ref",
+      "id": "new-template"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "After scaffold"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Add app/ pages and lib/features/ for your domain",
+        "Define Prisma models in overlay prisma/schema.prisma (not Lead/PromoBanner)",
+        "Add constants/site.ts brand defaults",
+        "Write README, GETTING_STARTED, ARCHITECTURE, CHANGELOG in overlay",
+        "pnpm sync-templates",
+        "Add pnpm dev:<id> script to root package.json if needed",
+        "Test with tempjs <id> in a temp folder"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Register in sync"
+    },
+    {
+      "type": "paragraph",
+      "text": "sync-templates.mjs reads template directories from templates.json automatically — no manual TEMPLATE_TARGETS list."
+    }
+  ]
+}

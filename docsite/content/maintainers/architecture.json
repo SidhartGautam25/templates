@@ -1,0 +1,53 @@
+{
+  "title": "Architecture",
+  "description": "Core, overlays, sync, and generated project layout.",
+  "blocks": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Data flow"
+    },
+    {
+      "type": "code",
+      "language": "text",
+      "code": "packages/core  +  templates/overlays/hotel\n        │                    │\n        └────────┬───────────┘\n                 │  pnpm sync-templates\n                 ▼\n      templates/hotel-website-template\n                 │  tempjs hotel\n                 ▼\n           client-project/"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What goes where"
+    },
+    {
+      "type": "table",
+      "headers": ["Location", "Examples"],
+      "rows": [
+        ["packages/core", "auth, leads, FTP, Navbar, PromoBanner, prisma Lead/PromoBanner, docker-compose, /api/health"],
+        ["Hotel overlay", "lib/features/room-types, facilities, gallery, hotel Hero, constants/site.ts"],
+        ["Real-estate overlay", "lib/features/projects, property Hero, listings"],
+        ["templates/hotel-*", "DO NOT EDIT — sync output only"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "lib/features pattern"
+    },
+    {
+      "type": "paragraph",
+      "text": "Domain code uses controller / service / repository folders under lib/features/<domain>/, same as lib/features/leads in core. Legacy lib/controllers paths are thin re-exports."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Prisma merge"
+    },
+    {
+      "type": "paragraph",
+      "text": "Lead and PromoBanner live in packages/core/prisma/schema.prisma. Overlay schemas contain only domain models. Sync merges them into the generated template schema."
+    },
+    {
+      "type": "command-ref",
+      "id": "sync-templates"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { projectsData } from "@/app/data/projects";
-import { projectService } from "@/lib/services/ProjectService";
+import { projectService } from "@/lib/features/projects";
 import { slugify } from "@/lib/utils/slugify";
 import { SITE } from "@/constants";
 

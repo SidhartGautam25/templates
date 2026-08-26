@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Project } from "../data/projects";
 import { slugify } from "@/lib/utils/slugify";
 import { ChevronRight } from "lucide-react";
+import { SITE } from "@/constants";
 
 interface ProjectCardProps {
   project: Project;
@@ -48,11 +49,15 @@ export default function ProjectCard({ project, onOpenEnquiry, newLaunchLogo }: P
                 <div className="absolute inset-0.5 rounded-full border border-dashed border-red-500/40"></div>
                 
                 {/* Text elements inside stamp */}
-                <span className="text-[7px] font-bold tracking-widest opacity-85 uppercase leading-none font-sans">GODREJ</span>
+                <span className="text-[7px] font-bold tracking-widest opacity-85 uppercase leading-none font-sans">
+                  {SITE.brand.shortName.toUpperCase()}
+                </span>
                 <span className="text-[10px] font-black tracking-normal uppercase my-0.5 py-0.5 px-1 border-y-2 border-red-600 leading-none font-serif">
                   NEW LAUNCH
                 </span>
-                <span className="text-[6px] font-bold tracking-widest opacity-85 uppercase leading-none font-sans">PROPERTIES</span>
+                <span className="text-[6px] font-bold tracking-widest opacity-85 uppercase leading-none font-sans">
+                  LISTING
+                </span>
               </div>
             )}
           </div>
