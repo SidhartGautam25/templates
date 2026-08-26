@@ -43,5 +43,9 @@ Thumbs.db
 # Nested git repositories (templates must not contain .git)
 **/.git/
 
+# Sync staging
+.sync-staging/
+
+
 # Prisma generated client in template working copies
 **/generated/

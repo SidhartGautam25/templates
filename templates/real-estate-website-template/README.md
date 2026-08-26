@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shared Core Package
 
-## Getting Started
+This directory contains code shared across all website templates (auth, leads API, storage, admin shell pieces, Docker config, etc.).
 
-First, run the development server:
+**Do not edit generated template folders directly** for shared code. Edit here, then run:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm sync-templates
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Layout (generated project structure)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+After sync, developers receive a standard Next.js app with an organized `lib/` layer:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+lib/
+├── database/
+│   ├── prisma.ts          # Prisma client singleton (MariaDB adapter)
+│   └── index.ts
+├── storage/
+│   ├── StorageService.ts  # FTP upload service
+│   └── index.ts
+├── utils/
+│   ├── slugify.ts
+│   └── index.ts
+├── features/
+│   └── leads/             # Lead capture module (API + service layer)
+│       ├── lead.controller.ts
+│       ├── lead.service.ts
+│       ├── lead.repository.ts
+│       ├── lead.types.ts
+│       └── index.ts
+├── controllers/           # Legacy re-exports (deprecated paths)
+├── services/
+├── repositories/
+├── db.ts                  # Shim → database/prisma
+└── index.ts               # Barrel exports
 
-## Learn More
+app/
+├── api/                   # Shared API routes (auth, leads, promo-banner, …)
+├── admin/                 # Shared admin UI pieces
+└── components/            # Shared public components (Navbar, PromoBanner, …)
 
-To learn more about Next.js, take a look at the following resources:
+auth.ts / auth.config.ts   # NextAuth configuration
+constants/                 # Shared constants (not site.ts — template overlay)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Import conventions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Preferred (new code):**
 
-## Deploy on Vercel
+```typescript
+import { prisma } from "@/lib/database/prisma";
+import { leadController } from "@/lib/features/leads";
+import { storageService } from "@/lib/storage";
+import { slugify } from "@/lib/utils";
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Legacy paths still work** (thin re-exports for compatibility):
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```typescript
+import { prisma } from "@/lib/db";
+import { leadController } from "@/lib/controllers/LeadController";
+```
+
+## What belongs in core vs overlay
+
+| Core (`packages/core`) | Template overlay (`templates/overlays/<name>/`) |
+|------------------------|--------------------------------------------------|
+| Auth, leads, FTP storage | Template-specific pages (Hero, gallery, properties) |
+| Shared admin components | Prisma models for domain (RoomType, Project, …) |
+| Docker, eslint, package.json base | `constants/site.ts` (brand per client) |
+| Shared API routes | Domain API routes (`/api/room-types`, `/api/projects`) |
+
+See `ARCHITECTURE.md` in this repo root for the full sync workflow.

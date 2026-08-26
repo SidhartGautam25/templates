@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+:root {
+  /* Chanakya Resort — soft light theme (override via constants/site.ts values) */
+  --primary: #3d5a52;
+  --primary-hover: #2f4841;
+  --accent-gold: #c4a574;
+  --accent-gold-dark: #a68b5b;
+  --accent-gold-light: #e8d9c0;
+  --text-main: #3d4a47;
+  --text-muted: #6b7c78;
+  --bg-tan: #faf8f5;
+  --bg-light: #f3f0eb;
+  --bg-card: #ffffff;
+  --footer-bg: #eef2f0;
+  --cta-primary: #4a7c59;
+  --cta-primary-hover: #3d6b4a;
+
+  --font-serif: var(--font-playfair), Georgia, serif;
+  --font-sans: var(--font-outfit), system-ui, sans-serif;
+
+  --background: var(--bg-tan);
+  --foreground: var(--text-main);
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-gold-dark: var(--accent-gold-dark);
+  --color-accent-gold-light: var(--accent-gold-light);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-bg-tan: var(--bg-tan);
+  --color-bg-light: var(--bg-light);
+  --color-bg-card: var(--bg-card);
+  --color-footer-bg: var(--footer-bg);
+  --color-cta-primary: var(--cta-primary);
+  --color-cta-primary-hover: var(--cta-primary-hover);
+
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-tan);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 15s linear infinite;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, var(--primary) 8%, transparent);
+  box-shadow: 0 8px 32px 0 color-mix(in srgb, var(--primary) 6%, transparent);
+}
+
+.glass-card-light {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--primary) 6%, transparent);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dark) 100%);
+}
+
+.gold-gradient-hover:hover {
+  background: linear-gradient(135deg, var(--accent-gold-dark) 0%, color-mix(in srgb, var(--accent-gold-dark) 85%, black) 100%);
+}
+
+.hero-gradient {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--primary) 10%, var(--bg-tan)) 0%,
+    color-mix(in srgb, var(--accent-gold) 10%, var(--bg-tan)) 35%,
+    color-mix(in srgb, var(--primary) 8%, var(--bg-tan)) 70%,
+    color-mix(in srgb, var(--primary) 12%, var(--bg-tan)) 100%
+  );
+}

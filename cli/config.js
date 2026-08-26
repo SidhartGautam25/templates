@@ -5,7 +5,20 @@ import { fileURLToPath } from "node:url";
 const packageRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /** @typedef {{ owner: string, repo: string, branch: string, templatesPath: string }} RepositoryConfig */
-/** @typedef {{ directory: string, name: string, description: string }} TemplateEntry */
+/** @typedef {{
+ *   directory: string,
+ *   name: string,
+ *   description: string,
+ *   version?: string,
+ *   stack?: string[],
+ *   packageManager?: string,
+ *   node?: string,
+ *   setupTime?: string,
+ *   docker?: boolean,
+ *   tags?: string[],
+ *   features?: string[],
+ *   docs?: string
+ * }} TemplateEntry */
 /** @typedef {{ repository: RepositoryConfig, templates: Record<string, TemplateEntry> }} Manifest */
 
 /**

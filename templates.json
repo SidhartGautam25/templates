@@ -9,12 +9,42 @@
     "hotel": {
       "directory": "hotel-website-template",
       "name": "Hotel Website",
-      "description": "Modern hotel and resort website with admin panel, gallery, and booking features"
+      "description": "Modern hotel and resort website with admin panel, gallery, and booking features",
+      "version": "1.0.0",
+      "stack": ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS 4", "Prisma", "MariaDB", "NextAuth"],
+      "packageManager": "pnpm",
+      "node": ">=20",
+      "setupTime": "~10 min",
+      "docker": true,
+      "tags": ["admin", "cms", "gallery", "booking", "leads"],
+      "features": [
+        "Admin dashboard for rooms, facilities, reviews, and leads",
+        "Gallery and promo banner management",
+        "FTP asset upload pipeline",
+        "LeadRat CRM integration",
+        "Docker Compose for local MariaDB"
+      ],
+      "docs": "DEVELOPER_GUIDE.md"
     },
     "real-estate": {
       "directory": "real-estate-website-template",
       "name": "Real Estate Website",
-      "description": "Real estate and property listing website with admin panel and property management"
+      "description": "Real estate and property listing website with admin panel and property management",
+      "version": "1.0.0",
+      "stack": ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS 4", "Prisma", "MariaDB", "NextAuth"],
+      "packageManager": "pnpm",
+      "node": ">=20",
+      "setupTime": "~10 min",
+      "docker": true,
+      "tags": ["admin", "cms", "properties", "leads"],
+      "features": [
+        "Admin dashboard for property listings and leads",
+        "Dynamic project pages with slug routing",
+        "FTP asset upload pipeline",
+        "LeadRat CRM integration",
+        "Docker Compose for local MariaDB"
+      ],
+      "docs": "DEVELOPER_GUIDE.md"
     }
   }
 }

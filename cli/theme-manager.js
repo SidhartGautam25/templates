@@ -152,6 +152,26 @@ export function getSavedConfig(targetDir) {
   return {};
 }
 
+export function resolveThemeId(id) {
+  const theme = THEMES.find((t) => t.id === id);
+  if (!theme) {
+    throw new Error(
+      `Unknown theme: ${id}. Valid options: ${THEMES.map((t) => t.id).join(", ")}`
+    );
+  }
+  return theme.id;
+}
+
+export function resolveFontId(id) {
+  const font = FONTS.find((f) => f.id === id);
+  if (!font) {
+    throw new Error(
+      `Unknown font: ${id}. Valid options: ${FONTS.map((f) => f.id).join(", ")}`
+    );
+  }
+  return font.id;
+}
+
 async function promptSelection(options, promptText, defaultValue) {
   const rl = createInterface({ input, output });
   try {
@@ -179,11 +199,17 @@ async function promptSelection(options, promptText, defaultValue) {
   }
 }
 
-export async function promptTheme(currentThemeId = "theme1") {
+export async function promptTheme(currentThemeId = "theme1", options = {}) {
+  if (options.yes || options.theme) {
+    return resolveThemeId(options.theme || currentThemeId || "theme1");
+  }
   return promptSelection(THEMES, "Available Themes:", currentThemeId);
 }
 
-export async function promptFont(currentFontId = "default") {
+export async function promptFont(currentFontId = "default", options = {}) {
+  if (options.yes || options.font) {
+    return resolveFontId(options.font || currentFontId || "default");
+  }
   return promptSelection(FONTS, "Available Font combinations:", currentFontId);
 }
 

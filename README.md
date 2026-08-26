@@ -30,29 +30,344 @@ List templates from the CLI:
 tempjs list
 ```
 
-## CLI usage
+## CLI reference
+
+### Discover templates
+
+#### `tempjs list`
+
+Shows every available template with a short summary:
+
+```bash
+tempjs list
+```
+
+Output includes:
+
+- Template **id** (what you pass to `tempjs hotel`, etc.)
+- **Name** and **description**
+- **Tags** (e.g. `admin`, `cms`, `gallery`)
+- **Stack** preview (first few technologies)
+
+Run `tempjs info <id>` for full details.
+
+#### `tempjs info <template-id>`
+
+Shows everything a developer needs before choosing a template:
+
+```bash
+tempjs info hotel
+tempjs info real-estate
+```
+
+Displays:
+
+| Field | Example |
+|-------|---------|
+| Version | `1.0.0` |
+| Stack | Next.js 16, React 19, Prisma, MariaDB, … |
+| Node.js | `>=20` |
+| Package manager | `pnpm` |
+| Typical setup time | `~10 min` |
+| Docker | Yes / No |
+| Tags | `admin`, `cms`, `gallery` |
+| Features | Bullet list of capabilities |
+| Source path | `templates/hotel-website-template` |
+| Repository | `github.com/SidhartGautam25/templates` |
+| Quick start commands | Copy-paste examples |
+| Docs file | `DEVELOPER_GUIDE.md` (in generated project) |
+
+If the template id is wrong:
+
+```text
+Unknown template: xyz
+Run `tempjs list` to see available templates.
+```
+
+---
+
+### Create a project
+
+#### Basic (copy only)
+
+```bash
+mkdir my-client && cd my-client
+tempjs hotel
+```
+
+Copies template files into the **current directory** (not a subfolder). Does not run theme, brand, or database setup.
+
+#### Interactive full setup
+
+```bash
+tempjs hotel config
+# or
+tempjs hotel --config
+```
+
+After copying, prompts for:
+
+1. **Theme** (theme1–theme5)
+2. **Font pairing** (default, inter, lora-montserrat, …)
+3. **Brand & contact** (name, URL, phone, email, address)
+4. **Database & admin** (.env + optional `prisma db push`)
+
+#### Non-interactive full setup
+
+Use `--yes` (or `-y` / `--no-prompt`) to skip every prompt. Values come from flags; anything not provided uses template defaults.
+
+```bash
+mkdir mi-plaza && cd mi-plaza
+
+tempjs hotel --config --yes \
+  --theme theme2 \
+  --name "Mi Plaza" \
+  --base-url "https://miplaza.com" \
+  --db-host localhost \
+  --db-name mi_plaza_db \
+  --admin-user admin \
+  --admin-password mypass \
+  --skip-db-push
+```
+
+#### Partial automation
+
+Configure only what you care about; the rest uses defaults:
+
+```bash
+tempjs hotel --config --yes --theme theme3 --name "Mi Plaza"
+```
+
+Then configure the rest later in the same project directory:
+
+```bash
+tempjs init-db --yes --db-host localhost --db-name mi_plaza_db
+tempjs brand --yes --name "Mi Plaza" --email "hello@miplaza.com"
+tempjs theme --theme theme2 --yes
+tempjs font --font inter --yes
+```
+
+---
+
+### Post-init commands (inside a generated project)
+
+Run these from the project root (where `package.json` exists):
+
+| Command | Purpose |
+|---------|---------|
+| `tempjs theme` | Change color theme |
+| `tempjs font` | Change font pairing |
+| `tempjs brand` | Update brand name, URL, contact info |
+| `tempjs init-db` | Create/update `.env` and sync Prisma schema |
+
+Examples:
+
+```bash
+tempjs theme --theme theme3 --yes
+tempjs brand --yes --name "New Name" --email "new@example.com"
+tempjs init-db --yes --db-host 127.0.0.1 --db-name my_db --db-push
+```
+
+When re-running with `--yes`, unspecified fields keep existing values from `constants/site.ts` or `.env`.
+
+---
+
+### All CLI flags
+
+#### General
+
+| Flag | Short | Description |
+|------|-------|-------------|
+| `--config` | | Run theme + font + brand + database setup after copy |
+| `--yes` | `-y` | Skip all prompts |
+| `--no-prompt` | | Same as `--yes` |
+| `--force` | `-f` | Overwrite existing files; auto-confirm overwrite warnings |
+| `--remote` | | Fetch from GitHub even if local templates exist |
+| `--init-git` | | Run `git init` after copying |
+| `--help` | `-h` | Show help |
+
+#### Theme & typography
+
+| Flag | Values | Description |
+|------|--------|-------------|
+| `--theme` | `theme1` … `theme5` | Color theme id |
+| `--font` | See table below | Font pairing id |
+
+**Theme ids**
+
+| Id | Name |
+|----|------|
+| `theme1` | Slate / Blue (default) |
+| `theme2` | Forest / Green |
+| `theme3` | Purple / Violet |
+| `theme4` | Red / Crimson |
+| `theme5` | Amber / Gold |
+
+**Font ids**
+
+| Id | Pairing |
+|----|---------|
+| `default` | Playfair Display + Outfit (default) |
+| `inter` | Inter + Inter |
+| `lora-montserrat` | Lora + Montserrat |
+| `merriweather-open-sans` | Merriweather + Open Sans |
+| `cinzel-montserrat` | Cinzel + Montserrat |
+
+With `--yes`, if `--theme` / `--font` is omitted, the current or default id is used.
+
+#### Brand & contact
+
+| Flag | Example | Written to |
+|------|---------|------------|
+| `--name` | `"Mi Plaza"` | `constants/site.ts` → brand name |
+| `--short-name` | `"Mi Plaza"` | Short / display name |
+| `--base-url` | `"https://miplaza.com"` | Site URL (also derives `wwwHost`) |
+| `--phone` | `"9876543210"` | Raw phone number |
+| `--phone-display` | `"+91 98765 43210"` | Formatted display phone |
+| `--country-code` | `"91"` | Phone country code |
+| `--email` | `"info@miplaza.com"` | Contact email |
+| `--address` | `"Pune, Maharashtra, India"` | Full address string |
+
+Quotes are optional in the shell when the value has no spaces:
+
+```bash
+--email info@miplaza.com
+--name "Mi Plaza"
+--base-url=https://miplaza.com    # --key=value also works
+```
+
+#### Database & admin
+
+| Flag | Example | Written to |
+|------|---------|------------|
+| `--db-host` | `localhost` | `.env` → `DATABASE_URL` host |
+| `--db-port` | `3306` | Database port |
+| `--db-user` | `root` | Database username |
+| `--db-password` | `secret` | Database password |
+| `--db-name` | `mi_plaza_db` | Database name |
+| `--admin-user` | `admin` | `.env` → `ADMIN_USER` |
+| `--admin-password` | `mypass` | `.env` → `ADMIN_PASSWORD` |
+| `--db-push` | | With `--yes`, run `npx prisma db push` after writing `.env` |
+| `--skip-db-push` | | With `--yes`, skip `prisma db push` |
+
+Default database name (if not set): derived from the folder name, e.g. `mi-plaza` → `mi_plaza_db`.
+
+**Prisma / database behavior**
+
+| Mode | Behavior |
+|------|----------|
+| Interactive `init-db` | Prompts for DB fields; asks whether to run `prisma db push` |
+| `--yes` without flags | Uses defaults / existing `.env` values; runs `prisma db push` |
+| `--yes --skip-db-push` | Writes `.env` only; no Prisma |
+| `--yes --db-push` | Explicitly runs `prisma db push` |
+
+Ensure MySQL/MariaDB is running before `--db-push`.
+
+---
+
+### Manifest metadata (`templates.json`)
+
+Each template entry can include metadata used by `tempjs list` and `tempjs info`:
+
+```json
+{
+  "repository": {
+    "owner": "SidhartGautam25",
+    "repo": "templates",
+    "branch": "main",
+    "templatesPath": "templates"
+  },
+  "templates": {
+    "hotel": {
+      "directory": "hotel-website-template",
+      "name": "Hotel Website",
+      "description": "Modern hotel and resort website with admin panel, gallery, and booking features",
+      "version": "1.0.0",
+      "stack": ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS 4", "Prisma", "MariaDB", "NextAuth"],
+      "packageManager": "pnpm",
+      "node": ">=20",
+      "setupTime": "~10 min",
+      "docker": true,
+      "tags": ["admin", "cms", "gallery", "booking", "leads"],
+      "features": [
+        "Admin dashboard for rooms, facilities, reviews, and leads",
+        "Gallery and promo banner management",
+        "FTP asset upload pipeline"
+      ],
+      "docs": "DEVELOPER_GUIDE.md"
+    }
+  }
+}
+```
+
+| Field | Required | Used by |
+|-------|----------|---------|
+| `directory` | Yes | CLI copy path |
+| `name` | Yes | `list`, `info`, success messages |
+| `description` | Yes | `list`, `info` |
+| `version` | No | `info` |
+| `stack` | No | `list`, `info` |
+| `packageManager` | No | `info` |
+| `node` | No | `info` |
+| `setupTime` | No | `info` |
+| `docker` | No | `info` |
+| `tags` | No | `list`, `info` |
+| `features` | No | `info` |
+| `docs` | No | `info` — filename inside generated project |
+
+Adding a new template: add the folder + one manifest entry. No CLI code changes required.
+
+---
+
+### Install & update the CLI
+
+```bash
+# First install
+npm install -g @navneet_25/tempjs
+
+# Update to latest (recommended after new templates or CLI features)
+npm install -g @navneet_25/tempjs@latest
+```
+
+Current version: **1.2.0** (includes `info`, non-interactive flags, tarball fetch).
+
+Verify:
+
+```bash
+tempjs --help
+tempjs list
+```
+
+## CLI usage (quick reference)
 
 ```bash
 tempjs list                  # show available templates
-tempjs hotel                 # create project from hotel template using default theme
-tempjs hotel config          # create project and run full interactive configuration (theme, font, brand, database)
-tempjs theme                 # change/reset the theme of an initialized project
-tempjs font                  # change/reset the font pairing of an initialized project
-tempjs brand                 # configure brand identity & contact info of an initialized project
-tempjs init-db               # set up .env file and run database schema sync on an initialized project
+tempjs info hotel            # detailed template metadata (stack, features, setup)
+tempjs hotel                 # create project from hotel template
+tempjs hotel config          # interactive setup (theme, font, brand, database)
+tempjs hotel --config --yes  # non-interactive setup with defaults
+tempjs theme --theme theme3 --yes
+tempjs brand --yes --name "Mi Plaza" --base-url "https://miplaza.com"
+tempjs init-db --yes --db-host localhost --db-name my_db --skip-db-push
 tempjs real-estate --force   # overwrite existing files
 tempjs --help                # show help
 ```
 
-### Options
+### Options (summary)
 
-| Option        | Description |
-|---------------|-------------|
-| `--config`    | Prompt for full configuration (theme, font, brand, db) during template initialization |
-| `--force`     | Overwrite files in the current directory without prompting |
-| `--remote`    | Fetch from GitHub even when a local template copy exists |
-| `--init-git`  | Run `git init` after copying (optional) |
-| `--help`      | Show help |
+| Option | Description |
+|--------|-------------|
+| `--config` | Run full setup (theme, font, brand, db) after copying |
+| `--yes`, `-y`, `--no-prompt` | Skip all prompts; use defaults or flag values |
+| `--force`, `-f` | Overwrite files without prompting |
+| `--theme`, `--font` | Theme/font id (see CLI reference above) |
+| `--name`, `--base-url`, `--email`, … | Brand/contact fields (non-interactive) |
+| `--db-host`, `--db-name`, `--admin-user`, … | Database and admin credentials |
+| `--db-push` / `--skip-db-push` | Control `prisma db push` with `--yes` |
+| `--remote` | Fetch from GitHub even when local templates exist |
+| `--init-git` | Run `git init` after copying |
+
+See **CLI reference** above for full flag tables, theme/font ids, and examples.
 
 The CLI copies template **contents** into the current directory — not a nested folder:
 
@@ -106,7 +421,9 @@ npm link
 
 ## Configuration
 
-All template mappings live in **`templates.json`** at the repository root:
+All template mappings and metadata live in **`templates.json`** at the repository root. See **Manifest metadata (`templates.json`)** in the CLI reference for every field.
+
+Minimal example:
 
 ```json
 {
@@ -126,6 +443,8 @@ All template mappings live in **`templates.json`** at the repository root:
 }
 ```
 
+For `tempjs info` and richer `tempjs list`, add `version`, `stack`, `tags`, `features`, etc. (documented above).
+
 ### GitHub repository URL
 
 Configure in one place — `templates.json` or environment variables:
@@ -136,7 +455,7 @@ Configure in one place — `templates.json` or environment variables:
 | `TEMPLATES_REPO_OWNER` | GitHub username or org |
 | `TEMPLATES_REPO_REPO`  | Repository name |
 | `TEMPLATES_REPO_BRANCH`| Branch (default: `main`) |
-| `GITHUB_TOKEN`         | Optional token for higher API rate limits |
+| `GITHUB_TOKEN`         | Optional — private repositories only |
 
 Example:
 
@@ -159,36 +478,299 @@ The archive contains the whole templates repo on the wire, but only the requeste
 
 ```
 templates/                          # this repository root
-├── README.md
-├── package.json                    # CLI package (bin: tempjs)
-├── templates.json                  # manifest + repo config
-├── .gitignore                      # for THIS repo only (not copied to projects)
+├── ARCHITECTURE.md                 # core + overlay design
+├── packages/
+│   └── core/                       # shared source (synced into templates)
+├── templates/
+│   ├── overlays/                   # template-specific source only
+│   │   ├── hotel-website-template/
+│   │   └── real-estate-website-template/
+│   ├── hotel-website-template/     # merged output (what tempjs copies)
+│   └── real-estate-website-template/
+├── scripts/
+│   └── sync-templates.mjs
+├── package.json                    # CLI package + sync scripts
+├── templates.json
 ├── cli/
-│   ├── index.js
-│   ├── config.js
-│   ├── copy.js
-│   └── fetch.js
-└── templates/
-    ├── hotel-website-template/
-    │   ├── .gitignore              # copied to generated projects
-    │   ├── package.json
-    │   ├── app/
-    │   └── ...
-    └── real-estate-website-template/
-        └── ...
+│   └── ...
 ```
+
+## Shared core package (Option 1 — implemented)
+
+This repo uses **pre-merge sync**: shared code lives in `packages/core/`, template-specific code in `templates/overlays/`, and `pnpm sync-templates` produces the full template folders that `tempjs` copies to users.
+
+**Full design doc:** [ARCHITECTURE.md](./ARCHITECTURE.md)
+
+### Quick maintainer commands
+
+```bash
+# After editing packages/core or templates/overlays/*
+pnpm sync-templates
+
+# CI / pre-PR check
+pnpm sync-templates:check
+```
+
+### What developers receive
+
+A normal Next.js project with organized `lib/`:
+
+- `lib/database/` — Prisma client
+- `lib/features/leads/` — shared lead module
+- `lib/storage/` — FTP uploads
+- `lib/features/<domain>/` — template-specific modules (rooms, projects, …) in overlay
+- `app/` — routes and UI
+
+All source is on disk; no submodule, no `@tempjs/core` npm dependency in client projects.
+
+### Comparison (other approaches)
+
+| Approach | User gets full source? | Maintained in this repo |
+|----------|------------------------|-------------------------|
+| **Option 1 — pre-merge sync** (current) | Yes | `packages/core` + overlays |
+| CLI merge at copy time | Yes | `packages/core` only in git |
+| npm `@tempjs/core` package | Partial (core in node_modules) | Published package |
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for diagrams and adding new templates.
+
+---
+
+## Shared core package — design options (reference)
+
+Hotel and real-estate templates share a large amount of code (auth, admin shell, leads, FTP, Prisma patterns). A **shared core** reduces duplicate maintenance, but you must decide how that core reaches the **generated project** when someone runs `tempjs hotel`.
+
+Generated projects must remain **standalone** — no submodule, no link to the templates repo, no `npm install` required just to get source files from your monorepo layout.
+
+Below are the main approaches and what each means for `tempjs` users.
+
+### The core question
+
+| Where core lives (your repo) | What `tempjs hotel` must produce |
+|------------------------------|----------------------------------|
+| `packages/core/` (shared) | `hotel-client/` with **all** code needed to build and deploy |
+
+The user never sees `packages/core/` as a separate install step unless you explicitly choose that design.
+
+---
+
+### Option 1: Pre-merge into each template (recommended for tempjs)
+
+**How it works**
+
+- You maintain shared code in `packages/core/` (or `shared/core/`) inside the templates monorepo.
+- A **build/sync script** copies (or rsyncs) core files into each template before commit:
+
+  ```bash
+  pnpm run sync-templates
+  # merges packages/core → templates/hotel-website-template/
+  # merges packages/core → templates/real-estate-website-template/
+  ```
+
+- What is **committed** under `templates/hotel-website-template/` already contains the merged code.
+- `tempjs hotel` only extracts that folder — user gets one flat, complete project.
+
+```
+YOUR REPO (maintenance view)          WHAT USER GETS (tempjs hotel)
+─────────────────────────          ─────────────────────────────
+packages/core/                     hotel-client/
+  lib/auth.ts          ──sync──►      lib/auth.ts
+  lib/leads.ts                       lib/leads.ts
+templates/hotel-website-template/  app/ (hotel-specific)
+  app/ (hotel-specific)              package.json
+```
+
+**Pros**
+
+- Simplest for CLI — no merge logic in `tempjs`
+- User gets 100% source in their repo; easy to customize
+- No extra npm dependency on `@you/template-core`
+- Works with current tarball fetch
+
+**Cons**
+
+- Duplicated core **in git** across template folders (larger repo)
+- Must run sync script when core changes (can be a CI check)
+
+**Maintenance**
+
+1. Fix bug in `packages/core/`
+2. Run `pnpm sync-templates`
+3. Commit updated `templates/hotel-website-template/` and `templates/real-estate-website-template/`
+4. Push — users fetch updated template on next `tempjs hotel`
+
+---
+
+### Option 2: CLI merges core at copy time
+
+**How it works**
+
+- Core stays only in `packages/core/` (not duplicated in each template folder).
+- `tempjs` downloads/extracts **two** paths from the tarball:
+  1. `packages/core/`
+  2. `templates/hotel-website-template/`
+- CLI merges them into the user's directory (template files override core on conflict).
+
+```
+tempjs fetch
+    ├── extract packages/core/     → temp/core/
+    └── extract templates/hotel/   → temp/hotel/
+              merge(core, hotel)   → user's hotel-client/
+```
+
+**Pros**
+
+- Single source of core in git — no duplication in template folders
+- User still gets a flat, standalone project (all files copied locally)
+
+**Cons**
+
+- More complex CLI (merge rules, conflict handling, ordering)
+- Must define what overrides what (template wins over core)
+- Harder to debug if merge goes wrong
+
+**Maintenance**
+
+- Edit `packages/core/` only
+- Push — CLI merges on every `tempjs hotel` (no per-template sync commit)
+
+---
+
+### Option 3: Published npm package dependency
+
+**How it works**
+
+- Publish shared code as `@navneet_25/template-core` on npm.
+- Each template's `package.json` includes:
+
+  ```json
+  "dependencies": {
+    "@navneet_25/template-core": "^1.0.0"
+  }
+  ```
+
+- `tempjs hotel` copies only the **thin** template (pages, schema, config).
+- User runs `pnpm install` → core lands in `node_modules/@navneet_25/template-core`.
+
+**What the user gets**
+
+```
+hotel-client/
+├── app/                    # from template (hotel-specific)
+├── package.json            # lists @navneet_25/template-core
+└── node_modules/
+    └── @navneet_25/template-core/   # shared code HERE, not in src/
+```
+
+**Pros**
+
+- Clean separation; one core package versioned independently
+- Template folders stay small in the templates repo
+
+**Cons**
+
+- **Not ideal for agency white-label work** — clients customize by editing `node_modules` or you need a build step anyway
+- Requires publishing and versioning core on every fix
+- Generated project depends on your npm package forever (or until they eject)
+- `tempjs` only transfers template files; **core is not in the tarball path** unless user runs install
+
+**When to use**
+
+- Internal products where you control upgrades
+- Not ideal if every client project must be fully forkable and editable as plain source
+
+---
+
+### Option 4: pnpm workspace (dev only) + publish flattened templates
+
+**How it works**
+
+- Monorepo:
+
+  ```
+  packages/core/
+  packages/hotel-app/          # imports from @local/core via workspace
+  packages/real-estate-app/
+  ```
+
+- Dev with `workspace:*` references.
+- **Release pipeline** builds each app and outputs a **flattened** tree into `templates/hotel-website-template/` for the CLI (bundle or copy with a tool like `tsup` / custom script).
+
+Same end result as Option 1 for users; workspace only helps local dev.
+
+---
+
+### Comparison
+
+| Approach | User gets full source? | Core in git once? | CLI complexity | Client customization |
+|----------|------------------------|-------------------|----------------|----------------------|
+| **1. Pre-merge sync** | Yes | No (duplicated in templates) | Low | Easy |
+| **2. CLI merge** | Yes | Yes | High | Easy |
+| **3. npm package** | Partial (core in node_modules) | Yes | Low | Harder |
+| **4. Workspace + flatten** | Yes | Yes (in packages/) | Medium (build step) | Easy |
+
+---
+
+### Recommendation for your project
+
+**Start with Option 1 (pre-merge sync script)** unless the repo size or sync friction becomes painful.
+
+Reasons:
+
+1. Matches your current `tempjs` design (single folder extract, flat copy).
+2. Agencies and clients get **all** code in `app/`, `lib/`, etc. — no hidden package.
+3. No change to tarball fetch or rate limits.
+4. You can add a GitHub Action: `on push to packages/core → run sync-templates → fail if templates out of date`.
+
+**Sketch of a sync script**
+
+```bash
+# scripts/sync-core-to-templates.sh
+CORE=packages/core
+for tpl in hotel-website-template real-estate-website-template; do
+  rsync -a --delete "$CORE/" "templates/$tpl/" \
+    --exclude template-specific paths if needed
+done
+```
+
+Hotel-specific files stay only in the hotel template; only truly shared files live in core. Template-specific overrides stay in the template folder and are not overwritten if you rsync with care (e.g. sync only `lib/`, `app/components/admin/`, etc.).
+
+**When to move to Option 2**
+
+- Many templates (5+) and core duplication in git becomes unwieldy.
+- You want a single `packages/core/` commit without touching every template folder.
+
+**Avoid Option 3** if your main users are developers who fork, rename, and heavily customize each client site.
+
+---
+
+### What does *not* work well with tempjs
+
+| Pattern | Problem |
+|---------|---------|
+| Git submodule in generated project | User gets submodule reference, not standalone repo |
+| `workspace:*` in published template | Broken after copy — no monorepo parent |
+| Copy only template without core | Incomplete project unless core is npm dependency |
+
+The rule: **everything required to `pnpm install && pnpm build` must either be in the copied folder or in declared npm dependencies.**
 
 ## Adding a new template
 
 1. Add a directory under `templates/`, e.g. `templates/restaurant-website-template/`.
 2. Include a template-specific `.gitignore` for that stack (Next.js, Vite, etc.).
-3. Add one entry to `templates.json`:
+3. Add metadata to `templates.json` (recommended):
 
 ```json
 "restaurant": {
   "directory": "restaurant-website-template",
   "name": "Restaurant Website",
-  "description": "Restaurant website with menu and reservations"
+  "description": "Restaurant website with menu and reservations",
+  "version": "1.0.0",
+  "stack": ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS 4"],
+  "packageManager": "pnpm",
+  "node": ">=20",
+  "tags": ["admin", "menu", "reservations"],
+  "features": ["Menu management", "Reservation leads"],
+  "docs": "DEVELOPER_GUIDE.md"
 }
 ```
 
