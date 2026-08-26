@@ -47,6 +47,8 @@ curl -s http://localhost:3000/api/health | jq
 
 Expect `status: "ok"` when required env vars are set and the database is reachable.
 
+Or run **`tempjs doctor`** for a full local checklist (Node, `.env`, DB, dependencies, template version).
+
 ## Next steps
 
 - Edit **`constants/site.ts`** for brand and copy.

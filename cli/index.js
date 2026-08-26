@@ -24,6 +24,7 @@ import { printFetchComplete } from "./progress.js";
 import { confirmYesNo } from "./prompt.js";
 import { resolveTemplateSource } from "./template-resolver.js";
 import { runUpdate } from "./update.js";
+import { runDoctor } from "./doctor.js";
 
 const HELP_TEXT = `
 tempjs — instantiate project templates from GitHub
@@ -38,6 +39,7 @@ USAGE
   tempjs font                     Change font styling in an initialized project
   tempjs brand                    Configure brand & contact info
   tempjs init-db                  Configure .env and sync database schema
+  tempjs doctor                   Check if this project can run (env, DB, deps)
   tempjs --help
 
 UPDATE
@@ -61,6 +63,8 @@ EXAMPLES
 
   tempjs update --check
   tempjs update --merge --yes
+
+  tempjs doctor
 
 ENVIRONMENT
   TEMPLATES_REPO_URL       GitHub repo URL or owner/repo
@@ -215,6 +219,7 @@ async function runTemplate(targetDir, templateId, flags, runWithConfig = false) 
     console.log("  5. pnpm dev");
     console.log("  6. Open /admin — login with ADMIN_USER / ADMIN_PASSWORD");
     console.log("\n  curl http://localhost:3000/api/health   # verify DB + env");
+    console.log("  tempjs doctor                           # full readiness check");
   } catch (error) {
     if (error instanceof Error && error.message === "TARGET_NOT_EMPTY") {
       printConflictWarning(error.conflicts ?? []);
@@ -291,9 +296,17 @@ async function main(argv) {
     command === "theme" ||
     command === "font" ||
     command === "brand" ||
-    command === "init-db"
+    command === "init-db" ||
+    command === "doctor"
   ) {
     const targetDir = process.cwd();
+
+    if (command === "doctor") {
+      const code = await runDoctor(targetDir);
+      if (code !== 0) process.exitCode = 1;
+      return;
+    }
+
     const currentConfig = getSavedConfig(targetDir);
 
     if (command === "theme") {

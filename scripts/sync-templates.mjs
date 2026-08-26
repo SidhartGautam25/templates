@@ -52,6 +52,22 @@ function hashFile(filePath) {
 
 const CORE_EXCLUDE = new Set(["package.json", "README.md", "MAINTAINERS.md"]);
 
+/** Paths under packages/core that are maintainer-only (not copied to generated projects). */
+const CORE_PATH_PREFIX_EXCLUDE = ["scripts/dev"];
+
+/**
+ * @param {string} rel Path relative to copy source root
+ * @param {Set<string>} excludeFileNames
+ */
+function shouldCopyPath(rel, excludeFileNames) {
+  if (!rel) return true;
+  if (CORE_PATH_PREFIX_EXCLUDE.some((prefix) => rel === prefix || rel.startsWith(`${prefix}/`))) {
+    return false;
+  }
+  const base = rel.split("/").pop() ?? "";
+  return !excludeFileNames.has(base);
+}
+
 /**
  * @param {string} src
  * @param {string} dest
@@ -64,9 +80,7 @@ function copyTree(src, dest, options = {}) {
     force: true,
     filter: (path) => {
       const rel = relative(src, path).replace(/\\/g, "/");
-      if (!rel) return true;
-      const base = rel.split("/").pop() ?? "";
-      return !excludeFileNames.has(base);
+      return shouldCopyPath(rel, excludeFileNames);
     },
   });
 }
