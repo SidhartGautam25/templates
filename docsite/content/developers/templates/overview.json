@@ -1,5 +1,5 @@
 {
-  "title": "Templates",
+  "title": "Templates Guide",
   "description": "How templates work, what they share, and how to pick the right one for your client.",
   "blocks": [
     {
@@ -17,6 +17,106 @@
     },
     {
       "type": "template-cards"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Template Design and Architecture Pattern"
+    },
+    {
+      "type": "paragraph",
+      "text": "All generated template folders are fully functional Next.js 15+ App Router projects. Developers can customize layouts, pages, and components easily using these structural patterns:"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "1. Constants-Driven Rendering"
+    },
+    {
+      "type": "paragraph",
+      "text": "Every page, form label, CTA button, contact info block, and SEO description pulls directly from constants/site.ts. For example, SITE.theme.colors.primary sets component primary backgrounds, while SITE.hero.headline sets landing page text. This allows developers to change a website's entire identity and look-and-feel simply by editing constants/site.ts without rewriting any HTML."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "2. Database and State Flow"
+    },
+    {
+      "type": "paragraph",
+      "text": "Enquiry forms capture client details and submit them to POST /api/leads. Next.js route handlers process this request and invoke the Controller -> Service -> Repository layer, persisting data to the PostgreSQL database via Prisma client. The service layer handles validation (e.g. mobile digit length check) and formats the data before passing it to the database repository. If configured, it also pushes the lead to the LeadRat CRM API."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "3. UI Layout and Theme System"
+    },
+    {
+      "type": "paragraph",
+      "text": "Layouts use standard CSS custom properties declared in app/globals.css. Dynamic inline styles utilize colors from the SITE.theme configuration. Global layout components (Header, Footer, Sidebar, Admin Nav) are server-rendered for maximum performance and SEO indexing, while client interactivity (such as forms or modal dialogs) is isolated to separate interactive sub-components."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "How to Add a Custom Feature"
+    },
+    {
+      "type": "paragraph",
+      "text": "If you need to add new custom functionalities (e.g. adding a customer reviews feature or rating system), follow this step-by-step workflow:"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Step 1: Update Database Schema"
+    },
+    {
+      "type": "paragraph",
+      "text": "Define the database model in your overlay's prisma/schema.prisma file. For example, add a Review model:"
+    },
+    {
+      "type": "code",
+      "language": "prisma",
+      "code": "model Review {\n  id        String   @id @default(uuid())\n  author    String\n  rating    Int\n  content   String\n  createdAt DateTime @default(now())\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": "After defining, run `pnpm sync-templates` to combine the core schema with your new overlay model, followed by `npx prisma db push` to synchronize your local database schema."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Step 2: Implement Backend Logic (CSR)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Create a new feature folder lib/features/reviews/ containing your repository, service, and controller files. This isolates all database querying, business rule validations, and JSON payload handling in a clean module:"
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "code": "// lib/features/reviews/review.repository.ts\nimport { prisma } from \"@/lib/database/prisma\";\nexport class ReviewRepository {\n  async create(data: { author: string; rating: number; content: string }) {\n    return prisma.review.create({ data });\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Step 3: Expose API Route"
+    },
+    {
+      "type": "paragraph",
+      "text": "Create a Next.js App Router API route under app/api/reviews/route.ts to capture HTTP requests and route them directly to your controller class:"
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "code": "import { NextRequest } from \"next/server\";\nimport { reviewController } from \"@/lib/features/reviews/review.controller\";\nexport async function POST(req: NextRequest) {\n  return reviewController.createReview(req);\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Step 4: Create UI and Render Components"
+    },
+    {
+      "type": "paragraph",
+      "text": "Design your React component (e.g. ReviewForm.tsx) to perform a fetch call to /api/reviews and render it on your template page. Use SITE.theme.colors variables to style the form elements and match the client's custom theme."
     },
     {
       "type": "heading",

@@ -32,6 +32,42 @@
     {
       "type": "heading",
       "level": 2,
+      "text": "File Synchronization Scenarios"
+    },
+    {
+      "type": "paragraph",
+      "text": "When running the sync-templates script, files are merged and overlaid using the following exact scenarios:"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Scenario 1: File only in Core"
+    },
+    {
+      "type": "paragraph",
+      "text": "Example: The route file packages/core/app/api/leads/route.ts exists in Core but is absent in the Hotel overlay directory. When sync runs, the script copies the file as-is into templates/hotel-website-template/app/api/leads/route.ts. This ensures all templates inherit standard, shared core API endpoints automatically."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Scenario 2: File in Core and Overlay (Override)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Example: packages/core/constants/site.ts contains standard dummy branding constants, but templates/overlays/hotel-website-template/constants/site.ts defines custom hotel brand, colors, and rooms details. During sync, the core file is staged first, and then the overlay file is copied on top. The overlay file completely overwrites the core file at templates/hotel-website-template/constants/site.ts. This allows overlays to redefine page routes, branding configurations, or swap entire components."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Scenario 3: Database Schema Merge (Prisma)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Example: packages/core/prisma/schema.prisma has database providers and core models (Lead, PromoBanner), while templates/overlays/hotel-website-template/prisma/schema.prisma defines hotel models (RoomType, Facility). Because Next.js and Prisma only support a single database connection preamble, sync merges the schemas by using the core schema as the base, stripping the preamble and duplicate Lead/PromoBanner models from the overlay, and appending the remaining custom models (RoomType, Facility) to generate templates/hotel-website-template/prisma/schema.prisma."
+    },
+    {
+      "type": "heading",
+      "level": 2,
       "text": "Controller Service Repository"
     },
     {
