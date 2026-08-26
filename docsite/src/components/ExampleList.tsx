@@ -6,7 +6,7 @@ export function ExampleList({ examples }: { examples: CommandExample[] }) {
       {examples.map((ex) => (
         <div key={ex.label}>
           <p className="text-sm font-medium text-[var(--color-doc-muted)] mb-1">{ex.label}</p>
-          <pre className="rounded-lg bg-slate-900 text-slate-100 px-4 py-3 text-sm overflow-x-auto">
+          <pre className="rounded-lg bg-[var(--color-doc-code-bg)] text-[var(--color-doc-code-text)] px-4 py-3 text-sm overflow-x-auto">
             <code>{ex.command}</code>
           </pre>
         </div>

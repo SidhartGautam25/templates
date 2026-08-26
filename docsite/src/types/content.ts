@@ -44,6 +44,10 @@ export interface CommandRefBlock extends ContentBlockBase {
   id: string;
 }
 
+export interface TemplateCommandBlock extends ContentBlockBase {
+  type: "template-command";
+}
+
 export interface TemplateCardsBlock extends ContentBlockBase {
   type: "template-cards";
 }
@@ -56,11 +60,13 @@ export type ContentBlock =
   | CalloutBlock
   | TableBlock
   | CommandRefBlock
+  | TemplateCommandBlock
   | TemplateCardsBlock;
 
 export interface PageContent {
   title: string;
   description?: string;
+  templateId?: string;
   blocks?: ContentBlock[];
   commandIds?: string[];
   templates?: TemplateCardData[];
@@ -105,6 +111,30 @@ export interface NavItem {
   id: string;
   label: string;
   path: string;
+  children?: NavItem[];
+}
+
+export interface TemplateRegistryEntry {
+  id: string;
+  label: string;
+  version: string;
+  cliId: string;
+  flagGroups: string[];
+  brandFields: string[];
+}
+
+export interface TemplateRegistry {
+  templates: TemplateRegistryEntry[];
+}
+
+export interface InitFieldDef {
+  flag: string;
+  description: string;
+  example?: string;
+}
+
+export interface InitFieldsRegistry {
+  fields: Record<string, InitFieldDef>;
 }
 
 export interface AudienceNav {

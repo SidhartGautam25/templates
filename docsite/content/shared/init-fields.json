@@ -1,0 +1,79 @@
+{
+  "fields": {
+    "name": {
+      "flag": "--name",
+      "description": "Primary business name shown across the site",
+      "example": "--name \"Lakeside Haven Resort\""
+    },
+    "shortName": {
+      "flag": "--short-name",
+      "description": "Compact label for headers and compact UI",
+      "example": "--short-name \"Lakeside Haven\""
+    },
+    "baseUrl": {
+      "flag": "--base-url",
+      "description": "Production site URL (SEO, sitemap, canonical links)",
+      "example": "--base-url https://lakesidehaven.com"
+    },
+    "phone": {
+      "flag": "--phone",
+      "description": "Raw phone digits without spaces",
+      "example": "--phone 9876543210"
+    },
+    "phoneDisplay": {
+      "flag": "--phone-display",
+      "description": "Formatted phone for display in UI",
+      "example": "--phone-display \"+91 98765 43210\""
+    },
+    "countryCode": {
+      "flag": "--country-code",
+      "description": "Phone country code (no plus sign)",
+      "example": "--country-code 91"
+    },
+    "email": {
+      "flag": "--email",
+      "description": "Public contact email",
+      "example": "--email reservations@example.com"
+    },
+    "address": {
+      "flag": "--address",
+      "description": "Full address string; locality and region are derived for structured fields",
+      "example": "--address \"Lonavala, Maharashtra, India\""
+    },
+    "tagline": {
+      "flag": "--tagline",
+      "description": "Short brand tagline under the logo",
+      "example": "--tagline \"Where Nature Meets Refined Comfort\""
+    },
+    "developerName": {
+      "flag": "--developer-name",
+      "description": "Developer or operator entity name",
+      "example": "--developer-name \"Greenfield Properties\""
+    },
+    "channelPartner": {
+      "flag": "--channel-partner",
+      "description": "Sales or hospitality partner label used in consent text",
+      "example": "--channel-partner \"Greenfield Realty Partners\""
+    },
+    "agentRera": {
+      "flag": "--agent-rera",
+      "description": "RERA registration for real-estate agent/consent (legal.agentRera)",
+      "example": "--agent-rera A52100012345"
+    },
+    "templeDistance": {
+      "flag": "--temple-distance",
+      "description": "Hotel-specific nearby landmark line (contact.templeDistance)",
+      "example": "--temple-distance \"5 min walk to Lonavala Lake viewpoint\""
+    },
+    "company": {
+      "flag": "--company",
+      "description": "Alias for developer/company name",
+      "example": "--company \"Mi Plaza Hospitality\""
+    },
+    "location": {
+      "flag": "--location",
+      "description": "City or locality label when full address is not provided",
+      "example": "--location \"Lonavala\""
+    }
+  }
+}

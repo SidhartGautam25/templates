@@ -24,7 +24,24 @@
         "LeadRat CRM integration",
         "Docker Compose for local MariaDB"
       ],
-      "docs": "GETTING_STARTED.md"
+      "docs": "GETTING_STARTED.md",
+      "init": {
+        "flagGroups": ["generate", "theme", "brand", "database"],
+        "brandFields": [
+          "name",
+          "shortName",
+          "baseUrl",
+          "phone",
+          "phoneDisplay",
+          "countryCode",
+          "email",
+          "address",
+          "tagline",
+          "developerName",
+          "channelPartner",
+          "templeDistance"
+        ]
+      }
     },
     "real-estate": {
       "directory": "real-estate-website-template",
@@ -44,7 +61,24 @@
         "LeadRat CRM integration",
         "Docker Compose for local MariaDB"
       ],
-      "docs": "GETTING_STARTED.md"
+      "docs": "GETTING_STARTED.md",
+      "init": {
+        "flagGroups": ["generate", "theme", "brand", "database"],
+        "brandFields": [
+          "name",
+          "shortName",
+          "baseUrl",
+          "phone",
+          "phoneDisplay",
+          "countryCode",
+          "email",
+          "address",
+          "tagline",
+          "developerName",
+          "channelPartner",
+          "agentRera"
+        ]
+      }
     }
   }
 }

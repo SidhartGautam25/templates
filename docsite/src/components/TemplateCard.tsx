@@ -1,11 +1,15 @@
+import Link from "next/link";
 import type { TemplateCardData } from "@/types/content";
 
 export function TemplateCard({ template }: { template: TemplateCardData }) {
   return (
-    <div className="rounded-xl border border-[var(--color-doc-border)] bg-[var(--color-doc-surface)] p-5 shadow-sm">
+    <Link
+      href={`/developers/templates/${template.id}`}
+      className="block rounded-xl border border-[var(--color-doc-border)] bg-[var(--color-doc-surface)] p-5 shadow-sm hover:border-[var(--color-doc-accent)] transition-colors"
+    >
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-semibold text-lg">{template.name}</h3>
-        <span className="text-xs font-mono bg-teal-100 text-teal-800 px-2 py-0.5 rounded">
+        <span className="text-xs font-mono bg-[var(--color-doc-badge-bg)] text-[var(--color-doc-badge-text)] px-2 py-0.5 rounded">
           v{template.version}
         </span>
       </div>
@@ -14,7 +18,10 @@ export function TemplateCard({ template }: { template: TemplateCardData }) {
       {template.tags && (
         <div className="mt-3 flex flex-wrap gap-1">
           {template.tags.map((t) => (
-            <span key={t} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
+            <span
+              key={t}
+              className="text-xs bg-[var(--color-doc-tag-bg)] text-[var(--color-doc-tag-text)] px-2 py-0.5 rounded-full"
+            >
               {t}
             </span>
           ))}
@@ -27,7 +34,8 @@ export function TemplateCard({ template }: { template: TemplateCardData }) {
           ))}
         </ul>
       )}
-    </div>
+      <p className="mt-4 text-sm font-medium text-[var(--color-doc-accent)]">View template guide →</p>
+    </Link>
   );
 }
 

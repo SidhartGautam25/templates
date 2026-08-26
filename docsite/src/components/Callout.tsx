@@ -2,9 +2,9 @@ import { type ReactNode } from "react";
 import type { CalloutVariant } from "@/types/content";
 
 const styles: Record<CalloutVariant, string> = {
-  info: "border-sky-200 bg-sky-50 text-sky-900",
-  warning: "border-amber-200 bg-amber-50 text-amber-900",
-  tip: "border-teal-200 bg-teal-50 text-teal-900",
+  info: "border-sky-300/50 bg-sky-500/10 text-[var(--color-doc-text)]",
+  warning: "border-amber-300/50 bg-amber-500/10 text-[var(--color-doc-text)]",
+  tip: "border-[var(--color-doc-accent)]/40 bg-[var(--color-doc-accent-soft)]/30 text-[var(--color-doc-text)]",
 };
 
 export function Callout({

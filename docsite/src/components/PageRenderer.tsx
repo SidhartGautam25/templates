@@ -1,9 +1,16 @@
-import type { ContentBlock, PageContent } from "@/types/content";
+import type { ContentBlock, PageContent, TemplateRegistryEntry } from "@/types/content";
 import { Callout } from "./Callout";
 import { CommandBlock } from "./CommandBlock";
 import { TemplateCardGrid } from "./TemplateCard";
+import { TemplateCommandBlock } from "./TemplateCommandBlock";
 
-function Block({ block }: { block: ContentBlock }) {
+function Block({
+  block,
+  templateEntry,
+}: {
+  block: ContentBlock;
+  templateEntry?: TemplateRegistryEntry;
+}) {
   switch (block.type) {
     case "paragraph":
       return <p className="my-4 text-[var(--color-doc-muted)] leading-relaxed">{block.text}</p>;
@@ -24,7 +31,7 @@ function Block({ block }: { block: ContentBlock }) {
       );
     case "code":
       return (
-        <pre className="my-4 rounded-lg bg-slate-900 text-slate-100 px-4 py-3 text-sm overflow-x-auto leading-relaxed">
+        <pre className="my-4 rounded-lg bg-[var(--color-doc-code-bg)] text-[var(--color-doc-code-text)] px-4 py-3 text-sm overflow-x-auto leading-relaxed">
           <code>{block.code}</code>
         </pre>
       );
@@ -38,7 +45,7 @@ function Block({ block }: { block: ContentBlock }) {
       return (
         <div className="my-4 overflow-x-auto rounded-lg border border-[var(--color-doc-border)]">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50">
+            <thead className="bg-[var(--color-doc-surface-elevated)]">
               <tr>
                 {block.headers.map((h) => (
                   <th key={h} className="px-4 py-2 text-left font-semibold">{h}</th>
@@ -59,6 +66,8 @@ function Block({ block }: { block: ContentBlock }) {
       );
     case "command-ref":
       return <CommandBlock id={block.id} />;
+    case "template-command":
+      return templateEntry ? <TemplateCommandBlock entry={templateEntry} /> : null;
     case "template-cards":
       return null;
     default:
@@ -66,7 +75,13 @@ function Block({ block }: { block: ContentBlock }) {
   }
 }
 
-export function PageRenderer({ page }: { page: PageContent }) {
+export function PageRenderer({
+  page,
+  templateEntry,
+}: {
+  page: PageContent;
+  templateEntry?: TemplateRegistryEntry;
+}) {
   return (
     <article>
       <header className="mb-8 border-b border-[var(--color-doc-border)] pb-6">
@@ -80,7 +95,7 @@ export function PageRenderer({ page }: { page: PageContent }) {
         if (block.type === "template-cards" && page.templates) {
           return <TemplateCardGrid key={i} templates={page.templates} />;
         }
-        return <Block key={i} block={block} />;
+        return <Block key={i} block={block} templateEntry={templateEntry} />;
       })}
 
       {page.commandIds?.map((id) => <CommandBlock key={id} id={id} />)}

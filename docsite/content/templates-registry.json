@@ -1,0 +1,46 @@
+{
+  "templates": [
+    {
+      "id": "hotel",
+      "label": "Hotel Website",
+      "version": "1.3.0",
+      "cliId": "hotel",
+      "flagGroups": ["generate", "theme", "brand", "database"],
+      "brandFields": [
+        "name",
+        "shortName",
+        "baseUrl",
+        "phone",
+        "phoneDisplay",
+        "countryCode",
+        "email",
+        "address",
+        "tagline",
+        "developerName",
+        "channelPartner",
+        "templeDistance"
+      ]
+    },
+    {
+      "id": "real-estate",
+      "label": "Real Estate Website",
+      "version": "1.3.0",
+      "cliId": "real-estate",
+      "flagGroups": ["generate", "theme", "brand", "database"],
+      "brandFields": [
+        "name",
+        "shortName",
+        "baseUrl",
+        "phone",
+        "phoneDisplay",
+        "countryCode",
+        "email",
+        "address",
+        "tagline",
+        "developerName",
+        "channelPartner",
+        "agentRera"
+      ]
+    }
+  ]
+}

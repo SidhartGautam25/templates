@@ -16,7 +16,6 @@
   "developers": [
     { "id": "intro", "label": "Introduction", "path": "/developers" },
     { "id": "commands", "label": "Commands", "path": "/developers/commands" },
-    { "id": "templates", "label": "Templates", "path": "/developers/templates" },
     { "id": "customization", "label": "Customization", "path": "/developers/customization" },
     { "id": "updates", "label": "Updates & doctor", "path": "/developers/updates" },
     { "id": "docker", "label": "Docker & database", "path": "/developers/docker" }

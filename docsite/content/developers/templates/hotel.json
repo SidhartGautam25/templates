@@ -1,0 +1,60 @@
+{
+  "title": "Hotel Website",
+  "description": "Resort and hotel template with rooms, gallery, facilities, reviews, and enquiry flows.",
+  "templateId": "hotel",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Use tempjs hotel to generate a boutique hotel or resort site. The admin portal manages room types, gallery images, facilities, reviews, promo banners, and leads. Demo brand: Lakeside Haven Resort (Lonavala)."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Stack & features"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Next.js 16, React 19, TypeScript, Tailwind CSS 4",
+        "Room types with slug detail pages and enquiry modals",
+        "Gallery and facilities CMS",
+        "Guest reviews management",
+        "Docker Compose MariaDB + Prisma",
+        "FTP asset upload pipeline",
+        "Optional LeadRat CRM integration"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Hotel-specific init options"
+    },
+    {
+      "type": "paragraph",
+      "text": "Besides standard brand and contact flags, hotel init supports tagline, developer/operator name, channel partner, and a nearby landmark line (templeDistance) shown on the contact section."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Real estate templates use --agent-rera instead of --temple-distance. Options are defined per template in templates.json under init.brandFields."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Commands"
+    },
+    {
+      "type": "template-command"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Examples"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "code": "mkdir lakeside-client && cd lakeside-client\ntempjs hotel config\n\n# Non-interactive full setup\ntempjs hotel --config --yes \\\n  --theme theme1 --font modern \\\n  --name \"Lakeside Haven Resort\" \\\n  --short-name \"Lakeside Haven\" \\\n  --base-url https://lakesidehaven.com \\\n  --phone 9876543210 \\\n  --email reservations@lakesidehaven.com \\\n  --address \"Lonavala, Maharashtra, India\" \\\n  --tagline \"Where Nature Meets Refined Comfort\" \\\n  --temple-distance \"5 min walk to Lonavala Lake\" \\\n  --db-host localhost --db-name lakeside_db --admin-user admin --admin-password changeme"
+    }
+  ]
+}

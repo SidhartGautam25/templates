@@ -1,10 +1,10 @@
 {
   "title": "Templates",
-  "description": "Available website templates and what each includes.",
+  "description": "Available website templates. Each template has its own init options, flags, and dedicated guide in the sidebar.",
   "blocks": [
     {
       "type": "paragraph",
-      "text": "Templates are full Next.js 16 apps with admin portal, Prisma + MariaDB, lead capture, optional FTP uploads, and Docker Compose for local database."
+      "text": "Templates are full Next.js 16 apps with admin portal, Prisma + MariaDB, lead capture, optional FTP uploads, and Docker Compose for local database. Pick a template in the sidebar for template-specific commands and options."
     },
     {
       "type": "template-cards"
@@ -12,7 +12,7 @@
     {
       "type": "heading",
       "level": 2,
-      "text": "What you get"
+      "text": "What every template includes"
     },
     {
       "type": "list",
@@ -25,12 +25,18 @@
       ]
     },
     {
-      "type": "command-ref",
-      "id": "info"
+      "type": "callout",
+      "variant": "tip",
+      "title": "Per-template options",
+      "text": "Each template defines its own init flags in templates.json (brandFields). Hotel prompts for landmark distance; real estate prompts for RERA. Add a new templates-registry.json entry plus a JSON page to document a new template."
     },
     {
       "type": "command-ref",
-      "id": "generate"
+      "id": "list"
+    },
+    {
+      "type": "command-ref",
+      "id": "info"
     }
   ],
   "templates": [

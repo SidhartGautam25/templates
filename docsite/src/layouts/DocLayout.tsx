@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { siteMeta, nav } from "@/lib/content";
+import { siteMeta, nav, buildDeveloperSidebar } from "@/lib/content";
 import { Sidebar } from "@/components/Sidebar";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function DocLayout({
   activeAudience,
@@ -9,7 +10,8 @@ export function DocLayout({
   activeAudience: "developers" | "maintainers";
   children: React.ReactNode;
 }) {
-  const sidebarItems = activeAudience === "maintainers" ? nav.maintainers : nav.developers;
+  const sidebarItems =
+    activeAudience === "maintainers" ? nav.maintainers : buildDeveloperSidebar();
   const sidebarTitle = activeAudience === "maintainers" ? "Maintainers" : "Developers";
 
   return (
@@ -17,20 +19,24 @@ export function DocLayout({
       <header className="border-b border-[var(--color-doc-border)] bg-[var(--color-doc-surface)]">
         <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between gap-4">
           <div>
-            <Link href="/" className="text-xl font-bold text-teal-800 hover:text-teal-900">
+            <Link
+              href="/"
+              className="text-xl font-bold text-[var(--color-doc-accent)] hover:opacity-90"
+            >
               {siteMeta.title}
             </Link>
             <p className="text-sm text-[var(--color-doc-muted)]">{siteMeta.tagline}</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
             {nav.audiences.map((aud) => (
               <Link
                 key={aud.id}
                 href={aud.home}
                 className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                   activeAudience === aud.id
-                    ? "bg-teal-700 text-white"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    ? "bg-[var(--color-doc-audience-active-bg)] text-[var(--color-doc-audience-active-text)]"
+                    : "bg-[var(--color-doc-audience-idle-bg)] text-[var(--color-doc-audience-idle-text)] hover:opacity-90"
                 }`}
               >
                 {aud.label}
@@ -48,7 +54,9 @@ export function DocLayout({
       </div>
 
       <footer className="border-t border-[var(--color-doc-border)] py-6 text-center text-sm text-[var(--color-doc-muted)]">
-        <code className="text-xs bg-slate-100 px-2 py-1 rounded">{siteMeta.installCommand}</code>
+        <code className="text-xs bg-[var(--color-doc-surface-elevated)] px-2 py-1 rounded">
+          {siteMeta.installCommand}
+        </code>
       </footer>
     </div>
   );

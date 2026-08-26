@@ -1,0 +1,60 @@
+{
+  "title": "Real Estate Website",
+  "description": "Property listing template with slug pages, RERA fields, admin CRM, and lead export.",
+  "templateId": "real-estate",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Use tempjs real-estate to generate a property listing site. The admin portal manages projects/properties, leads, and promo content. Demo brand: Greenfield Properties (Pune). Property pages support RERA numbers and new-launch badges."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Stack & features"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Next.js 16, React 19, TypeScript, Tailwind CSS 4",
+        "Property grid with apartments / plots tabs",
+        "Slug-based property detail pages",
+        "RERA fields on listings and legal consent",
+        "Lead export and enquiry widgets",
+        "Docker Compose MariaDB + Prisma",
+        "Optional LeadRat CRM integration"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Real-estate-specific init options"
+    },
+    {
+      "type": "paragraph",
+      "text": "Besides standard brand and contact flags, real-estate init supports tagline, developer name, channel partner, and agent RERA number (legal.agentRera) used in consent and footer."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "Hotel templates use --temple-distance for a landmark line instead of --agent-rera. Each template's applicable flags are listed in templates.json init.brandFields."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Commands"
+    },
+    {
+      "type": "template-command"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Examples"
+    },
+    {
+      "type": "code",
+      "language": "bash",
+      "code": "mkdir greenfield-client && cd greenfield-client\ntempjs real-estate config\n\n# Non-interactive full setup\ntempjs real-estate --config --yes \\\n  --theme theme2 --font elegant \\\n  --name \"Greenfield Properties\" \\\n  --short-name \"Greenfield\" \\\n  --base-url https://greenfieldproperties.com \\\n  --phone 9123456780 \\\n  --email hello@greenfieldproperties.com \\\n  --address \"Baner, Pune, Maharashtra, India\" \\\n  --tagline \"Homes & Investments You Can Trust\" \\\n  --agent-rera A52100012345 \\\n  --db-host localhost --db-name greenfield_db --admin-user admin --admin-password changeme"
+    }
+  ]
+}

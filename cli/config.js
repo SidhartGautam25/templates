@@ -17,7 +17,13 @@ const packageRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
  *   docker?: boolean,
  *   tags?: string[],
  *   features?: string[],
- *   docs?: string
+ *   docs?: string,
+ *   init?: {
+ *     flagGroups?: string[],
+ *     brandFields?: string[],
+ *     skipBrand?: boolean,
+ *     skipDatabase?: boolean
+ *   }
  * }} TemplateEntry */
 /** @typedef {{ repository: RepositoryConfig, templates: Record<string, TemplateEntry> }} Manifest */
 

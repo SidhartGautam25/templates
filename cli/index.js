@@ -13,6 +13,11 @@ import { promptAndSetupDb } from "./db-setup.js";
 import { printTemplateInfo } from "./info.js";
 import { parseArgs, toCliOptions } from "./parse-args.js";
 import {
+  pickBrandOptionsForTemplate,
+  resolveTemplateInitConfig,
+} from "./init-options.js";
+import { readProjectStamp } from "./project-stamp.js";
+import {
   copyTemplate,
   findConflictingPaths,
   isDirectoryEmpty,
@@ -213,13 +218,20 @@ async function runTemplate(targetDir, templateId, flags, runWithConfig = false) 
     }
 
     if (runWithConfig) {
+      const initConfig = resolveTemplateInitConfig(entry);
       console.log("\nConfiguring project theme and typography...");
       const selectedTheme = await promptTheme("theme1", cliOptions);
       const selectedFont = await promptFont("default", cliOptions);
       await applyThemeAndFont(targetDir, selectedTheme, selectedFont);
 
-      await promptAndApplyBrand(targetDir, cliOptions);
-      await promptAndSetupDb(targetDir, cliOptions);
+      if (!initConfig.skipBrand) {
+        const brandOpts = pickBrandOptionsForTemplate(templateId, entry, cliOptions);
+        await promptAndApplyBrand(targetDir, brandOpts, templateId);
+      }
+
+      if (!initConfig.skipDatabase) {
+        await promptAndSetupDb(targetDir, cliOptions);
+      }
     }
 
     console.log(`\nTemplate "${entry.name}" created successfully in ${targetDir}`);
@@ -393,7 +405,8 @@ See VERSIONING.md in the repo for the full maintainer guide.
         selectedFont
       );
     } else if (command === "brand") {
-      await promptAndApplyBrand(targetDir, cliOptions);
+      const stamp = readProjectStamp(targetDir);
+      await promptAndApplyBrand(targetDir, cliOptions, stamp?.template);
     } else if (command === "init-db") {
       await promptAndSetupDb(targetDir, cliOptions);
     }
