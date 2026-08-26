@@ -1,0 +1,24 @@
+{
+  "cli": {
+    "version": "2.1.0",
+    "gitCommit": "afefd07df8ff6acb9b2cc8ff11e347abf5c9eef5",
+    "recordedAt": "2026-08-26T05:54:57.141Z"
+  },
+  "core": {
+    "version": "shared",
+    "gitCommit": "afefd07df8ff6acb9b2cc8ff11e347abf5c9eef5",
+    "recordedAt": "2026-08-26T05:54:57.141Z"
+  },
+  "templates": {
+    "hotel": {
+      "version": "1.3.0",
+      "gitCommit": "afefd07df8ff6acb9b2cc8ff11e347abf5c9eef5",
+      "recordedAt": "2026-08-26T05:54:57.141Z"
+    },
+    "real-estate": {
+      "version": "1.3.0",
+      "gitCommit": "afefd07df8ff6acb9b2cc8ff11e347abf5c9eef5",
+      "recordedAt": "2026-08-26T05:54:57.141Z"
+    }
+  }
+}

@@ -20,6 +20,8 @@ pnpm dev:hotel
 # pnpm dev:real-estate
 
 # 4. Bump version in templates.json + overlay CHANGELOG.md
+tempjs version check
+tempjs version inc patch hotel   # auto sync-templates:check when overlay/core changed
 # 5. git commit (pre-commit runs sync-templates:check)
 ```
 
@@ -44,6 +46,16 @@ pnpm sync-templates
 
 ```bash
 pnpm setup-hooks   # enables .githooks/pre-commit → sync-templates:check
+```
+
+## Versioning
+
+CLI and template versions are separate. See **[VERSIONING.md](../VERSIONING.md)** in the repo root.
+
+```bash
+tempjs version check
+tempjs version inc patch cli
+tempjs version inc minor hotel
 ```
 
 See `ARCHITECTURE.md` in the repo root for the full sync workflow.

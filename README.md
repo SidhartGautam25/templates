@@ -202,6 +202,15 @@ tempjs info hotel    # shows full version in details
 
 When maintainers bump `"version"` in `templates.json` and push, clients can pull fixes safely.
 
+**Two version numbers (don’t confuse them):**
+
+| Version | Where | Meaning |
+|---------|--------|---------|
+| **CLI** (`@navneet_25/tempjs`) | npm / `package.json` in templates repo | The `tempjs` tool itself |
+| **Template** (`hotel`, `real-estate`) | `templates.json` → your `.tempjs.json` | The website template snapshot |
+
+Maintainers: see **[VERSIONING.md](./VERSIONING.md)** for `tempjs version check` / `tempjs version inc`.
+
 ---
 
 ### Update an existing project (`tempjs update`)
@@ -462,9 +471,9 @@ npm install -g @navneet_25/tempjs
 npm install -g @navneet_25/tempjs@latest
 ```
 
-Current version: **1.4.0** (update, versioning, fetch progress, info, non-interactive flags).
+Current version: **2.1.0** (doctor, version tracking, core/overlays sync, update merge).
 
-See also: [guide.md](./guide.md) for CLI architecture and update algorithm details.
+See also: [guide.md](./guide.md) for CLI architecture, [VERSIONING.md](./VERSIONING.md) for release workflow.
 
 Verify:
 
@@ -485,8 +494,21 @@ tempjs theme --theme theme3 --yes
 tempjs brand --yes --name "Mi Plaza" --base-url "https://miplaza.com"
 tempjs init-db --yes --db-host localhost --db-name my_db --skip-db-push
 tempjs real-estate --force   # overwrite existing files
+tempjs doctor                # readiness check (generated projects)
 tempjs --help                # show help
 ```
+
+### Maintainer commands (monorepo root)
+
+```bash
+pnpm sync-templates
+pnpm dev:hotel
+tempjs version check         # unreleased CLI/template changes?
+tempjs version inc patch cli
+tempjs version inc minor hotel
+```
+
+See [VERSIONING.md](./VERSIONING.md).
 
 ### Options (summary)
 

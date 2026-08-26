@@ -89,7 +89,11 @@ Legacy paths (`@/lib/db`, `@/lib/controllers/LeadController`) remain as thin re-
 # Edit packages/core OR templates/overlays/<template>/
 pnpm sync-templates
 pnpm dev:hotel          # or pnpm dev:real-estate
-# Bump templates.json version + overlay CHANGELOG.md
+# Bump versions (if check reported changes)
+tempjs version check
+tempjs version inc patch cli      # npm package
+tempjs version inc minor hotel    # templates.json + CHANGELOG
+
 git commit              # pre-commit runs sync-templates:check
 ```
 
@@ -98,6 +102,8 @@ Enable hooks once per clone:
 ```bash
 pnpm setup-hooks
 ```
+
+See **[VERSIONING.md](./VERSIONING.md)** for CLI vs template versions, semver rules, and client developer notes.
 
 ### Change shared code (auth, leads, FTP, Navbar, …)
 

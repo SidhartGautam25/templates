@@ -25,6 +25,11 @@ import { confirmYesNo } from "./prompt.js";
 import { resolveTemplateSource } from "./template-resolver.js";
 import { runUpdate } from "./update.js";
 import { runDoctor } from "./doctor.js";
+import {
+  resolveMonorepoRoot,
+  runVersionCheck,
+  runVersionInc,
+} from "./version-manager.js";
 
 const HELP_TEXT = `
 tempjs — instantiate project templates from GitHub
@@ -40,7 +45,15 @@ USAGE
   tempjs brand                    Configure brand & contact info
   tempjs init-db                  Configure .env and sync database schema
   tempjs doctor                   Check if this project can run (env, DB, deps)
+  tempjs version check [cli|all|<template-id>]
+  tempjs version inc <patch|minor|major> [cli|all|<template-id>]
   tempjs --help
+
+VERSION (maintainers — run from monorepo root)
+  tempjs version check            Compare git changes since last version bump
+  tempjs version check hotel      Check one template only
+  tempjs version inc patch cli    Bump @navneet_25/tempjs in package.json
+  tempjs version inc minor hotel  Bump template in templates.json + CHANGELOG stub
 
 UPDATE
   tempjs update --check           Show diff vs latest template (read-only)
@@ -289,6 +302,62 @@ async function main(argv) {
 
     const targetDir = process.cwd();
     await runUpdate(targetDir, flags, { checkOnly: hasCheck && !hasMerge });
+    return;
+  }
+
+  if (command === "version") {
+    const repoRoot = resolveMonorepoRoot(process.cwd());
+    if (!repoRoot) {
+      console.error("tempjs version commands must run from the templates monorepo root.");
+      console.error("(Directory containing templates.json and cli/)");
+      process.exitCode = 1;
+      return;
+    }
+
+    const sub = positionals[1];
+
+    if (sub === "check") {
+      runVersionCheck(repoRoot, { scope: positionals[2] });
+      return;
+    }
+
+    if (sub === "inc") {
+      const level = positionals[2];
+      const target = positionals[3] ?? "cli";
+
+      if (!level || !["patch", "minor", "major"].includes(level)) {
+        console.error("Usage: tempjs version inc <patch|minor|major> [cli|all|<template-id>]");
+        process.exitCode = 1;
+        return;
+      }
+
+      runVersionInc(repoRoot, level, target);
+      return;
+    }
+
+    console.log(`
+tempjs version — release tracking for CLI and templates (maintainers)
+
+USAGE
+  tempjs version check [cli|all|<template-id>]
+  tempjs version inc <patch|minor|major> [cli|all|<template-id>]
+
+HOW IT WORKS
+  .tempjs-version.json stores the git commit recorded at each version bump.
+  "check" diffs tracked paths since that commit (+ uncommitted changes).
+
+CLI tracks: cli/, package.json, templates.json
+Templates track: packages/core/, overlay, merged output, sync script
+
+EXAMPLES
+  tempjs version check
+  tempjs version check hotel
+  tempjs version inc patch cli
+  tempjs version inc minor hotel
+  tempjs version inc patch all
+
+See VERSIONING.md in the repo for the full maintainer guide.
+`.trim());
     return;
   }
 
