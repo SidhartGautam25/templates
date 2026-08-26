@@ -50,12 +50,25 @@ function hashFile(filePath) {
   return createHash("sha256").update(readFileSync(filePath)).digest("hex");
 }
 
+const CORE_EXCLUDE = new Set(["package.json", "README.md", "MAINTAINERS.md"]);
+
 /**
  * @param {string} src
  * @param {string} dest
+ * @param {{ excludeFileNames?: Set<string> }} [options]
  */
-function copyTree(src, dest) {
-  cpSync(src, dest, { recursive: true, force: true });
+function copyTree(src, dest, options = {}) {
+  const excludeFileNames = options.excludeFileNames ?? new Set();
+  cpSync(src, dest, {
+    recursive: true,
+    force: true,
+    filter: (path) => {
+      const rel = relative(src, path).replace(/\\/g, "/");
+      if (!rel) return true;
+      const base = rel.split("/").pop() ?? "";
+      return !excludeFileNames.has(base);
+    },
+  });
 }
 
 /**
@@ -76,7 +89,7 @@ function buildMergedTree(templateId, overlayName) {
     throw new Error(`Core package not found: ${coreDir}`);
   }
 
-  copyTree(coreDir, staging);
+  copyTree(coreDir, staging, { excludeFileNames: CORE_EXCLUDE });
 
   if (existsSync(overlay)) {
     copyTree(overlay, staging);

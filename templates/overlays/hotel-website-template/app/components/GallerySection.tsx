@@ -9,6 +9,7 @@ import {
   ArrowUpRight,
   Sparkles,
 } from "lucide-react";
+import { SITE } from "@/constants";
 
 const GALLERY_IMAGES = [
   {
@@ -146,7 +147,7 @@ export default function GallerySection() {
               <span className="h-px w-10 bg-accent-gold" />
 
               <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-accent-gold-dark">
-                Discover Chanakya Resort
+                Discover {SITE.brand.name}
               </span>
             </div>
 

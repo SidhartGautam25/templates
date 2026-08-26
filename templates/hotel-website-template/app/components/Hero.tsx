@@ -246,7 +246,7 @@ export default function Hero({ onOpenEnquiry }: HeroProps) {
             {/* Bottom title */}
             <div className="absolute bottom-0 left-0 right-0 z-20 p-5 pb-7">
               <span className="mb-1 block text-[8px] font-bold uppercase tracking-[0.28em] text-accent-gold-light">
-                Chanakya Resort
+                {SITE.brand.shortName}
               </span>
 
               <h2 className="font-serif text-2xl font-medium leading-tight text-white">

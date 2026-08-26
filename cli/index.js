@@ -207,12 +207,14 @@ async function runTemplate(targetDir, templateId, flags, runWithConfig = false) 
 
     console.log(`\nTemplate "${entry.name}" created successfully in ${targetDir}`);
     console.log(`Stamped .tempjs.json (template v${entry.version ?? "0.0.0"})`);
-    console.log("\nNext steps:");
-    console.log("  pnpm install   # or npm install");
-    console.log("  pnpm dev       # start development server");
-    if (!flags.initGit && !targetHasGitRepo(targetDir)) {
-      console.log("  git init       # optional: initialize a new repository");
-    }
+    console.log("\nNext steps — see GETTING_STARTED.md:");
+    console.log("  1. pnpm install");
+    console.log("  2. cp .env.example .env");
+    console.log("  3. docker compose up -d   # or: tempjs init-db");
+    console.log("  4. pnpm prisma db push && pnpm prisma db seed");
+    console.log("  5. pnpm dev");
+    console.log("  6. Open /admin — login with ADMIN_USER / ADMIN_PASSWORD");
+    console.log("\n  curl http://localhost:3000/api/health   # verify DB + env");
   } catch (error) {
     if (error instanceof Error && error.message === "TARGET_NOT_EMPTY") {
       printConflictWarning(error.conflicts ?? []);

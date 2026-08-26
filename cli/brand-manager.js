@@ -22,13 +22,13 @@ import { findSiteTs } from "./theme-manager.js";
  */
 function parseCurrentBrandValues(siteContent) {
   return {
-    brandName: (siteContent.match(/name:\s*"([^"]+)"/) || [])[1] || "Chanakya Resort",
-    shortName: (siteContent.match(/shortName:\s*"([^"]+)"/) || [])[1] || "Chanakya",
-    baseUrl: (siteContent.match(/baseUrl:\s*"([^"]+)"/) || [])[1] || "https://chanakyaresort.com",
+    brandName: (siteContent.match(/name:\s*"([^"]+)"/) || [])[1] || "Demo Client Site",
+    shortName: (siteContent.match(/shortName:\s*"([^"]+)"/) || [])[1] || "Demo",
+    baseUrl: (siteContent.match(/baseUrl:\s*"([^"]+)"/) || [])[1] || "https://example.com",
     phone: (siteContent.match(/phone:\s*"([^"]+)"/) || [])[1] || "9876543210",
     phoneDisplay: (siteContent.match(/phoneDisplay:\s*"([^"]+)"/) || [])[1] || "+91 98765 43210",
     countryCode: (siteContent.match(/countryCode:\s*"([^"]+)"/) || [])[1] || "91",
-    email: (siteContent.match(/email:\s*"([^"]+)"/) || [])[1] || "reservations@chanakyaresort.com",
+    email: (siteContent.match(/email:\s*"([^"]+)"/) || [])[1] || "hello@example.com",
     address: (siteContent.match(/full:\s*"([^"]+)"/) || [])[1] || "Lonavala, Maharashtra, India",
   };
 }

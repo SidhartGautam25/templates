@@ -15,7 +15,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       },
       async authorize(credentials) {
         const adminUser = process.env.ADMIN_USER || "admin";
-        const adminPassword = process.env.ADMIN_PASSWORD || "chanakya2026";
+        const adminPassword = process.env.ADMIN_PASSWORD || "change_this_password";
 
         if (
           credentials?.username === adminUser &&

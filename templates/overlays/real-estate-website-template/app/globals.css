@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Chanakya Resort — soft light theme (override via constants/site.ts values) */
+  /* Greenfield Properties — professional light theme (override via constants/site.ts) */
   --primary: #3d5a52;
   --primary-hover: #2f4841;
   --accent-gold: #c4a574;

@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import EnquiryModal from "../components/EnquiryModal";
 import { ArrowLeft, ZoomIn, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { defaultRoomTypes } from "@/constants/default-room-types";
+import { SITE } from "@/constants";
 
 const STATIC_VIEWS = [
   { src: "/hero/hero-image-1.avif", category: "resort" },
@@ -128,7 +129,7 @@ export default function GalleryPage() {
                 FullScreen Gallery
               </h1>
               <p className="text-xs text-text-muted">
-                Explore the premium interiors, suite styles, and beautiful landscape of Chanakya Resort.
+                Explore the premium interiors, suite styles, and beautiful landscape of {SITE.brand.name}.
               </p>
             </div>
 
@@ -194,7 +195,7 @@ export default function GalleryPage() {
                         {img.category === "resort" ? "Exterior View" : "Accommodation"}
                       </span>
                       <h4 className="text-sm font-bold text-white font-serif">
-                        {img.title || "Chanakya Resort"}
+                        {img.title || SITE.brand.name}
                       </h4>
                     </div>
                   </div>
@@ -254,7 +255,7 @@ export default function GalleryPage() {
           {/* Lightbox Footer */}
           <div className="text-center text-white/90 space-y-1">
             <h4 className="text-base font-serif font-bold">
-              {filteredImages[lightboxIndex].title || "Chanakya Resort"}
+              {filteredImages[lightboxIndex].title || SITE.brand.name}
             </h4>
             <p className="text-[10px] uppercase tracking-wider text-accent-gold">
               {filteredImages[lightboxIndex].category === "resort" ? "Exterior View" : "Accommodation"}
