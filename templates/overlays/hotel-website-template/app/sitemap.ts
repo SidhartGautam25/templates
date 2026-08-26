@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { defaultRoomTypes } from "@/constants/default-room-types";
-import { roomTypeService } from "@/lib/services/RoomTypeService";
+import { roomTypeService } from "@/lib/features/room-types";
 import { slugify } from "@/lib/utils/slugify";
 import { SITE } from "@/constants";
 

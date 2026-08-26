@@ -23,6 +23,10 @@
   "license": "MIT",
   "scripts": {
     "sync-templates": "node scripts/sync-templates.mjs",
-    "sync-templates:check": "node scripts/sync-templates.mjs --check"
+    "sync-templates:check": "node scripts/sync-templates.mjs --check",
+    "new-template": "node scripts/new-template.mjs",
+    "setup-hooks": "git config core.hooksPath .githooks && chmod +x .githooks/pre-commit",
+    "dev:hotel": "pnpm sync-templates && cd templates/hotel-website-template && pnpm dev",
+    "dev:real-estate": "pnpm sync-templates && cd templates/real-estate-website-template && pnpm dev"
   }
 }

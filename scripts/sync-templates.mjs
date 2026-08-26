@@ -5,7 +5,16 @@
  * Usage: node scripts/sync-templates.mjs
  *        node scripts/sync-templates.mjs --check  (verify templates match without writing)
  */
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
@@ -14,14 +23,22 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const coreDir = join(root, "packages", "core");
 const overlaysDir = join(root, "templates", "overlays");
 const templatesDir = join(root, "templates");
-
-/** @type {Array<{ id: string, overlay: string }>} */
-const TEMPLATE_TARGETS = [
-  { id: "hotel-website-template", overlay: "hotel-website-template" },
-  { id: "real-estate-website-template", overlay: "real-estate-website-template" },
-];
+const manifestPath = join(root, "templates.json");
 
 const checkOnly = process.argv.includes("--check");
+
+const SHARED_PRISMA_MODELS = ["Lead", "PromoBanner"];
+
+/**
+ * @returns {Array<{ id: string, overlay: string }>}
+ */
+function loadTemplateTargets() {
+  const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  return Object.values(manifest.templates).map((entry) => ({
+    id: entry.directory,
+    overlay: entry.directory,
+  }));
+}
 
 /**
  * @param {string} dir
@@ -86,6 +103,58 @@ function copyTree(src, dest, options = {}) {
 }
 
 /**
+ * @param {string} schema
+ * @param {string} modelName
+ */
+function stripPrismaModel(schema, modelName) {
+  const regex = new RegExp(`model\\s+${modelName}\\s*\\{[\\s\\S]*?\\n\\}`, "g");
+  return schema.replace(regex, "").trim();
+}
+
+/**
+ * @param {string} schema
+ */
+function stripPrismaPreamble(schema) {
+  return schema
+    .replace(/^\s*\/\/.*$/gm, "")
+    .replace(/datasource\s+db\s*\{[\s\S]*?\}/g, "")
+    .replace(/generator\s+client\s*\{[\s\S]*?\}/g, "")
+    .trim();
+}
+
+/**
+ * Merge packages/core/prisma/schema.prisma with overlay domain models.
+ * @param {string} staging
+ * @param {string} overlayName
+ */
+function mergePrismaSchema(staging, overlayName) {
+  const coreSchemaPath = join(coreDir, "prisma", "schema.prisma");
+  const overlaySchemaPath = join(overlaysDir, overlayName, "prisma", "schema.prisma");
+  const destSchemaPath = join(staging, "prisma", "schema.prisma");
+
+  if (!existsSync(coreSchemaPath)) {
+    return;
+  }
+
+  let merged = readFileSync(coreSchemaPath, "utf8").trim();
+
+  if (existsSync(overlaySchemaPath)) {
+    let overlayPart = readFileSync(overlaySchemaPath, "utf8");
+    overlayPart = stripPrismaPreamble(overlayPart);
+    for (const model of SHARED_PRISMA_MODELS) {
+      overlayPart = stripPrismaModel(overlayPart, model);
+    }
+    overlayPart = overlayPart.trim();
+    if (overlayPart) {
+      merged = `${merged}\n\n${overlayPart}`;
+    }
+  }
+
+  mkdirSync(dirname(destSchemaPath), { recursive: true });
+  writeFileSync(destSchemaPath, `${merged}\n`, "utf8");
+}
+
+/**
  * @param {string} templateId
  * @param {string} overlayName
  */
@@ -108,6 +177,8 @@ function buildMergedTree(templateId, overlayName) {
   if (existsSync(overlay)) {
     copyTree(overlay, staging);
   }
+
+  mergePrismaSchema(staging, overlayName);
 
   return { staging, dest };
 }
@@ -140,8 +211,9 @@ function diffTrees(expectedRoot, actualRoot) {
 
 function syncAll() {
   let hasErrors = false;
+  const targets = loadTemplateTargets();
 
-  for (const { id, overlay } of TEMPLATE_TARGETS) {
+  for (const { id, overlay } of targets) {
     const { staging, dest } = buildMergedTree(id, overlay);
 
     if (checkOnly) {
@@ -161,7 +233,7 @@ function syncAll() {
     }
 
     if (existsSync(dest)) {
-      rmSync(dest, { recursive: true, force: true });
+      rmSync(dest, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
     }
     mkdirSync(dirname(dest), { recursive: true });
     copyTree(staging, dest);

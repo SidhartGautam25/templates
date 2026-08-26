@@ -56,12 +56,14 @@ client-project/
 │   ├── storage/            # FTP asset pipeline
 │   ├── utils/              # Shared utilities
 │   ├── features/           # Domain modules
-│   │   └── leads/          # Lead capture (shared across templates)
+│   │   ├── leads/          # Lead capture (shared core)
+│   │   ├── room-types/     # Hotel overlay example
+│   │   └── projects/       # Real-estate overlay example
 │   ├── controllers/        # Template domain + legacy re-exports
 │   ├── services/
 │   └── repositories/
 ├── constants/              # Site config, defaults
-├── prisma/                 # Schema & seeds (template-specific)
+├── prisma/                 # Merged schema (core Lead/PromoBanner + overlay models)
 ├── public/
 ├── auth.ts
 └── package.json
@@ -81,22 +83,38 @@ Legacy paths (`@/lib/db`, `@/lib/controllers/LeadController`) remain as thin re-
 
 ## Maintainer workflow
 
+### Daily loop
+
+```bash
+# Edit packages/core OR templates/overlays/<template>/
+pnpm sync-templates
+pnpm dev:hotel          # or pnpm dev:real-estate
+# Bump templates.json version + overlay CHANGELOG.md
+git commit              # pre-commit runs sync-templates:check
+```
+
+Enable hooks once per clone:
+
+```bash
+pnpm setup-hooks
+```
+
 ### Change shared code (auth, leads, FTP, Navbar, …)
 
-1. Edit `packages/core/`
+1. Edit `packages/core/` (shared Prisma: `Lead`, `PromoBanner` in `prisma/schema.prisma`)
 2. Run `pnpm sync-templates`
 3. Commit `packages/core/` **and** synced `templates/*-website-template/` folders
 4. Push
 
 ### Change hotel-only code (rooms, gallery, facilities, …)
 
-1. Edit `templates/overlays/hotel-website-template/`
+1. Edit `templates/overlays/hotel-website-template/` — domain code in `lib/features/room-types`, `facilities`, `reviews`, `hotel-config`
 2. Run `pnpm sync-templates`
 3. Commit overlay + synced `templates/hotel-website-template/`
 
 ### Change real-estate-only code
 
-1. Edit `templates/overlays/real-estate-website-template/`
+1. Edit `templates/overlays/real-estate-website-template/` — `lib/features/projects`
 2. Run `pnpm sync-templates`
 3. Commit overlay + synced output
 
@@ -106,15 +124,15 @@ Legacy paths (`@/lib/db`, `@/lib/controllers/LeadController`) remain as thin re-
 pnpm sync-templates:check
 ```
 
-Fails if merged output does not match `core + overlay`.
+Fails if merged output does not match `core + overlay` (also runs on `git commit` when hooks are enabled).
 
 ## What goes where?
 
 | Location | Examples |
 |----------|----------|
-| **packages/core** | `auth.ts`, leads module, FTP storage, `/api/leads`, Navbar, PromoBanner, Docker, `package.json` base |
-| **Hotel overlay** | RoomType, Facility, Review models & APIs, gallery page, hotel Hero, `constants/site.ts` defaults |
-| **Real-estate overlay** | Project model & APIs, property Hero, `app/data/projects.ts` |
+| **packages/core** | `auth.ts`, leads module, FTP storage, `/api/leads`, Navbar, PromoBanner, `prisma/schema.prisma` (Lead, PromoBanner), Docker |
+| **Hotel overlay** | `lib/features/room-types`, facilities, reviews, hotel-config; gallery; hotel Hero |
+| **Real-estate overlay** | `lib/features/projects`; property Hero |
 
 ## Code Placement Rules: What Goes Where?
 
@@ -130,54 +148,22 @@ To keep templates maintainable, adhere to these code separation guidelines:
 
 ## Detailed Walkthrough: Adding a New Template
 
-To illustrate how to add a template, let's take a simple example of adding a new **Restaurant Website Template** (`restaurant-website-template`) which will reuse the shared Lead Capture API from `packages/core` but feature a custom booking layout and menu page.
+Use the scaffold script (reads/writes `templates.json` automatically):
 
-### Step 1: Create the Overlay Directory
-Create the overlay folder under `templates/overlays/`. Only place template-specific files here. Let's create:
-*   `templates/overlays/restaurant-website-template/constants/site.ts` (restaurant-specific name, domain, and colors)
-*   `templates/overlays/restaurant-website-template/app/menu/page.tsx` (the restaurant menu view)
-*   `templates/overlays/restaurant-website-template/prisma/schema.prisma` (adding a `Reservation` model to the DB schema)
-
-### Step 2: Register in `templates.json`
-Add the new template entry to the root [templates.json](file:///home/sidharthg/sid/project/free/templates/templates.json) file so the CLI knows it exists:
-```json
-{
-  "restaurant": {
-    "name": "Restaurant Website",
-    "description": "Premium template for bistros, bars, and fine-dining restaurants.",
-    "path": "templates/restaurant-website-template"
-  }
-}
-```
-
-### Step 3: Register in the Sync script
-Add the template target definition to the `TEMPLATE_TARGETS` list in [scripts/sync-templates.mjs](file:///home/sidharthg/sid/project/free/templates/scripts/sync-templates.mjs#L19-L22):
-```javascript
-const TEMPLATE_TARGETS = [
-  { id: "hotel-website-template", overlay: "hotel-website-template" },
-  { id: "real-estate-website-template", overlay: "real-estate-website-template" },
-  { id: "restaurant-website-template", overlay: "restaurant-website-template" }, // <-- Add this
-];
-```
-
-### Step 4: Run the Sync Command
-Execute the compiler script to merge the shared core files and restaurant overlay files into the final template folder:
 ```bash
+pnpm new-template bakery bakery-website-template
 pnpm sync-templates
+pnpm dev:bakery   # add matching script to root package.json
 ```
-#### What happens under the hood during Sync:
-1. The script creates a temporary folder `.sync-staging/restaurant-website-template/`.
-2. It copies the entire `packages/core/` directory to the staging folder (establishing the base framework).
-3. It copies `templates/overlays/restaurant-website-template/` on top of the staging folder, overwriting any matching files (applying custom modifications).
-4. It deletes the old `templates/restaurant-website-template/` folder and writes the staged, merged files to its place.
 
-### Step 5: Verify and Commit
-Verify that `templates/restaurant-website-template/` contains both your custom menu code and the shared database/FTP services from the core directory. Commit the files to Git:
-```bash
-git add templates/overlays/restaurant-website-template
-git add templates/restaurant-website-template
-git commit -m "feat: add restaurant website template"
-```
+This creates `templates/overlays/bakery-website-template/` with `constants/site.ts`, `package.json`, `prisma/schema.prisma`, `CHANGELOG.md`, and a `templates.json` entry.
+
+### Manual steps (if you prefer)
+
+1. Create overlay under `templates/overlays/<name>/`
+2. Add entry to `templates.json` (or use `pnpm new-template`)
+3. `pnpm sync-templates` — targets are loaded from `templates.json`
+4. Commit overlay + synced `templates/<name>/`
 
 ---
 

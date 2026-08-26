@@ -24,11 +24,16 @@ constants/
   default-facilities.ts
   default-reviews.ts
 lib/
+  features/                # ★ Domain modules (controller / service / repository)
+    room-types/
+    facilities/
+    reviews/
+    hotel-config/
   database/prisma.ts       # Prisma client
-  features/leads/          # Lead capture + optional LeadRat forward
+  features/leads/          # Lead capture + optional LeadRat forward (from core)
   storage/                 # Local + FTP upload helpers
 prisma/
-  schema.prisma            # RoomType, Lead, Facility, Review, HotelConfig…
+  schema.prisma            # Merged: core Lead/PromoBanner + hotel models
   seed.ts                  # Seeds rooms, facilities, reviews
 public/
   hero/                    # Default hero / gallery images

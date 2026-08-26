@@ -1,6 +1,6 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { projectService } from "@/lib/services/ProjectService";
+import { projectService } from "@/lib/features/projects";
 import { projectsData } from "@/app/data/projects";
 import ProjectDetailsClient from "./ProjectDetailsClient";
 import { slugify } from "@/lib/utils/slugify";

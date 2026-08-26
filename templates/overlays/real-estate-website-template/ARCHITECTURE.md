@@ -18,12 +18,13 @@ constants/
   site.ts                  # ★ Brand, RERA, SEO, theme, hero — customize first
   default-projects.ts      # Demo listings (seed source)
 lib/
+  features/                # Domain modules (controller / service / repository)
+    projects/
   database/prisma.ts
-  features/leads/          # Lead capture + optional LeadRat
-  storage/                 # Local + FTP uploads
-  utils/slugify.ts         # URL slugs for /[slug] routes
+  features/leads/          # From shared core
+  storage/
 prisma/
-  schema.prisma            # Project, Lead, PromoBanner, SiteConfig…
+  schema.prisma            # Merged: core Lead/PromoBanner + Project
   seed.ts                  # Seeds default-projects
 public/
   logo.svg
