@@ -1,232 +1,218 @@
-# How `tempjs` Works Under the Hood: A Comprehensive Developer Guide
+# tempjs CLI — technical guide
 
-This guide explains the architecture of the `@navneet_25/tempjs` CLI, what NPM and GitHub each manage, how installation works, and the step-by-step execution flow under the hood.
+This document explains how the **tempjs** CLI is structured, how template fetching, versioning, and updates work internally. For day-to-day usage examples, see [README.md](./README.md).
 
 ---
 
-## 1. High-Level Architecture
+## CLI module map
 
-The CLI is designed to be **lightweight**. Instead of packaging every website template inside the NPM package (which would make the download huge and require constant updates), the CLI downloads templates dynamically from **GitHub** only when needed.
+The CLI is split into small modules — each file has a single responsibility:
 
-```mermaid
-graph TD
-    User([User's Local Machine]) -->|npm install -g @navneet_25/tempjs| NPM[NPM Registry]
-    NPM -->|Downloads CLI + templates.json| User
-    User -->|Runs: tempjs hotel| CLI[tempjs CLI]
-    CLI -->|1. Looks up 'hotel' in local templates.json| Manifest[(templates.json)]
-    CLI -->|2. Fetches file tree via API| GitHubAPI[GitHub REST API]
-    GitHubAPI -->|3. Returns list of files| CLI
-    CLI -->|4. Downloads each file concurrently| GitHubRaw[GitHub Raw Content]
-    GitHubRaw -->|5. Writes files locally| User
+| Module | Responsibility |
+|--------|----------------|
+| `index.js` | Command routing, help text, orchestration |
+| `parse-args.js` | Flag parsing (`--yes`, `--theme`, `--check`, …) |
+| `config.js` | Load `templates.json`, resolve GitHub repo env overrides |
+| `template-resolver.js` | Local template vs remote tarball (single entry point) |
+| `fetch.js` | Download GitHub archive, extract one template folder |
+| `copy.js` | Copy template tree into target directory |
+| `fs-ignore.js` | Shared skip rules (`.env`, `node_modules`, protected paths) |
+| `file-tree.js` | Walk directories, SHA-256 hashes, diff algorithm |
+| `project-stamp.js` | Read/write `.tempjs.json` |
+| `update.js` | `update --check` report and `update --merge` apply |
+| `progress.js` | Format bytes, duration, fetch completion line |
+| `prompt.js` | Shared yes/no confirmation |
+| `info.js` | `tempjs info` output |
+| `theme-manager.js` | Themes, fonts, `.tempjsrc` |
+| `brand-manager.js` | `constants/site.ts` brand fields |
+| `db-setup.js` | `.env` + optional `prisma db push` |
+
+**DRY principles used:**
+
+- Skip rules live in `fs-ignore.js` (used by `copy.js`, `fetch.js`, `file-tree.js`, `update.js`).
+- Template resolution is centralized in `template-resolver.js` (used by `index.js` and `update.js`).
+- Confirmations use `prompt.js` instead of duplicating readline logic.
+
+---
+
+## Template fetching
+
+### Strategy
+
+`tempjs hotel` does **not** run `git clone` or per-file GitHub API calls.
+
+1. Download **one** tarball from `codeload.github.com/{owner}/{repo}/tar.gz/{branch}`.
+2. Extract only `templates/<template-directory>/` from the archive.
+3. Validate (`package.json` exists), copy into the user's directory.
+
+This avoids GitHub API rate limits (60 req/hr unauthenticated) and is fast for typical template repos.
+
+### Progress feedback
+
+After resolve completes, the CLI prints:
+
+```text
+Fetching template "hotel"... done (4.2 MB, 130 files, 1.8s, download)
 ```
 
+| Metric | Source |
+|--------|--------|
+| Size | Tarball bytes on disk (0 for local copy) |
+| Files | Count of template files after extract (excluding skipped paths) |
+| Duration | `performance.now()` around download + extract |
+| Source | `local copy` or `download` |
+
+Implementation: `fetch.js` returns `{ templateRoot, cleanupDir, stats }`; `progress.js` formats the line.
+
+### Local development
+
+When the CLI package is linked from this repo, `template-resolver.js` uses `templates/hotel-website-template/` on disk (no network). Stats show `0ms, local copy`.
+
+Force remote: `tempjs hotel --remote` or `TEMPLATE_USE_REMOTE=1`.
+
 ---
 
-## 2. Who Manages What?
+## Project stamping (`.tempjs.json`)
 
-### A. NPM Registry (The CLI)
-The NPM registry only stores the command-line interface itself and the manifest mapping. 
+### When it is created
 
-In `package.json`, the `"files"` array specifies exactly which files get packaged:
+After a successful `tempjs <id>` copy, `project-stamp.js` writes `.tempjs.json` containing:
+
+- Template id and **manifest version** (`templates.json` → `"version"`).
+- `generatedAt` timestamp (preserved on updates).
+- `fileHashes`: SHA-256 of every file in the template tree (baseline for updates).
+
+Hashes are computed from the template source **before** user customization (`file-tree.js` + `fs-ignore.js`).
+
+### Example
+
 ```json
-"files": [
-  "cli",
-  "templates.json"
-]
-```
-* **What is uploaded to NPM:**
-  * The `cli/` folder (the JavaScript logic).
-  * `templates.json` (the list of available templates and repo details).
-  * `package.json` and `README.md`.
-* **What is excluded from NPM:**
-  * The `templates/` folder (containing the heavy website source codes).
-  * `.gitignore`, development configurations, etc.
-  * **Result:** The NPM package is extremely fast to download and install (around 8.5 KB compressed).
-
-### B. GitHub Repository (The Templates)
-GitHub acts as the **source of truth** and hosting platform for the template files.
-* **What is stored on GitHub:**
-  * The complete codebase, including the `templates/` folder which holds all the individual website templates (e.g., `templates/hotel-website-template`).
-  * The CLI code and documentation.
-
----
-
-## 3. Under the Hood: Step-by-Step Execution
-
-When a user runs `tempjs hotel`, the CLI executes the following steps:
-
-1. **Manifest Lookup:**
-   The CLI reads the `templates.json` packaged with the NPM installation to verify if `hotel` exists. It retrieves:
-   * The directory name: `hotel-website-template`
-   * The GitHub repo owner, repo name, and branch.
-
-2. **Local vs Remote Check:**
-   * If running locally in development mode (where the local `templates/` folder exists relative to the CLI script), it copies the files instantly from the disk.
-   * Otherwise, it prepares to fetch from GitHub.
-
-3. **Fetch Repository Tree:**
-   The CLI queries the GitHub API:
-   `GET https://api.github.com/repos/{owner}/{repo}/git/trees/{branch}?recursive=1`
-   This returns the entire file tree of the repository without downloading the contents.
-
-4. **Filter & Select Files:**
-   The CLI filters the file tree to select only blobs whose paths start with `templates/hotel-website-template/`.
-
-5. **Concurrently Download Blobs:**
-   The CLI spins up **8 concurrent workers** (as defined in `fetch.js` concurrency settings) to download the matching files asynchronously.
-   * For files under 1MB, it uses the GitHub Blobs API.
-   * For larger files, it streams directly from `https://raw.githubusercontent.com`.
-
-6. **Safety Cleanups & Verification:**
-   * Files are initially downloaded into a secure system temporary directory (e.g., `tmpdir()/template-cli-xxxxxx`).
-   * It excludes `.git/` directories and sensitive configuration files like `.env` (keeping `.env.example`).
-   * Once successfully downloaded, it copies the clean templates into the user's current directory (prompting if files will be overwritten, unless `--force` is used).
-
----
-
-## 4. Workflow: Adding a New Template
-
-If you create a new template (e.g., `restaurant`), do you need to publish to NPM again? **Yes, but only to update the manifest.**
-
-Here is the exact process:
-
-### Step 1: Create the template folder
-Add your template directory under the `templates/` root on your local filesystem (e.g., `templates/restaurant-website-template/`).
-
-### Step 2: Update the local `templates.json`
-Add the new entry under `"templates"` in `templates.json`:
-```json
-"restaurant": {
-  "directory": "restaurant-website-template",
-  "name": "Restaurant Website",
-  "description": "Modern restaurant website template"
-}
-```
-
-### Step 3: Push to GitHub
-Commit and push your template code and the updated `templates.json` to your GitHub repository:
-```bash
-git add .
-git commit -m "Add restaurant website template"
-git push origin main
-```
-> [!IMPORTANT]
-> The template files **must** be live on GitHub because the CLI fetches them from the remote repository during production use.
-
-### Step 4: Publish to NPM
-Since the installed CLI looks at the **locally installed** `templates.json` to map command names, you must update the package version and publish to NPM:
-```bash
-# Bump version (e.g. from 1.0.0 to 1.0.1)
-npm version patch
-
-# Publish the update
-npm publish --access public
-```
-Once published, users who update their CLI (`npm update -g @navneet_25/tempjs`) will be able to run `tempjs restaurant` immediately.
-
----
-
-## 5. Crucial Setup Step
-
-In your `templates.json`, the `"repository"` settings currently point to placeholders:
-```json
-"repository": {
-  "owner": "your-username",
-  "repo": "templates",
+{
+  "template": "hotel",
+  "templateVersion": "1.2.0",
+  "templateDirectory": "hotel-website-template",
+  "generatedAt": "2026-08-26T04:52:13.543Z",
+  "repository": "SidhartGautam25/templates",
   "branch": "main",
-  "templatesPath": "templates"
+  "fileHashes": {
+    "lib/features/leads/lead.service.ts": "a1b2c3…"
+  }
 }
 ```
 
-Make sure to edit `templates.json` to replace `"your-username"` and `"templates"` with your actual GitHub username and repository name so that the CLI fetches templates from the correct place automatically!
+After `tempjs update --merge`, `templateVersion` and `fileHashes` refresh; `updatedAt` is set.
+
+### Manifest versioning
+
+Maintainers bump per-template version in `templates.json`:
+
+```json
+"hotel": {
+  "directory": "hotel-website-template",
+  "version": "1.2.0",
+  ...
+}
+```
+
+`tempjs list` and `tempjs info` surface this version. Clients compare their `.tempjs.json` `templateVersion` against the manifest when running `update --check`.
 
 ---
 
-## 6. Theme and Font Configuration System
+## Template update algorithm
 
-`tempjs` features a centralized, modular theme and font configuration system. This allows developers to customize the visual styling of templates during initialization or modify them post-initialization.
+### Commands
 
-### How it Works (Under the Hood)
-1. **Centralized Registry:** Theme definitions (colors, hover states) and Font pairings (Google Font imports, Serif/Sans font family overrides) are centrally managed inside [cli/theme-manager.js](file:///home/sidharthg/sid/project/free/templates/cli/theme-manager.js).
-2. **Metadata Tracking:** When styling is applied, a `.tempjsrc` JSON file is written to the root of the project to track the current configuration:
-   ```json
-   {
-     "theme": "theme2",
-     "font": "lora-montserrat",
-     "updatedAt": "2026-08-25T10:34:42.756Z"
-   }
-   ```
-3. **CSS Variables Override (`tempjs-theme.css`):**
-   - The CLI recursively searches for the template's stylesheet entry file (e.g. `globals.css`).
-   - It writes/overwrites a file called `tempjs-theme.css` in the same directory. This file `@import`s the correct Google Font URL and defines `:root` custom properties marked with `!important` (e.g., `--primary: #58812F !important;`, `--font-sans: 'Montserrat', sans-serif !important;`).
-   - The CLI automatically prepends `@import "./tempjs-theme.css";` to the top of `globals.css` if it's not already present. Because of `!important`, these values override baseline rules and inline styles.
-4. **JavaScript/TypeScript Configuration Sync:**
-   - The CLI scans for `constants/site.ts` (or `site.js`) containing the JavaScript-driven theme variables.
-   - It runs a regex replacement to update the `colors: { ... }` block inside `SITE.theme` to match the exact hex codes of the chosen theme, ensuring metadata, admin portals, and server-side components stay synchronized.
+| Command | Action |
+|---------|--------|
+| `tempjs update --check` | Fetch latest template, diff, print report — **no writes** |
+| `tempjs update --merge` | Apply safe updates + new files; refresh stamp |
+| `tempjs update --merge --yes` | Merge without confirmation prompt |
 
-### Adding New Themes
-To add a new theme to the system:
-1. Open [cli/theme-manager.js](file:///home/sidharthg/sid/project/free/templates/cli/theme-manager.js).
-2. Add a new object to the `THEMES` array:
-   ```javascript
-   {
-     id: "my-teal-theme",
-     name: "Theme 6 (Teal / Ocean)",
-     colors: {
-       primary: "#0D9488",
-       primaryHover: "#0F766E",
-       accent: "#2DD4BF",
-       accentDark: "#0D9488",
-       accentLight: "#F0FDFA",
-       textMain: "#111827",
-       textMuted: "#4B5563",
-       bgMain: "#F0FDFA",
-       bgLight: "#E6FFFA",
-       bgCard: "#FFFFFF",
-       footerBg: "#CCFBF1",
-       ctaPrimary: "#0D9488",
-       ctaPrimaryHover: "#0F766E",
-     }
-   }
-   ```
-3. No edits are required on the template side. The CLI will automatically display your new theme in the prompts and apply it!
+Requires `.tempjs.json` in the current directory.
 
-### Adding New Font Pairs
-To add a new font pairing:
-1. Open [cli/theme-manager.js](file:///home/sidharthg/sid/project/free/templates/cli/theme-manager.js).
-2. Add a new object to the `FONTS` array:
-   ```javascript
-   {
-     id: "lato-merriweather",
-     name: "Merriweather (Serif) + Lato (Sans-serif)",
-     serif: "'Merriweather', Georgia, serif",
-     sans: "'Lato', sans-serif",
-     importUrl: "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap"
-   }
-   ```
+### Three hash sets
+
+For each file path in the **latest** template:
+
+| Hash | Meaning |
+|------|---------|
+| `baseline` | From `.tempjs.json` `fileHashes` at last stamp |
+| `current` | File on disk in the client project now |
+| `latest` | File in the newest template from GitHub/local |
+
+### Classification
+
+```
+if current === latest     → up to date (skip)
+if current === baseline && latest !== baseline → SAFE UPDATE (template changed, user didn't)
+if current !== latest && current !== baseline → CONFLICT (user edited)
+if file missing in project → NEW FILE (add)
+if file in baseline but not in latest → REMOVED FROM TEMPLATE (warn only, do not delete)
+```
+
+### Protected paths
+
+Never overwritten by `--merge` (`fs-ignore.js` → `UPDATE_PROTECTED_PATHS`):
+
+- `.env`, `.env.*` (except `.env.example`)
+- `constants/site.ts`
+- `.tempjsrc`, `app/tempjs-theme.css`
+- `.git`
+
+Brand, secrets, and theme choices stay under client control.
+
+### Merge apply
+
+`update.js` copies only safe + new paths from a temp template directory (`copyTemplateFile` per file), then re-stamps with the new manifest version and refreshed `fileHashes` from the latest template tree.
+
+Conflicts remain for manual resolution (e.g. merge `app/components/Hero.tsx` by hand).
 
 ---
 
-## 7. Interactive Brand Configuration
+## Flow diagrams
 
-The interactive brand configuration (`tempjs brand`) allows developers to customize brand identities and contact details of a template without diving manually into `site.ts`.
+### Create project
 
-### How it Works (Under the Hood)
-1. **Interactive Prompt:** The CLI prompts for inputs including Brand Name, Display Name, Base URL, Contact Phone, Display Phone, Country Code, Contact Email, and Full Address.
-2. **Regex Parsing & Replacements:**
-   - The CLI loads `constants/site.ts`.
-   - It replaces the `brand`, `domain`, and `contact` configuration blocks with updated details.
-   - It dynamically extracts the `locality` and `region` from the address list and parses the `wwwHost` from the provided `baseUrl` automatically.
+```
+tempjs hotel
+    → resolveTemplateSource()     # local or tarball
+    → copyTemplate()              # flat copy to cwd
+    → writeProjectStamp()         # .tempjs.json + fileHashes
+    → (optional) theme/brand/db
+```
+
+### Update project
+
+```
+tempjs update --check
+    → readProjectStamp()
+    → resolveTemplateSource()     # latest template
+    → collectFileHashes() × 3   # baseline, current, latest
+    → diffTemplateTrees()
+    → printUpdateReport()
+
+tempjs update --merge
+    → same diff
+    → copy safe/new files only
+    → writeProjectStamp(isUpdate: true)
+```
 
 ---
 
-## 8. Environment & Database Auto-Setup
+## Maintainer checklist
 
-The database auto-setup command (`tempjs init-db`) handles the setup of environment files (`.env`) and database tables/schemas via Prisma.
+When shipping template fixes:
 
-### How it Works (Under the Hood)
-1. **Prompt for Credentials:** Prompts for MySQL connection details (Host, Port, User, Password, Database Name), using the current directory name as a baseline for the database name.
-2. **NextAuth Security:** Automatically generates a cryptographically secure random base64 string for `AUTH_SECRET` to prevent NextAuth from throwing errors.
-3. **Environment Setup:** Reads `.env.example`, replaces variables, and writes out `.env`.
-4. **Schema Initialization:** Runs `npx prisma db push` inside the directory using Node's `execSync` to synchronize the MySQL database table structure with the Prisma schema.
+1. Edit `packages/core/` or `templates/overlays/<template>/`.
+2. `pnpm sync-templates`
+3. Bump `"version"` in `templates.json` for affected templates.
+4. Commit, push, publish CLI if needed.
+5. Clients run `tempjs update --check` then `tempjs update --merge`.
 
+---
+
+## Related docs
+
+- [README.md](./README.md) — usage examples for developers
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — monorepo core + overlay sync model
+- [packages/core/README.md](./packages/core/README.md) — shared library layout in generated projects

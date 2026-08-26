@@ -1,5 +1,6 @@
 /**
  * Converts a string (e.g. project name) into a clean, dash-separated URL slug.
+ * Shared core utility — safe to customize per project.
  */
 export function slugify(name: string): string {
   return name

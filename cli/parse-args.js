@@ -29,6 +29,8 @@ export function createDefaultFlags() {
     adminPassword: undefined,
     skipDbPush: false,
     dbPush: false,
+    updateCheck: false,
+    updateMerge: false,
   };
 }
 
@@ -45,6 +47,8 @@ const FLAG_MAP = {
   "--no-prompt": { key: "yes", type: "boolean" },
   "--skip-db-push": { key: "skipDbPush", type: "boolean" },
   "--db-push": { key: "dbPush", type: "boolean" },
+  "--check": { key: "updateCheck", type: "boolean" },
+  "--merge": { key: "updateMerge", type: "boolean" },
   "--theme": { key: "theme", type: "string" },
   "--font": { key: "font", type: "string" },
   "--name": { key: "name", type: "string" },

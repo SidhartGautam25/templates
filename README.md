@@ -147,6 +147,139 @@ tempjs theme --theme theme2 --yes
 tempjs font --font inter --yes
 ```
 
+#### Fetch progress
+
+When downloading a template, tempjs reports size, file count, and duration:
+
+```text
+Fetching template "hotel"... done (4.2 MB, 130 files, 1.8s, download)
+```
+
+From a linked local dev copy (no network):
+
+```text
+Fetching template "hotel"... done (130 files, 0ms, local copy)
+```
+
+---
+
+### Template versioning (`.tempjs.json`)
+
+Every new project is stamped with a `.tempjs.json` file at the root:
+
+```json
+{
+  "template": "hotel",
+  "templateVersion": "1.2.0",
+  "templateDirectory": "hotel-website-template",
+  "generatedAt": "2026-08-26T04:52:13.543Z",
+  "updatedAt": "2026-08-26T05:10:00.000Z",
+  "repository": "SidhartGautam25/templates",
+  "branch": "main",
+  "fileHashes": {
+    "package.json": "abc123…",
+    "lib/database/prisma.ts": "def456…"
+  }
+}
+```
+
+| Field | Purpose |
+|-------|---------|
+| `template` | CLI id (`hotel`, `real-estate`) |
+| `templateVersion` | Manifest version when last stamped |
+| `generatedAt` | First `tempjs` run in this folder |
+| `updatedAt` | Last successful `tempjs update --merge` |
+| `fileHashes` | SHA-256 of each template file at stamp time (baseline for updates) |
+
+**Commit `.tempjs.json`** to your client repo so you know which template version the project started from.
+
+Check version in manifest:
+
+```bash
+tempjs list          # shows v1.2.0 next to template name
+tempjs info hotel    # shows full version in details
+```
+
+When maintainers bump `"version"` in `templates.json` and push, clients can pull fixes safely.
+
+---
+
+### Update an existing project (`tempjs update`)
+
+Use inside a project that has `.tempjs.json` (created by `tempjs hotel`, etc.).
+
+#### Check what changed (read-only)
+
+```bash
+cd mi-plaza
+tempjs update --check
+```
+
+Example output:
+
+```text
+Template update report: Hotel Website
+  Project version:  1.1.0
+  Latest version: 1.2.0
+
+Safe updates (1) — template changed, you did not edit:
+  ~ lib/utils/slugify.ts
+
+Conflicts (1) — you modified these files:
+  ! app/components/Hero.tsx
+
+129 file(s) already match the latest template.
+```
+
+| Report section | Meaning |
+|----------------|---------|
+| **New files** | Added in latest template; not in your project yet |
+| **Safe updates** | Template changed; you did **not** edit since generation → can auto-merge |
+| **Conflicts** | You modified files that also changed in the template → manual review |
+| **Removed from template** | No longer in template; **not deleted** from your project |
+
+#### Apply non-conflicting updates
+
+```bash
+tempjs update --merge
+# or without prompt:
+tempjs update --merge --yes
+```
+
+Only **new files** and **safe updates** are copied. Conflicts are listed but never overwritten.
+
+**Protected paths** (never touched by merge):
+
+- `.env`, `.env.*` (except `.env.example`)
+- `constants/site.ts` (brand/contact)
+- `.tempjsrc`, `app/tempjs-theme.css`
+- `.tempjs.json` (updated after merge with new version + hashes)
+
+#### Full workflow example
+
+```bash
+# 1. Create client project (stamped v1.1.0)
+mkdir mi-plaza && cd mi-plaza
+tempjs hotel --config --yes --name "Mi Plaza"
+
+# 2. Customize freely
+#    edit app/components/Hero.tsx, constants/site.ts, .env …
+
+# 3. Later — maintainer published template v1.2.0 with bug fixes in lib/
+
+tempjs update --check     # see safe updates vs conflicts
+tempjs update --merge --yes   # apply only non-conflicting fixes
+
+# 4. Manually merge conflicts if any (e.g. Hero.tsx)
+```
+
+Use `--remote` to fetch the latest template from GitHub instead of a local linked copy:
+
+```bash
+tempjs update --check --remote
+tempjs update --merge --remote --yes
+```
+
 ---
 
 ### Post-init commands (inside a generated project)
@@ -329,7 +462,9 @@ npm install -g @navneet_25/tempjs
 npm install -g @navneet_25/tempjs@latest
 ```
 
-Current version: **1.2.0** (includes `info`, non-interactive flags, tarball fetch).
+Current version: **1.4.0** (update, versioning, fetch progress, info, non-interactive flags).
+
+See also: [guide.md](./guide.md) for CLI architecture and update algorithm details.
 
 Verify:
 

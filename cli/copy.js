@@ -9,22 +9,9 @@ import {
   statSync,
 } from "node:fs";
 import { join } from "node:path";
+import { NEVER_COPY_NAMES, shouldSkipFileName } from "./fs-ignore.js";
 
-const NEVER_COPY = new Set([".git", ".gitignore.bak"]);
 const NEVER_OVERWRITE = new Set([".git"]);
-
-/**
- * Files that must never be transferred into a generated project.
- * @param {string} name
- * @returns {boolean}
- */
-function shouldSkipFile(name) {
-  if (NEVER_COPY.has(name)) return true;
-  if (name === ".env" || name.startsWith(".env.")) {
-    return name !== ".env.example";
-  }
-  return false;
-}
 
 /**
  * @param {string} dir
@@ -75,7 +62,7 @@ function collectConflicts(sourceDir, targetDir, relative, conflicts) {
 
   const sourceNames = readdirSync(currentSource);
   for (const name of sourceNames) {
-    if (shouldSkipFile(name)) continue;
+    if (shouldSkipFileName(name)) continue;
 
     const relPath = relative ? join(relative, name) : name;
     const sourcePath = join(sourceDir, relPath);
@@ -126,7 +113,7 @@ function copyRecursive(sourceRoot, targetRoot, relative) {
   const names = readdirSync(sourcePath);
 
   for (const name of names) {
-    if (shouldSkipFile(name)) continue;
+    if (shouldSkipFileName(name) || NEVER_COPY_NAMES.has(name)) continue;
 
     const relPath = relative ? join(relative, name) : name;
     const from = join(sourceRoot, relPath);
@@ -138,7 +125,6 @@ function copyRecursive(sourceRoot, targetRoot, relative) {
 
     const stat = lstatSync(from);
     if (stat.isSymbolicLink()) {
-      const linkTarget = readlinkSync(from);
       mkdirSync(join(to, ".."), { recursive: true });
       cpSync(from, to, { recursive: true, force: true });
       continue;
@@ -158,7 +144,7 @@ function copyRecursive(sourceRoot, targetRoot, relative) {
  * @param {string} dir
  */
 export function removeDirectory(dir) {
-  if (existsSync(dir)) {
+  if (dir && existsSync(dir)) {
     rmSync(dir, { recursive: true, force: true });
   }
 }

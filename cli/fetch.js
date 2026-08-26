@@ -1,39 +1,44 @@
 import { execFileSync } from "node:child_process";
-import { createWriteStream, existsSync } from "node:fs";
+import { createWriteStream, existsSync, statSync } from "node:fs";
 import { mkdir, mkdtemp, readdir, readFile, rm, stat } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pipeline } from "node:stream/promises";
 import { Readable } from "node:stream";
+import { shouldSkipFileName } from "./fs-ignore.js";
+import { countFiles } from "./file-tree.js";
 
 const CODELOAD_BASE = "https://codeload.github.com";
 
 /**
- * Download a single template directory from GitHub without cloning or per-file API calls.
- *
- * Strategy: one tarball download from codeload.github.com (not the REST API), then
- * extract only templates/<templateDirectory>/ from the archive. This uses a single
- * HTTP request instead of 60+ blob API calls, avoiding unauthenticated rate limits.
- *
+ * @typedef {{ bytes: number, files: number, durationMs: number, source: string }} FetchStats
+ * @typedef {{ templateRoot: string, cleanupDir: string, stats: FetchStats }} FetchResult
+ */
+
+/**
  * @param {import('./config.js').RepositoryConfig} repo
  * @param {string} templateDirectory
- * @returns {Promise<string>} Path to temp directory containing template files
+ * @returns {Promise<FetchResult>}
  */
 export async function fetchTemplateFromGitHub(repo, templateDirectory) {
+  const startMs = performance.now();
   const tempRoot = await mkdtemp(join(tmpdir(), "template-cli-"));
   const tarballPath = join(tempRoot, "archive.tar.gz");
   const templateRoot = join(tempRoot, "template");
 
   try {
-    await downloadTarball(repo, tarballPath);
-    await extractTemplateFromTarball(
-      tarballPath,
-      templateRoot,
-      repo,
-      templateDirectory
-    );
+    const bytes = await downloadTarball(repo, tarballPath);
+    await extractTemplateFromTarball(tarballPath, templateRoot, repo, templateDirectory);
     await readFile(join(templateRoot, "package.json"));
-    return templateRoot;
+
+    const durationMs = performance.now() - startMs;
+    const files = countFiles(templateRoot);
+
+    return {
+      templateRoot,
+      cleanupDir: tempRoot,
+      stats: { bytes, files, durationMs, source: "remote" },
+    };
   } catch (error) {
     await rm(tempRoot, { recursive: true, force: true });
     throw error;
@@ -43,6 +48,7 @@ export async function fetchTemplateFromGitHub(repo, templateDirectory) {
 /**
  * @param {import('./config.js').RepositoryConfig} repo
  * @param {string} destPath
+ * @returns {Promise<number>} Downloaded bytes
  */
 async function downloadTarball(repo, destPath) {
   const branch = encodeURIComponent(repo.branch);
@@ -69,6 +75,7 @@ async function downloadTarball(repo, destPath) {
   }
 
   await pipeline(Readable.fromWeb(response.body), createWriteStream(destPath));
+  return statSync(destPath).size;
 }
 
 /**
@@ -128,13 +135,12 @@ async function extractTemplateFromTarball(
 }
 
 /**
- * Remove files that must never appear in generated projects.
  * @param {string} dir
  */
 async function removeSkippedFiles(dir) {
   if (!existsSync(dir)) return;
 
-  const entries = await readDirSafe(dir);
+  const entries = await readDirEntries(dir);
   for (const entry of entries) {
     const fullPath = join(dir, entry.name);
     if (entry.isDirectory) {
@@ -155,7 +161,7 @@ async function removeSkippedFiles(dir) {
 /**
  * @param {string} dir
  */
-async function readDirSafe(dir) {
+async function readDirEntries(dir) {
   const names = await readdir(dir);
   const result = [];
   for (const name of names) {
@@ -164,16 +170,6 @@ async function readDirSafe(dir) {
     result.push({ name, isDirectory: info.isDirectory() });
   }
   return result;
-}
-
-/**
- * @param {string} name
- */
-function shouldSkipFileName(name) {
-  if (name === ".env" || (name.startsWith(".env.") && name !== ".env.example")) {
-    return true;
-  }
-  return false;
 }
 
 function buildHeaders() {
@@ -198,4 +194,26 @@ export async function resolveLocalTemplate(packageRoot, templatesPath, templateD
   } catch {
     return null;
   }
+}
+
+/**
+ * @param {string} packageRoot
+ * @param {string} templatesPath
+ * @param {string} templateDirectory
+ * @returns {Promise<FetchResult | null>}
+ */
+export async function loadLocalTemplate(packageRoot, templatesPath, templateDirectory) {
+  const localPath = await resolveLocalTemplate(packageRoot, templatesPath, templateDirectory);
+  if (!localPath) return null;
+
+  return {
+    templateRoot: localPath,
+    cleanupDir: "",
+    stats: {
+      bytes: 0,
+      files: countFiles(localPath),
+      durationMs: 0,
+      source: "local",
+    },
+  };
 }
