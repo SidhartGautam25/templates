@@ -1,13 +1,31 @@
 {
   "title": "Templates",
-  "description": "Available website templates. Each template has its own init options, flags, and dedicated guide in the sidebar.",
+  "description": "How templates work, what they share, and how to pick the right one for your client.",
   "blocks": [
     {
       "type": "paragraph",
-      "text": "Templates are full Next.js 16 apps with admin portal, Prisma + MariaDB, lead capture, optional FTP uploads, and Docker Compose for local database. Pick a template in the sidebar for template-specific commands and options."
+      "text": "A template in tempjs is a complete Next.js application — not a snippet or theme zip. Each template shares core infrastructure (admin auth, leads, health check, Docker database, FTP uploads) while the overlay layer adds vertical-specific pages and models: rooms for hotels, properties for real estate."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "How copying works"
+    },
+    {
+      "type": "paragraph",
+      "text": "When you run tempjs hotel inside an empty folder, files land directly in that folder. The CLI does not create hotel-website-template as a subdirectory. That design keeps deployment and git repos simple: your client folder is the app root. .tempjs.json records template id and version so tempjs update can diff against upstream later."
     },
     {
       "type": "template-cards"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Shared vs template-specific options"
+    },
+    {
+      "type": "paragraph",
+      "text": "All templates support theme presets, font pairings, database flags, and core brand fields. Template-specific flags (e.g. hotel landmark line vs real-estate RERA) are declared in templates.json and mirrored in each template's docs page and command builder. You are not forced to pass every flag — only what you configure appears in non-interactive commands."
     },
     {
       "type": "heading",
@@ -17,18 +35,18 @@
     {
       "type": "list",
       "items": [
-        "Flat copy into current directory (no nested template folder)",
-        ".tempjs.json version stamp and file hash baseline",
-        "Admin at /admin with ADMIN_USER / ADMIN_PASSWORD from .env",
-        "GET /api/health for DB and env checks",
-        "GETTING_STARTED.md linear checklist in the project"
+        "Flat copy into current directory",
+        ".tempjs.json version stamp and file hashes",
+        "/admin portal (ADMIN_USER / ADMIN_PASSWORD from .env)",
+        "GET /api/health for environment and DB checks",
+        "GETTING_STARTED.md checklist in the generated project"
       ]
     },
     {
       "type": "callout",
       "variant": "tip",
-      "title": "Per-template options",
-      "text": "Each template defines its own init flags in templates.json (brandFields). Hotel prompts for landmark distance; real estate prompts for RERA. Add a new templates-registry.json entry plus a JSON page to document a new template."
+      "title": "Open a template guide",
+      "text": "Use the sidebar under Templates for per-template explanations and the interactive command generator."
     },
     {
       "type": "command-ref",

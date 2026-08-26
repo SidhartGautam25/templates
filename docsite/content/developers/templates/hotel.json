@@ -1,60 +1,72 @@
 {
   "title": "Hotel Website",
-  "description": "Resort and hotel template with rooms, gallery, facilities, reviews, and enquiry flows.",
+  "description": "A full resort or hotel site — how it works, what you configure, and commands to generate your project.",
   "templateId": "hotel",
   "blocks": [
     {
       "type": "paragraph",
-      "text": "Use tempjs hotel to generate a boutique hotel or resort site. The admin portal manages room types, gallery images, facilities, reviews, promo banners, and leads. Demo brand: Lakeside Haven Resort (Lonavala)."
+      "text": "The hotel template targets boutique hotels, resorts, and homestays that need room listings, gallery, facilities, reviews, and enquiry flows — not a generic landing page. Visitors browse room types, open enquiry modals, and see contact details driven from a single config file. Staff manage content through /admin without touching code for day-to-day updates."
     },
     {
       "type": "heading",
       "level": 2,
-      "text": "Stack & features"
+      "text": "Why this template exists"
+    },
+    {
+      "type": "paragraph",
+      "text": "Hotel sites repeat the same patterns: hero with property story, room grid with categories, gallery, amenities list, guest reviews, sticky phone/WhatsApp, and lead capture. This template encodes those patterns so you focus on brand copy, photography, and pricing — not rebuilding admin CRUD and enquiry plumbing."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Demo brand",
+      "text": "The default content models Lakeside Haven Resort in Lonavala. Replace names, URLs, and images — the structure stays the same."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What you get technically"
     },
     {
       "type": "list",
       "items": [
-        "Next.js 16, React 19, TypeScript, Tailwind CSS 4",
-        "Room types with slug detail pages and enquiry modals",
-        "Gallery and facilities CMS",
-        "Guest reviews management",
-        "Docker Compose MariaDB + Prisma",
-        "FTP asset upload pipeline",
-        "Optional LeadRat CRM integration"
+        "Next.js 16 App Router with React 19 and TypeScript",
+        "Room types with slug pages (e.g. /rooms/deluxe-lake-view) and enquiry modals",
+        "Gallery and facilities managed in admin",
+        "Guest reviews CMS",
+        "Promo banner and optional LeadRat CRM hook",
+        "Prisma + MariaDB with Docker Compose for local dev",
+        "FTP pipeline for uploading room and hero assets"
       ]
     },
     {
       "type": "heading",
       "level": 2,
-      "text": "Hotel-specific init options"
+      "text": "Hotel-specific configuration"
     },
     {
       "type": "paragraph",
-      "text": "Besides standard brand and contact flags, hotel init supports tagline, developer/operator name, channel partner, and a nearby landmark line (templeDistance) shown on the contact section."
-    },
-    {
-      "type": "callout",
-      "variant": "info",
-      "text": "Real estate templates use --agent-rera instead of --temple-distance. Options are defined per template in templates.json under init.brandFields."
+      "text": "Besides standard brand fields (name, URL, phone, email, address), hotel init supports tagline, operator/developer name, channel partner label, and templeDistance — a short line about a nearby landmark (lake, temple, viewpoint) shown in contact sections. Real-estate templates use RERA instead; you won't see --temple-distance there."
     },
     {
       "type": "heading",
       "level": 2,
-      "text": "Commands"
+      "text": "Generate your command"
+    },
+    {
+      "type": "paragraph",
+      "text": "Use the builder below to produce a copy-paste command for quick copy, interactive setup, or a fully customized non-interactive run. Pick generate new project, then walk through options, theme, brand, and database — skip any field you don't need yet."
+    },
+    {
+      "type": "command-builder"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Flag reference"
     },
     {
       "type": "template-command"
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "text": "Examples"
-    },
-    {
-      "type": "code",
-      "language": "bash",
-      "code": "mkdir lakeside-client && cd lakeside-client\ntempjs hotel config\n\n# Non-interactive full setup\ntempjs hotel --config --yes \\\n  --theme theme1 --font modern \\\n  --name \"Lakeside Haven Resort\" \\\n  --short-name \"Lakeside Haven\" \\\n  --base-url https://lakesidehaven.com \\\n  --phone 9876543210 \\\n  --email reservations@lakesidehaven.com \\\n  --address \"Lonavala, Maharashtra, India\" \\\n  --tagline \"Where Nature Meets Refined Comfort\" \\\n  --temple-distance \"5 min walk to Lonavala Lake\" \\\n  --db-host localhost --db-name lakeside_db --admin-user admin --admin-password changeme"
     }
   ]
 }

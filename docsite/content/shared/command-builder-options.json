@@ -1,0 +1,16 @@
+{
+  "themes": [
+    { "value": "theme1", "label": "Theme 1 — Slate / Blue" },
+    { "value": "theme2", "label": "Theme 2 — Forest / Green" },
+    { "value": "theme3", "label": "Theme 3 — Purple / Violet" },
+    { "value": "theme4", "label": "Theme 4 — Red / Crimson" },
+    { "value": "theme5", "label": "Theme 5 — Amber / Gold" }
+  ],
+  "fonts": [
+    { "value": "default", "label": "Playfair Display + Outfit (default)" },
+    { "value": "inter", "label": "Inter" },
+    { "value": "lora-montserrat", "label": "Lora + Montserrat" },
+    { "value": "merriweather-open-sans", "label": "Merriweather + Open Sans" },
+    { "value": "cinzel-montserrat", "label": "Cinzel + Montserrat" }
+  ]
+}

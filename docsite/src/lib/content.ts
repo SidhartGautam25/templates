@@ -5,6 +5,8 @@ import site from "@content/site.json";
 import navigation from "@content/navigation.json";
 import commandsRegistry from "@content/shared/commands.json";
 import initFieldsRegistry from "@content/shared/init-fields.json";
+import commandBuilderFields from "@content/shared/command-builder-fields.json";
+import commandBuilderOptions from "@content/shared/command-builder-options.json";
 import templatesRegistry from "@content/templates-registry.json";
 
 import devIntro from "@content/developers/intro.json";
@@ -29,6 +31,8 @@ import type {
   NavItem,
   PageContent,
   SiteMeta,
+  CommandBuilderFieldsRegistry,
+  CommandBuilderOptionsRegistry,
   TemplateRegistry,
   TemplateRegistryEntry,
 } from "@/types/content";
@@ -39,6 +43,8 @@ export const siteMeta = site as SiteMeta;
 export const nav = navigation as Navigation;
 export const commands = commandsRegistry as CommandsRegistry;
 export const initFields = initFieldsRegistry as InitFieldsRegistry;
+export const commandBuilderFieldDefs = commandBuilderFields as CommandBuilderFieldsRegistry;
+export const commandBuilderOptionSets = commandBuilderOptions as CommandBuilderOptionsRegistry;
 export const templateRegistry = templatesRegistry as TemplateRegistry;
 
 export const developerPages: Record<string, PageContent> = {

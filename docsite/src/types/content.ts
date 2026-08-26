@@ -48,6 +48,10 @@ export interface TemplateCommandBlock extends ContentBlockBase {
   type: "template-command";
 }
 
+export interface CommandBuilderBlock extends ContentBlockBase {
+  type: "command-builder";
+}
+
 export interface TemplateCardsBlock extends ContentBlockBase {
   type: "template-cards";
 }
@@ -61,6 +65,7 @@ export type ContentBlock =
   | TableBlock
   | CommandRefBlock
   | TemplateCommandBlock
+  | CommandBuilderBlock
   | TemplateCardsBlock;
 
 export interface PageContent {
@@ -121,6 +126,61 @@ export interface TemplateRegistryEntry {
   cliId: string;
   flagGroups: string[];
   brandFields: string[];
+  commandBuilder?: TemplateCommandBuilderConfig;
+}
+
+export interface CommandBuilderPreset {
+  id: string;
+  label: string;
+  description: string;
+  command: string;
+}
+
+export interface CommandBuilderWizardStep {
+  id: string;
+  title: string;
+  description?: string;
+  fieldKeys: string[];
+}
+
+export interface CommandBuilderMode {
+  id: string;
+  label: string;
+  description?: string;
+  baseCommand: string;
+  wizardSteps: CommandBuilderWizardStep[];
+}
+
+export interface TemplateCommandBuilderConfig {
+  presets: CommandBuilderPreset[];
+  modes: CommandBuilderMode[];
+}
+
+export interface CommandBuilderFieldDef {
+  flag: string;
+  label: string;
+  description: string;
+  type: "text" | "select" | "toggle";
+  optionSet?: string;
+  placeholder?: string;
+  quote?: boolean;
+  default?: boolean;
+}
+
+export interface CommandBuilderFieldsRegistry {
+  fields: Record<string, CommandBuilderFieldDef>;
+  databaseFieldKeys: string[];
+  generateToggleKeys: string[];
+}
+
+export interface CommandBuilderOption {
+  value: string;
+  label: string;
+}
+
+export interface CommandBuilderOptionsRegistry {
+  themes: CommandBuilderOption[];
+  fonts: CommandBuilderOption[];
 }
 
 export interface TemplateRegistry {

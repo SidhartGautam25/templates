@@ -3,6 +3,8 @@ import { Callout } from "./Callout";
 import { CommandBlock } from "./CommandBlock";
 import { TemplateCardGrid } from "./TemplateCard";
 import { TemplateCommandBlock } from "./TemplateCommandBlock";
+import { CommandBuilder } from "./command-builder/CommandBuilder";
+import { commandBuilderFieldDefs, commandBuilderOptionSets } from "@/lib/content";
 
 function Block({
   block,
@@ -68,6 +70,15 @@ function Block({
       return <CommandBlock id={block.id} />;
     case "template-command":
       return templateEntry ? <TemplateCommandBlock entry={templateEntry} /> : null;
+    case "command-builder":
+      return templateEntry?.commandBuilder ? (
+        <CommandBuilder
+          config={templateEntry.commandBuilder}
+          fieldRegistry={commandBuilderFieldDefs}
+          optionSets={commandBuilderOptionSets}
+          templateLabel={templateEntry.label}
+        />
+      ) : null;
     case "template-cards":
       return null;
     default:

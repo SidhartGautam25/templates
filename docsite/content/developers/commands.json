@@ -1,6 +1,40 @@
 {
   "title": "Commands",
-  "description": "Complete reference for tempjs CLI commands. Copy examples directly into your terminal.",
+  "description": "How tempjs commands fit together — use this page as a map, then drill into template pages for generated commands.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "tempjs commands fall into two groups: generation (run in an empty client folder) and maintenance (run inside a project that already has .tempjs.json). Generation copies the template; maintenance commands like theme, brand, and init-db modify an existing install without re-copying files."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "For copy-paste commands tailored to hotel or real-estate — including step-by-step flag picking — open the template guide in the sidebar and use the command generator."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Generation commands"
+    },
+    {
+      "type": "paragraph",
+      "text": "tempjs <template-id> copies files. Add config to run setup after copy, or use the template id followed by config for interactive prompts. --yes skips confirmations; --force overwrites conflicting files."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Project commands (existing folder)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Run these from the project root where .tempjs.json exists. They update constants/site.ts, globals.css theme tokens, or .env without touching unrelated files."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Full reference"
+    }
+  ],
   "commandIds": [
     "list",
     "info",
@@ -12,12 +46,5 @@
     "doctor",
     "update-check",
     "update-merge"
-  ],
-  "blocks": [
-    {
-      "type": "callout",
-      "variant": "info",
-      "text": "Run commands inside your client project folder unless noted. Maintainer commands live in the Maintainers section."
-    }
   ]
 }
