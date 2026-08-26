@@ -5,6 +5,7 @@ import { TemplateCardGrid } from "./TemplateCard";
 import { TemplateCommandBlock } from "./TemplateCommandBlock";
 import { CommandBuilder } from "./command-builder/CommandBuilder";
 import { commandBuilderFieldDefs, commandBuilderOptionSets } from "@/lib/content";
+import { slugify } from "@/lib/slugify";
 
 function Block({
   block,
@@ -18,11 +19,12 @@ function Block({
       return <p className="my-4 text-[var(--color-doc-muted)] leading-relaxed">{block.text}</p>;
     case "heading":
       const Tag = block.level === 2 ? "h2" : "h3";
+      const id = block.level === 2 ? slugify(block.text) : undefined;
       const cls =
         block.level === 2
           ? "mt-10 mb-4 text-2xl font-semibold text-[var(--color-doc-text)]"
           : "mt-8 mb-3 text-lg font-semibold text-[var(--color-doc-text)]";
-      return <Tag className={cls}>{block.text}</Tag>;
+      return <Tag id={id} className={cls}>{block.text}</Tag>;
     case "list":
       return (
         <ul className="my-4 space-y-2 text-[var(--color-doc-muted)] list-disc pl-6">

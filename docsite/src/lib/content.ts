@@ -1,6 +1,3 @@
-import { readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
-
 import site from "@content/site.json";
 import navigation from "@content/navigation.json";
 import commandsRegistry from "@content/shared/commands.json";
@@ -15,6 +12,9 @@ import devCustomization from "@content/developers/customization.json";
 import devUpdates from "@content/developers/updates.json";
 import devDocker from "@content/developers/docker.json";
 import templatesOverview from "@content/developers/templates/overview.json";
+
+import hotelTemplate from "@content/developers/templates/hotel.json";
+import realEstateTemplate from "@content/developers/templates/real-estate.json";
 
 import maintIntro from "@content/maintainers/intro.json";
 import maintArchitecture from "@content/maintainers/architecture.json";
@@ -37,8 +37,6 @@ import type {
   TemplateRegistryEntry,
 } from "@/types/content";
 
-const CONTENT_DIR = join(process.cwd(), "content");
-
 export const siteMeta = site as SiteMeta;
 export const nav = navigation as Navigation;
 export const commands = commandsRegistry as CommandsRegistry;
@@ -57,6 +55,11 @@ export const developerPages: Record<string, PageContent> = {
 
 export const templatesOverviewPage = templatesOverview as PageContent;
 
+export const templatePages: Record<string, PageContent> = {
+  hotel: hotelTemplate as PageContent,
+  "real-estate": realEstateTemplate as PageContent,
+};
+
 export const maintainerPages: Record<string, PageContent> = {
   intro: maintIntro as PageContent,
   architecture: maintArchitecture as PageContent,
@@ -66,23 +69,12 @@ export const maintainerPages: Record<string, PageContent> = {
   commands: maintCommands as PageContent,
 };
 
-function loadTemplatePage(templateId: string): PageContent | null {
-  const path = join(CONTENT_DIR, "developers/templates", `${templateId}.json`);
-  if (!existsSync(path)) return null;
-  return JSON.parse(readFileSync(path, "utf8")) as PageContent;
-}
-
 export function getTemplatePage(templateId: string): PageContent | null {
-  return loadTemplatePage(templateId);
+  return templatePages[templateId] || null;
 }
 
 export function getAllTemplatePages(): Record<string, PageContent> {
-  const pages: Record<string, PageContent> = {};
-  for (const entry of templateRegistry.templates) {
-    const page = loadTemplatePage(entry.id);
-    if (page) pages[entry.id] = page;
-  }
-  return pages;
+  return templatePages;
 }
 
 export function getTemplateRegistryEntry(templateId: string): TemplateRegistryEntry | undefined {
