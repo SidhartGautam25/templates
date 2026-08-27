@@ -103,15 +103,24 @@ export async function runAddModule(projectDir, moduleIds, repo, options = {}) {
       coreDir,
       displayName,
       skipHomePage: true,
-      skipAdminContentPage: true,
       skipSeoMetadataReplace: true,
       writePrismaSchema: () => writeMergedPrismaSchema(coreDir, projectDir),
     });
+
+    const cmsModules = installed.filter((id) => id === "gallery" || id === "reviews");
+    if (cmsModules.length > 0) {
+      console.log(
+        `  Admin tabs: gallery/reviews wired on /admin via app/admin/registry.ts`
+      );
+    }
 
     console.log(`\n✓ Installed: ${installed.join(", ")}`);
     console.log("\nNext steps:");
     console.log("  pnpm prisma db push");
     console.log("  pnpm dev");
+    if (cmsModules.length > 0) {
+      console.log("  Open /admin — Gallery and Reviews tabs appear when SITE.features flags are true");
+    }
     console.log(`\nAvailable modules: ${available.join(", ")}`);
   } finally {
     if (cleanupDir) {

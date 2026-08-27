@@ -128,7 +128,7 @@
     "add-module": {
       "syntax": "tempjs add-module <module-id>[,<module-id>...]",
       "title": "Add optional core modules",
-      "description": "Installs core modules from packages/core/modules.json into an existing client project. Merges Prisma, enables SITE.features flags, records .tempjs-modules.json. Does not overwrite app/page.tsx or the main admin dashboard.",
+      "description": "Installs core modules from packages/core/modules.json into an existing client project. Merges Prisma, enables SITE.features flags, records .tempjs-modules.json. Gallery/reviews update app/admin/registry.ts on the unified /admin dashboard. Does not overwrite app/page.tsx.",
       "audience": ["developers"],
       "examples": [
         { "label": "SEO + gallery + reviews", "command": "tempjs add-module seo,gallery,reviews" },

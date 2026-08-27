@@ -44,6 +44,8 @@ export function resolveModuleIdsFromCore(moduleIds) {
  *   displayName?: string;
  *   excludePaths?: string[];
  *   skipHomePage?: boolean;
+ *   skipAdminTabRegistry?: boolean;
+ *   /** @deprecated Use skipAdminTabRegistry */
  *   skipAdminContentPage?: boolean;
  *   skipSeoMetadataReplace?: boolean;
  *   excludePaths?: string[];
@@ -56,6 +58,7 @@ export function copyModulesIntoTemplate(templateRoot, moduleIds, options = {}) {
     displayName: options.displayName,
     excludePaths: options.excludePaths,
     skipHomePage: options.skipHomePage,
+    skipAdminTabRegistry: options.skipAdminTabRegistry,
     skipAdminContentPage: options.skipAdminContentPage,
     skipSeoMetadataReplace: options.skipSeoMetadataReplace,
     excludePaths: options.excludePaths,

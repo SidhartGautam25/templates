@@ -112,7 +112,7 @@ Maintainers edit `modules/<id>/` and run `pnpm template:assemble` to copy into t
 
 ### Planned
 
-- **Admin tab registry** — modules register admin UI tabs on one dashboard instead of `/admin/content` only
+- **Admin tab registry** — unified `app/admin/page.tsx` with `getAdminTabs()`; gallery/reviews via `registry.ts`; `tempjs add-module` wires CMS tabs
 - **`--with-docs`** on `new-template` — auto docsite registry stub
 - **Hotel naming cleanup** — room-type naming in admin hooks/components
 - **Hero/Footer dedupe** — align shipped templates with `hero-simple` / `footer` modules

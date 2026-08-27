@@ -111,17 +111,17 @@
     {
       "type": "heading",
       "level": 2,
-      "text": "Admin UI today vs planned"
+      "text": "Admin tab registry"
     },
     {
       "type": "paragraph",
-      "text": "Gallery and reviews modules register tabs on the unified app/admin/page.tsx dashboard via app/admin/registry.ts (generated on install). Scaffold templates get LeadsPanel + promo/logo tabs from core; hotel and real-estate add vertical tabs (room types, projects, facilities). Legacy app/admin/content/page.tsx is removed when gallery/reviews are installed on scaffold templates."
+      "text": "Gallery and reviews modules register tabs on the unified app/admin/page.tsx dashboard via app/admin/registry.ts (generated on scaffold install, merged on shipped templates). Scaffold templates get LeadsPanel, Theme & Colors, promo, and logo tabs from core. Hotel and real-estate add vertical tabs (room types, projects, facilities). Legacy app/admin/content/page.tsx is removed when gallery/reviews are installed."
     },
     {
       "type": "callout",
       "variant": "info",
-      "title": "Admin tab registry",
-      "text": "Core lib/admin/AdminShell.tsx renders sidebar tabs from getAdminTabs(). Optional CMS modules push gallery/reviews tabs when SITE.features flags are true. pnpm new-template wires the dashboard; tempjs add-module updates registry.ts for gallery/reviews."
+      "title": "How it works",
+      "text": "lib/admin/AdminShell.tsx renders sidebar tabs from getAdminTabs(). Gallery/reviews tabs appear when SITE.features.gallery or SITE.features.reviews is true. pnpm new-template wires the dashboard and registry; tempjs add-module updates registry.ts for gallery/reviews on client projects (merges into vertical registries on hotel/real-estate copies)."
     },
     {
       "type": "heading",

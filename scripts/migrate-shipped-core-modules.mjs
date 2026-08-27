@@ -20,7 +20,7 @@ console.log("Migrating hotel → core seo, gallery, reviews");
 copyModulesIntoTemplate(hotelRoot, ["seo", "gallery", "reviews"], {
   displayName: "Hotel",
   skipHomePage: true,
-  skipAdminContentPage: true,
+  skipAdminTabRegistry: true,
   skipSeoMetadataReplace: true,
   excludePaths: ["app/gallery/page.tsx", "app/gallery/layout.tsx"],
 });
@@ -29,7 +29,7 @@ console.log("\nMigrating real-estate → core seo");
 copyModulesIntoTemplate(realEstateRoot, ["seo"], {
   displayName: "Real Estate",
   skipHomePage: true,
-  skipAdminContentPage: true,
+  skipAdminTabRegistry: true,
   skipSeoMetadataReplace: true,
 });
 

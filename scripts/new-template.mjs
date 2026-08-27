@@ -26,7 +26,9 @@ import {
   listModuleIds,
 } from "./template-modules.mjs";
 import { applyDocsiteStub } from "./docsite-stub.mjs";
-import { applyAdminDashboard } from "./template-modules-admin.mjs";
+import {
+  applyScaffoldAdminRegistry,
+} from "./template-modules-admin.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const scaffoldDir = join(coreDir, "scaffold");
@@ -132,7 +134,11 @@ writeFileSync(
 );
 
 writeMergedPrismaSchema(templatePath);
-applyAdminDashboard(templatePath);
+if (moduleIds.some((id) => id === "gallery" || id === "reviews")) {
+  // copyModulesIntoTemplate already updated registry + dashboard
+} else {
+  applyScaffoldAdminRegistry(templatePath);
+}
 
 writeFileSync(
   join(templatePath, "CHANGELOG.md"),

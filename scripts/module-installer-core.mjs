@@ -283,6 +283,8 @@ export function applyModulesHomePage(templateRoot, moduleIds) {
  *   displayName?: string;
  *   excludePaths?: string[];
  *   skipHomePage?: boolean;
+ *   skipAdminTabRegistry?: boolean;
+ *   /** @deprecated Use skipAdminTabRegistry */
  *   skipAdminContentPage?: boolean;
  *   skipSeoMetadataReplace?: boolean;
  *   writePrismaSchema?: (root: string) => void;
@@ -356,11 +358,14 @@ export function copyModulesIntoProject(templateRoot, moduleIds, options) {
     applyModulesHomePage(templateRoot, resolved);
   }
 
-  if (!options.skipAdminContentPage) {
-    const uiAdminModules = moduleIds.filter((id) => id === "gallery" || id === "reviews");
-    if (uiAdminModules.length > 0) {
-      applyAdminTabRegistry(templateRoot, resolved);
-    }
+  const skipAdminTabRegistry =
+    options.skipAdminTabRegistry ?? options.skipAdminContentPage ?? false;
+
+  if (
+    !skipAdminTabRegistry &&
+    resolved.some((id) => id === "gallery" || id === "reviews")
+  ) {
+    applyAdminTabRegistry(templateRoot, resolved);
   }
 
   return resolved;
