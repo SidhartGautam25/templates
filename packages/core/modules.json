@@ -118,7 +118,9 @@
         "app/blog/layout.tsx",
         "app/admin/hooks/useBlogPosts.ts",
         "app/admin/components/blog-compose-form.ts",
-        "app/admin/panels/BlogComposePanel.tsx"
+        "app/admin/panels/BlogComposePanel.tsx",
+        "app/components/BlogSidebar.tsx",
+        "app/components/BlogShell.tsx"
       ],
       "featureFlag": "blogCompose",
       "prismaFragment": "prisma/blog-compose.prisma",

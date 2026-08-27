@@ -207,6 +207,8 @@ export const SITE = {
     viewAllLabel: "View all articles",
     emptyMessage: "Articles will appear here once published in admin.",
     homepageLimit: 3,
+    sidebarTitle: "Articles",
+    playgroundLabel: "JSON playground",
   },
 
   privacyPage: {
@@ -263,6 +265,7 @@ export const SITE = {
     reviews: false,
     legalPages: false,
     blogCompose: false,
+    blogSidebar: false,
   },
 } as const;
 

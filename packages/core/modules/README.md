@@ -14,6 +14,7 @@ Copy on demand via `pnpm new-template --modules`, `pnpm template:add-module` (mo
 | `reviews` | `reviews` | `Review` | ReviewsList tab on unified dashboard |
 | `legal-pages` | `legalPages` | — | — |
 | `blog-compose` | `blogCompose` | `BlogPost` | BlogComposePanel tab — compose editor + preview |
+| Optional `+sidebar` on install | `blogSidebar` | — | BlogShell + BlogSidebar on /blog routes |
 
 Registry: `packages/core/modules.json`
 

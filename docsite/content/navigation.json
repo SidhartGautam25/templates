@@ -19,7 +19,6 @@
     { "id": "customization", "label": "Customization", "path": "/developers/customization" },
     { "id": "updates", "label": "Updates & doctor", "path": "/developers/updates" },
     { "id": "optional-modules", "label": "Optional modules", "path": "/developers/optional-modules" },
-    { "id": "blog-compose", "label": "Compose blog", "path": "/developers/blog-compose" },
     { "id": "docker", "label": "Docker & database", "path": "/developers/docker" }
   ],
   "maintainers": [
@@ -30,7 +29,6 @@
     { "id": "template-tools", "label": "Validate & diff-core", "path": "/maintainers/template-tools" },
     { "id": "new-template", "label": "New template", "path": "/maintainers/new-template" },
     { "id": "modules", "label": "Optional modules", "path": "/maintainers/modules" },
-    { "id": "blog-compose", "label": "Compose blog", "path": "/maintainers/blog-compose" },
     { "id": "command-builders", "label": "Command builders", "path": "/maintainers/command-builders" },
     { "id": "versioning", "label": "Versioning", "path": "/maintainers/versioning" },
     { "id": "commands", "label": "Maintainer commands", "path": "/maintainers/commands" }

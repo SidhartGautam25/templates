@@ -247,7 +247,7 @@
       "description": "Comma-separated core module ids.",
       "type": "arg",
       "argOrder": 1,
-      "placeholder": "seo,gallery,reviews"
+      "placeholder": "seo,gallery,reviews or blog-compose+sidebar"
     },
     "newTemplateId": {
       "flag": "",

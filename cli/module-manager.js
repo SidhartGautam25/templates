@@ -88,12 +88,15 @@ export async function runAddModule(projectDir, moduleIds, repo, options = {}) {
   });
 
   const installerPath = join(scriptsDir, "module-installer-core.mjs");
-  const { copyModulesIntoProject, listModuleIds, resolveModuleIds } = await import(
+  const { copyModulesIntoProject, listModuleIds, resolveModuleIds, parseModuleSpecs, moduleInstallOptionsFromSpecs } = await import(
     pathToFileURL(installerPath).href
   );
 
+  const specs = parseModuleSpecs(moduleIds.join(","));
+  const resolvedIds = specs.map((s) => s.id);
   const available = listModuleIds(coreDir);
-  const resolved = resolveModuleIds(coreDir, moduleIds);
+  const resolved = resolveModuleIds(coreDir, resolvedIds);
+  const installOptions = moduleInstallOptionsFromSpecs(specs);
 
   console.log(`Adding core modules to ${relative(process.cwd(), projectDir) || "."}:`);
   console.log(`  modules: ${resolved.join(", ")}`);
@@ -104,6 +107,7 @@ export async function runAddModule(projectDir, moduleIds, repo, options = {}) {
       displayName,
       skipHomePage: true,
       skipSeoMetadataReplace: true,
+      installOptions,
       writePrismaSchema: () => writeMergedPrismaSchema(coreDir, projectDir),
     });
 

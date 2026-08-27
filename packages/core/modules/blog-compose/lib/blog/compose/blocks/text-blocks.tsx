@@ -1,6 +1,7 @@
 import type { ComposeHeadingBlock } from "../types";
 import { AnnotatedText } from "../annotate-text";
 import type { ComposeListBlock, ComposeQuoteBlock } from "../types";
+import { slugify } from "@/lib/utils/slugify";
 
 export function ComposeHeading({ block }: { block: ComposeHeadingBlock }) {
   const base = "text-text-main tracking-tight";
@@ -39,6 +40,7 @@ export function ComposeHeading({ block }: { block: ComposeHeadingBlock }) {
 
   return (
     <h2
+      id={slugify(block.text)}
       className={[
         base,
         "text-2xl font-bold mt-10 mb-4",

@@ -120,12 +120,41 @@ export function buildDeveloperSidebar(): NavItem[] {
     children: templateChildren,
   };
 
+  const blogGroup: NavItem = {
+    id: "blog",
+    label: "Blog",
+    path: "/developers/blog-compose",
+    children: [
+      { id: "blog-compose", label: "Compose module", path: "/developers/blog-compose" },
+      { id: "blog-articles", label: "Live articles", path: "/blog" },
+      { id: "blog-playground", label: "Playground", path: "/blog/playground" },
+    ],
+  };
+
   const staticItems = nav.developers;
   const commandsIndex = staticItems.findIndex((item) => item.id === "commands");
   const before = staticItems.slice(0, commandsIndex + 1);
   const after = staticItems.slice(commandsIndex + 1);
 
-  return [...before, templatesGroup, ...after];
+  return [...before, templatesGroup, blogGroup, ...after];
+}
+
+export function buildMaintainerSidebar(): NavItem[] {
+  const blogGroup: NavItem = {
+    id: "blog",
+    label: "Blog",
+    path: "/maintainers/blog-compose",
+    children: [
+      { id: "blog-compose", label: "Compose module", path: "/maintainers/blog-compose" },
+      { id: "blog-articles", label: "Live articles", path: "/blog" },
+      { id: "blog-playground", label: "Playground", path: "/blog/playground" },
+    ],
+  };
+
+  const items = [...nav.maintainers];
+  const modulesIndex = items.findIndex((item) => item.id === "modules");
+  const insertAt = modulesIndex >= 0 ? modulesIndex + 1 : items.length;
+  return [...items.slice(0, insertAt), blogGroup, ...items.slice(insertAt)];
 }
 
 export function getCommand(id: string) {

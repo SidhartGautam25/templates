@@ -23,6 +23,8 @@ import { coreDir, CORE_EXCLUDE, shouldCopyCorePath, writeMergedPrismaSchema } fr
 import {
   copyModulesIntoTemplate,
   parseModulesArg,
+  parseModuleSpecs,
+  moduleInstallOptionsFromSpecs,
   listModuleIds,
 } from "./template-modules.mjs";
 import { applyDocsiteStub } from "./docsite-stub.mjs";
@@ -85,7 +87,9 @@ const displayName =
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 
-const moduleIds = parseModulesArg(modulesArg);
+const moduleSpecs = parseModuleSpecs(modulesArg);
+const moduleIds = moduleSpecs.map((s) => s.id);
+const installOptions = moduleInstallOptionsFromSpecs(moduleSpecs);
 
 function copyTreeFiltered(src, dest) {
   cpSync(src, dest, {
@@ -121,7 +125,10 @@ writeFileSync(join(templatePath, "package.json"), JSON.stringify(pkg, null, 2) +
 
 if (moduleIds.length > 0) {
   console.log("Installing core modules:");
-  const installed = copyModulesIntoTemplate(templatePath, moduleIds, { displayName });
+  const installed = copyModulesIntoTemplate(templatePath, moduleIds, {
+    displayName,
+    installOptions,
+  });
 }
 
 writeFileSync(

@@ -9,10 +9,12 @@ import {
   listModuleIds as listCoreModuleIds,
   loadModulesRegistry,
   parseModulesArg,
+  parseModuleSpecs,
+  moduleInstallOptionsFromSpecs,
   resolveModuleIds,
 } from "./module-installer-core.mjs";
 
-export { parseModulesArg };
+export { parseModulesArg, parseModuleSpecs, moduleInstallOptionsFromSpecs };
 
 /**
  * @returns {{ modules: Record<string, CoreModuleDef> }}
@@ -61,7 +63,7 @@ export function copyModulesIntoTemplate(templateRoot, moduleIds, options = {}) {
     skipAdminTabRegistry: options.skipAdminTabRegistry,
     skipAdminContentPage: options.skipAdminContentPage,
     skipSeoMetadataReplace: options.skipSeoMetadataReplace,
-    excludePaths: options.excludePaths,
+    installOptions: options.installOptions,
     writePrismaSchema: writeMergedPrismaSchema,
   });
 }

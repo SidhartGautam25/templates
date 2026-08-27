@@ -10,7 +10,24 @@
       "type": "callout",
       "variant": "tip",
       "title": "Live demo on this docsite",
-      "text": "Open /blog to read sample Compose articles rendered with the same JSON block shape as client templates. This docsite uses static JSON in content/blog/posts.json instead of Prisma."
+      "text": "Open the Blog section in the sidebar: Live articles (/blog), Playground (/blog/playground), and this module guide. Posts use static JSON in content/blog/posts.json — same Compose shape as client templates."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Optional blog sidebar"
+    },
+    {
+      "type": "paragraph",
+      "text": "By default, /blog pages are full-width without a docs-style left sidebar. To add an article list and on-page H2 table of contents (like this docsite blog section), install with the +sidebar suffix. This sets SITE.features.blogSidebar to true."
+    },
+    {
+      "type": "code",
+      "code": "tempjs add-module blog-compose+sidebar\npnpm new-template bakery --modules blog-compose+sidebar,seo"
+    },
+    {
+      "type": "paragraph",
+      "text": "You can also enable later in constants/site.ts: SITE.features.blogSidebar = true (requires blog-compose files already installed)."
     },
     {
       "type": "callout",

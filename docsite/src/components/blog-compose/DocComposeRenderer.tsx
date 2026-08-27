@@ -13,6 +13,7 @@ import type {
   ComposeListBlock,
   ComposeQuoteBlock,
 } from "@/lib/blog-compose/types";
+import { slugify } from "@/lib/slugify";
 
 function DocAnnotatedText({
   text,
@@ -100,6 +101,7 @@ function DocHeading({ block }: { block: ComposeHeadingBlock }) {
   }
   return (
     <h2
+      id={slugify(block.text)}
       className={[
         "text-2xl font-semibold text-[var(--color-doc-text)] mt-10 mb-4",
         block.variant === "underline-bar"

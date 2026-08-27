@@ -370,6 +370,10 @@ export function copyModulesIntoProject(templateRoot, moduleIds, options) {
 
   if (resolved.includes("blog-compose")) {
     applyBlogComposeSitemapPatch(templateRoot);
+    if (options.installOptions?.blogSidebar) {
+      enableFeatureFlag(templateRoot, "blogSidebar");
+      console.log("  ✓ enabled SITE.features.blogSidebar (blog article sidebar)");
+    }
   }
 
   if (options.writePrismaSchema) {
@@ -403,13 +407,36 @@ export function copyModulesIntoProject(templateRoot, moduleIds, options) {
 
 /**
  * @param {string[] | string | undefined} input
+ * @returns {{ id: string, extras: string[] }[]}
+ */
+export function parseModuleSpecs(input) {
+  if (!input) return [];
+  const raw = Array.isArray(input) ? input.join(",") : input;
+  const specs = [];
+  for (const part of raw.split(",")) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+    const pieces = trimmed.split("+").map((s) => s.trim()).filter(Boolean);
+    if (pieces.length === 0) continue;
+    specs.push({ id: pieces[0], extras: pieces.slice(1) });
+  }
+  return specs;
+}
+
+/**
+ * @param {{ id: string, extras: string[] }[]} specs
+ */
+export function moduleInstallOptionsFromSpecs(specs) {
+  return {
+    blogSidebar:
+      specs.some((s) => s.id === "blog-compose" && s.extras.includes("sidebar")),
+  };
+}
+
+/**
+ * @param {string[] | string | undefined} input
  * @returns {string[]}
  */
 export function parseModulesArg(input) {
-  if (!input) return [];
-  const raw = Array.isArray(input) ? input.join(",") : input;
-  return raw
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
+  return parseModuleSpecs(input).map((s) => s.id);
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { siteMeta, nav, buildDeveloperSidebar } from "@/lib/content";
+import { siteMeta, nav, buildDeveloperSidebar, buildMaintainerSidebar } from "@/lib/content";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -11,7 +11,7 @@ export function DocLayout({
   children: React.ReactNode;
 }) {
   const sidebarItems =
-    activeAudience === "maintainers" ? nav.maintainers : buildDeveloperSidebar();
+    activeAudience === "maintainers" ? buildMaintainerSidebar() : buildDeveloperSidebar();
   const sidebarTitle = activeAudience === "maintainers" ? "Maintainers" : "Developers";
 
   return (
@@ -28,12 +28,6 @@ export function DocLayout({
             <p className="text-sm text-[var(--color-doc-muted)]">{siteMeta.tagline}</p>
           </div>
           <div className="flex items-center gap-2">
-            <Link
-              href="/blog"
-              className="rounded-full px-4 py-1.5 text-sm font-medium bg-[var(--color-doc-tag-bg)] text-[var(--color-doc-tag-text)] hover:opacity-90"
-            >
-              Blog demo
-            </Link>
             <ThemeToggle />
             {nav.audiences.map((aud) => (
               <Link

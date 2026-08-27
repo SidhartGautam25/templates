@@ -6,13 +6,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b border-[var(--color-doc-border)] bg-[var(--color-doc-surface)] px-6 py-4">
-        <div className="mx-auto max-w-4xl flex justify-between items-center gap-4">
-          <Link
-            href="/blog"
-            className="text-sm font-medium text-[var(--color-doc-muted)] hover:text-[var(--color-doc-accent)]"
-          >
-            Blog demo →
-          </Link>
+        <div className="mx-auto max-w-4xl flex justify-end">
           <ThemeToggle />
         </div>
       </header>
@@ -27,7 +21,7 @@ export default function HomePage() {
         </pre>
       </div>
 
-      <div className="mx-auto max-w-4xl px-6 py-12 grid md:grid-cols-3 gap-6">
+      <div className="mx-auto max-w-4xl px-6 py-12 grid md:grid-cols-2 gap-6">
         {nav.audiences.map((aud) => (
           <Link
             key={aud.id}
@@ -41,18 +35,6 @@ export default function HomePage() {
             </span>
           </Link>
         ))}
-        <Link
-          href="/blog"
-          className="rounded-xl border border-[var(--color-doc-border)] bg-[var(--color-doc-surface)] p-6 shadow-sm hover:border-[var(--color-doc-accent)] hover:shadow-md transition-all"
-        >
-          <h2 className="text-xl font-semibold text-[var(--color-doc-accent)]">Blog demo</h2>
-          <p className="mt-2 text-[var(--color-doc-muted)]">
-            Live Compose Blog Engine — JSON blocks rendered like client templates.
-          </p>
-          <span className="mt-4 inline-block text-sm font-medium text-[var(--color-doc-accent)]">
-            Read articles →
-          </span>
-        </Link>
       </div>
     </div>
   );

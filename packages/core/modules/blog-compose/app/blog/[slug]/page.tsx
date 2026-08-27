@@ -31,6 +31,31 @@ export default async function BlogPostPage({
   if (!post) notFound();
 
   const content = blogComposeService.contentFromPost(post);
+  const withSidebar = SITE.features.blogSidebar;
+
+  const articleBody = (
+    <>
+      <header className="mb-10 border-b border-primary/10 pb-8">
+        <h1 className="text-3xl md:text-4xl font-bold font-serif text-primary">{post.title}</h1>
+        {post.excerpt && (
+          <p className="mt-4 text-lg text-text-muted leading-relaxed">{post.excerpt}</p>
+        )}
+        {post.publishedAt && (
+          <time
+            className="mt-4 block text-[10px] font-bold uppercase tracking-widest text-text-muted"
+            dateTime={post.publishedAt.toISOString()}
+          >
+            {post.publishedAt.toLocaleDateString()}
+          </time>
+        )}
+      </header>
+      <ComposeBlogRenderer document={content} />
+    </>
+  );
+
+  if (withSidebar) {
+    return <article>{articleBody}</article>;
+  }
 
   return (
     <div className="min-h-screen bg-bg-main">
@@ -48,24 +73,7 @@ export default async function BlogPostPage({
           </span>
         </div>
       </header>
-
-      <main className="max-w-3xl mx-auto px-6 py-12">
-        <header className="mb-10 border-b border-primary/10 pb-8">
-          <h1 className="text-3xl md:text-4xl font-bold font-serif text-primary">{post.title}</h1>
-          {post.excerpt && (
-            <p className="mt-4 text-lg text-text-muted leading-relaxed">{post.excerpt}</p>
-          )}
-          {post.publishedAt && (
-            <time
-              className="mt-4 block text-[10px] font-bold uppercase tracking-widest text-text-muted"
-              dateTime={post.publishedAt.toISOString()}
-            >
-              {post.publishedAt.toLocaleDateString()}
-            </time>
-          )}
-        </header>
-        <ComposeBlogRenderer document={content} />
-      </main>
+      <main className="max-w-3xl mx-auto px-6 py-12">{articleBody}</main>
     </div>
   );
 }

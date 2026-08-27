@@ -12,6 +12,8 @@ import { resolveTemplateRef, templateRootPath, ensureTemplateExists } from "./te
 import {
   copyModulesIntoTemplate,
   parseModulesArg,
+  parseModuleSpecs,
+  moduleInstallOptionsFromSpecs,
   listModuleIds,
 } from "./template-modules.mjs";
 const args = process.argv.slice(2);
@@ -25,7 +27,9 @@ if (args.length < 2) {
 }
 
 const templateRef = args[0];
-const moduleIds = parseModulesArg(args.slice(1).join(","));
+const moduleSpecs = parseModuleSpecs(args.slice(1).join(","));
+const moduleIds = moduleSpecs.map((s) => s.id);
+const installOptions = moduleInstallOptionsFromSpecs(moduleSpecs);
 
 if (moduleIds.length === 0) {
   console.error("No module ids provided.");
@@ -41,7 +45,10 @@ try {
     (template.entry.name && String(template.entry.name).replace(/ Website$/, "")) || template.id;
 
   console.log(`Adding modules to ${template.id} (templates/${template.directory}):`);
-  const installed = copyModulesIntoTemplate(templateRoot, moduleIds, { displayName });
+  const installed = copyModulesIntoTemplate(templateRoot, moduleIds, {
+    displayName,
+    installOptions,
+  });
 
   console.log(`\n✓ Installed: ${installed.join(", ")}`);
   console.log("Run pnpm template:validate " + template.id + " to verify.");

@@ -29,8 +29,22 @@
         ["lib/blog/compose/interpreter.tsx", "ComposeBlogRenderer / ComposeBlockView"],
         ["lib/features/blog-compose/", "Repository, service, controller"],
         ["app/admin/panels/BlogComposePanel.tsx", "Admin tab — meta form, block list, preview"],
-        ["app/admin/components/blog-compose-form.ts", "Maps registry fields ↔ block objects"]
+        ["app/admin/components/blog-compose-form.ts", "Maps registry fields ↔ block objects"],
+        ["app/components/BlogSidebar.tsx + BlogShell.tsx", "Optional docs-style sidebar when SITE.features.blogSidebar"]
       ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Optional blog sidebar (+sidebar)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Blog sidebar is not enabled by default. Install with blog-compose+sidebar (or pnpm template:add-module bakery blog-compose+sidebar) to set SITE.features.blogSidebar. parseModuleSpecs in module-installer-core.mjs splits +extras; moduleInstallOptionsFromSpecs enables the flag."
+    },
+    {
+      "type": "code",
+      "code": "pnpm template:add-module scaffold blog-compose+sidebar\n# Docsite demo: /blog has sidebar always; /blog/playground for JSON experiments"
     },
     {
       "type": "heading",
