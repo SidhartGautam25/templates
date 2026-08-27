@@ -5,7 +5,12 @@
       "label": "Hotel Website",
       "version": "1.3.0",
       "cliId": "hotel",
-      "flagGroups": ["generate", "theme", "brand", "database"],
+      "flagGroups": [
+        "generate",
+        "theme",
+        "brand",
+        "database"
+      ],
       "brandFields": [
         "name",
         "shortName",
@@ -46,13 +51,22 @@
                 "id": "options",
                 "title": "How should tempjs run?",
                 "description": "Choose how the CLI behaves when copying files. You can skip any toggle you don't need.",
-                "fieldKeys": ["config", "yes", "force", "remote", "initGit"]
+                "fieldKeys": [
+                  "config",
+                  "yes",
+                  "force",
+                  "remote",
+                  "initGit"
+                ]
               },
               {
                 "id": "theme",
                 "title": "Theme & typography",
                 "description": "Pick colors and fonts. Leave blank to skip — you can run tempjs theme later.",
-                "fieldKeys": ["theme", "font"]
+                "fieldKeys": [
+                  "theme",
+                  "font"
+                ]
               },
               {
                 "id": "brand",
@@ -101,7 +115,10 @@
                 "id": "theme",
                 "title": "Theme & font",
                 "description": "Select the new preset. Run from your project root (where .tempjs.json exists).",
-                "fieldKeys": ["theme", "font"]
+                "fieldKeys": [
+                  "theme",
+                  "font"
+                ]
               }
             ]
           },
@@ -114,7 +131,9 @@
               {
                 "id": "font",
                 "title": "Font pairing",
-                "fieldKeys": ["font"]
+                "fieldKeys": [
+                  "font"
+                ]
               }
             ]
           },
@@ -175,7 +194,12 @@
       "label": "Real Estate Website",
       "version": "1.3.0",
       "cliId": "real-estate",
-      "flagGroups": ["generate", "theme", "brand", "database"],
+      "flagGroups": [
+        "generate",
+        "theme",
+        "brand",
+        "database"
+      ],
       "brandFields": [
         "name",
         "shortName",
@@ -215,13 +239,22 @@
               {
                 "id": "options",
                 "title": "How should tempjs run?",
-                "fieldKeys": ["config", "yes", "force", "remote", "initGit"]
+                "fieldKeys": [
+                  "config",
+                  "yes",
+                  "force",
+                  "remote",
+                  "initGit"
+                ]
               },
               {
                 "id": "theme",
                 "title": "Theme & typography",
                 "description": "Optional — skip fields you want to set later.",
-                "fieldKeys": ["theme", "font"]
+                "fieldKeys": [
+                  "theme",
+                  "font"
+                ]
               },
               {
                 "id": "brand",
@@ -267,7 +300,10 @@
               {
                 "id": "theme",
                 "title": "Theme & font",
-                "fieldKeys": ["theme", "font"]
+                "fieldKeys": [
+                  "theme",
+                  "font"
+                ]
               }
             ]
           },
@@ -279,7 +315,9 @@
               {
                 "id": "font",
                 "title": "Font pairing",
-                "fieldKeys": ["font"]
+                "fieldKeys": [
+                  "font"
+                ]
               }
             ]
           },
@@ -313,6 +351,114 @@
             "label": "Configure database",
             "baseCommand": "tempjs init-db --yes",
             "wizardSteps": [
+              {
+                "id": "database",
+                "title": "Database & admin",
+                "fieldKeys": [
+                  "dbHost",
+                  "dbPort",
+                  "dbUser",
+                  "dbPassword",
+                  "dbName",
+                  "adminUser",
+                  "adminPassword",
+                  "skipDbPush",
+                  "dbPush"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "dev-agency",
+      "label": "Dev Agency Website",
+      "version": "1.0.0",
+      "cliId": "dev-agency",
+      "flagGroups": [
+        "generate",
+        "theme",
+        "brand",
+        "database"
+      ],
+      "brandFields": [
+        "name",
+        "shortName",
+        "baseUrl",
+        "phone",
+        "phoneDisplay",
+        "countryCode",
+        "email",
+        "address",
+        "tagline",
+        "developerName",
+        "channelPartner"
+      ],
+      "commandBuilder": {
+        "presets": [
+          {
+            "id": "quick-copy",
+            "label": "Quick copy",
+            "description": "Copy template files only — configure theme, brand, and database later.",
+            "command": "tempjs dev-agency --yes"
+          },
+          {
+            "id": "interactive",
+            "label": "Interactive setup",
+            "description": "Guided prompts for theme, brand, and database.",
+            "command": "tempjs dev-agency config"
+          },
+          {
+            "id": "add-blog-sidebar",
+            "label": "Add blog + sidebar",
+            "description": "After generation — compose blog with docs-style article sidebar (optional add-on).",
+            "command": "tempjs add-module blog-compose+sidebar"
+          }
+        ],
+        "modes": [
+          {
+            "id": "generate",
+            "label": "Generate new project",
+            "description": "Create a new site from the Dev Agency Website template.",
+            "baseCommand": "tempjs dev-agency",
+            "wizardSteps": [
+              {
+                "id": "options",
+                "title": "How should tempjs run?",
+                "fieldKeys": [
+                  "config",
+                  "yes",
+                  "force",
+                  "remote",
+                  "initGit"
+                ]
+              },
+              {
+                "id": "theme",
+                "title": "Theme & typography",
+                "fieldKeys": [
+                  "theme",
+                  "font"
+                ]
+              },
+              {
+                "id": "brand",
+                "title": "Brand & contact",
+                "fieldKeys": [
+                  "name",
+                  "shortName",
+                  "baseUrl",
+                  "phone",
+                  "phoneDisplay",
+                  "countryCode",
+                  "email",
+                  "address",
+                  "tagline",
+                  "developerName",
+                  "channelPartner"
+                ]
+              },
               {
                 "id": "database",
                 "title": "Database & admin",

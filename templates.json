@@ -11,12 +11,26 @@
       "name": "Hotel Website",
       "description": "Modern hotel and resort website with admin panel, gallery, and booking features",
       "version": "1.3.0",
-      "stack": ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS 4", "Prisma", "MariaDB", "NextAuth"],
+      "stack": [
+        "Next.js 16",
+        "React 19",
+        "TypeScript",
+        "Tailwind CSS 4",
+        "Prisma",
+        "MariaDB",
+        "NextAuth"
+      ],
       "packageManager": "pnpm",
       "node": ">=20",
       "setupTime": "~10 min",
       "docker": true,
-      "tags": ["admin", "cms", "gallery", "booking", "leads"],
+      "tags": [
+        "admin",
+        "cms",
+        "gallery",
+        "booking",
+        "leads"
+      ],
       "features": [
         "Admin dashboard for rooms, facilities, reviews, and leads",
         "Gallery and promo banner management",
@@ -26,7 +40,12 @@
       ],
       "docs": "GETTING_STARTED.md",
       "init": {
-        "flagGroups": ["generate", "theme", "brand", "database"],
+        "flagGroups": [
+          "generate",
+          "theme",
+          "brand",
+          "database"
+        ],
         "brandFields": [
           "name",
           "shortName",
@@ -41,19 +60,43 @@
           "channelPartner",
           "templeDistance"
         ]
-      }
+      },
+      "coreModules": [
+        "enquiry-modal",
+        "seo",
+        "gallery",
+        "reviews"
+      ],
+      "templateModules": [
+        "room-types",
+        "facilities",
+        "slug-pages"
+      ]
     },
     "real-estate": {
       "directory": "real-estate-website-template",
       "name": "Real Estate Website",
       "description": "Real estate and property listing website with admin panel and property management",
       "version": "1.3.0",
-      "stack": ["Next.js 16", "React 19", "TypeScript", "Tailwind CSS 4", "Prisma", "MariaDB", "NextAuth"],
+      "stack": [
+        "Next.js 16",
+        "React 19",
+        "TypeScript",
+        "Tailwind CSS 4",
+        "Prisma",
+        "MariaDB",
+        "NextAuth"
+      ],
       "packageManager": "pnpm",
       "node": ">=20",
       "setupTime": "~10 min",
       "docker": true,
-      "tags": ["admin", "cms", "properties", "leads"],
+      "tags": [
+        "admin",
+        "cms",
+        "properties",
+        "leads"
+      ],
       "features": [
         "Admin dashboard for property listings and leads",
         "Dynamic project pages with slug routing",
@@ -63,7 +106,12 @@
       ],
       "docs": "GETTING_STARTED.md",
       "init": {
-        "flagGroups": ["generate", "theme", "brand", "database"],
+        "flagGroups": [
+          "generate",
+          "theme",
+          "brand",
+          "database"
+        ],
         "brandFields": [
           "name",
           "shortName",
@@ -78,7 +126,80 @@
           "channelPartner",
           "agentRera"
         ]
-      }
+      },
+      "coreModules": [
+        "enquiry-modal",
+        "footer",
+        "hero-simple",
+        "seo"
+      ],
+      "templateModules": [
+        "projects",
+        "slug-pages"
+      ]
+    },
+    "dev-agency": {
+      "directory": "dev-agency-website-template",
+      "name": "Dev Agency Website",
+      "description": "Freelance dev agency landing page — expertise, team, CTA, featured work carousel, leads, and SEO",
+      "version": "1.0.0",
+      "stack": [
+        "Next.js 16",
+        "React 19",
+        "TypeScript",
+        "Tailwind CSS 4",
+        "Prisma",
+        "MariaDB",
+        "NextAuth"
+      ],
+      "packageManager": "pnpm",
+      "node": ">=20",
+      "setupTime": "~10 min",
+      "docker": true,
+      "tags": [
+        "admin",
+        "agency",
+        "portfolio",
+        "leads",
+        "seo"
+      ],
+      "features": [
+        "Dark agency landing with expertise, team, CTA, and work carousel",
+        "Admin CMS for expertise cards, team members, and featured projects",
+        "Lead capture via enquiry modal",
+        "SEO pack (sitemap, robots, JSON-LD)",
+        "Optional core modules via tempjs add-module (theme-modes, blog-compose+sidebar, gallery, reviews, …)"
+      ],
+      "optionalModuleExamples": [
+        "theme-modes",
+        "blog-compose+sidebar"
+      ],
+      "docs": "GETTING_STARTED.md",
+      "init": {
+        "flagGroups": [
+          "generate",
+          "theme",
+          "brand",
+          "database"
+        ],
+        "brandFields": [
+          "name",
+          "shortName",
+          "baseUrl",
+          "phone",
+          "phoneDisplay",
+          "countryCode",
+          "email",
+          "address",
+          "tagline",
+          "developerName",
+          "channelPartner"
+        ]
+      },
+      "coreModules": [
+        "enquiry-modal",
+        "seo"
+      ]
     }
   }
 }

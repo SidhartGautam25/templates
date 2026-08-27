@@ -13,12 +13,12 @@ export function CommandBuilder({
   config,
   fieldRegistry,
   optionSets,
-  templateLabel,
+  label,
 }: {
   config: TemplateCommandBuilderConfig;
   fieldRegistry: CommandBuilderFieldsRegistry;
   optionSets: CommandBuilderOptionsRegistry;
-  templateLabel: string;
+  label: string;
 }) {
   const [activeTab, setActiveTab] = useState<"presets" | "builder">("presets");
   const [modeId, setModeId] = useState(config.modes[0]?.id ?? "");
@@ -29,7 +29,7 @@ export function CommandBuilder({
     <section className="my-8 rounded-xl border border-[var(--color-doc-border)] bg-[var(--color-doc-surface)] shadow-sm overflow-hidden">
       <div className="border-b border-[var(--color-doc-border)] px-5 py-4 bg-[var(--color-doc-surface-elevated)]">
         <h3 className="text-lg font-semibold text-[var(--color-doc-text)]">
-          Command generator — {templateLabel}
+          Command generator — {label}
         </h3>
         <p className="mt-2 text-sm text-[var(--color-doc-muted)] leading-relaxed">
           Pick a ready-made command or build a custom one step by step. Every field is optional unless

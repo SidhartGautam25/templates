@@ -1,0 +1,109 @@
+{
+  "title": "Compose blog module",
+  "description": "Maintaining the blog-compose core module, Compose Blog Engine, and admin compose editor.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "blog-compose is a cross-vertical core module under packages/core/modules/blog-compose/. It implements the first blog engine variant: Compose (declarative JSON blocks). The module is registered in packages/core/modules.json with prismaFragment prisma/blog-compose.prisma and feature flag blogCompose."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Architecture"
+    },
+    {
+      "type": "code",
+      "code": "BlogPost (Prisma)\n  contentJson: ComposeDocument\n       ↓\nComposeBlogRenderer (interpreter)\n       ↓\nBlock components (Tailwind)\n\nAdmin: COMPOSE_BLOCK_REGISTRY → field defs → BlogComposePanel\n       ↓\n/api/blog-posts → BlogComposeService"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Key paths"
+    },
+    {
+      "type": "table",
+      "headers": ["Path", "Role"],
+      "rows": [
+        ["lib/blog/compose/types.ts", "ComposeDocument, block unions, validators"],
+        ["lib/blog/compose/registry.ts", "COMPOSE_BLOCK_REGISTRY — admin field metadata + createDefault()"],
+        ["lib/blog/compose/interpreter.tsx", "ComposeBlogRenderer / ComposeBlockView"],
+        ["lib/features/blog-compose/", "Repository, service, controller"],
+        ["app/admin/panels/BlogComposePanel.tsx", "Admin tab — meta form, block list, preview"],
+        ["app/admin/components/blog-compose-form.ts", "Maps registry fields ↔ block objects"],
+        ["app/components/BlogSidebar.tsx + BlogShell.tsx", "Optional docs-style sidebar when SITE.features.blogSidebar"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Optional blog sidebar (+sidebar)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Blog sidebar is not enabled by default. Install with blog-compose+sidebar (or pnpm template:add-module bakery blog-compose+sidebar) to set SITE.features.blogSidebar. parseModuleSpecs in module-installer-core.mjs splits +extras; moduleInstallOptionsFromSpecs enables the flag."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "Dev Agency walkthrough",
+      "text": "Developers → Templates → Dev Agency Website documents blog-compose+sidebar as the optional add-on example for a lean agency landing (expertise, team, work carousel) plus a later technical blog."
+    },
+    {
+      "type": "code",
+      "code": "pnpm template:add-module scaffold blog-compose+sidebar\n# Docsite demo: /blog has sidebar always; /blog/playground for JSON experiments"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Adding a new block type"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Extend the block union and ComposeBlockType in lib/blog/compose/types.ts",
+        "Add a ComposeBlockDefinition entry in registry.ts (fields for admin UI)",
+        "Implement the React component in blocks/text-blocks.tsx or blocks/media-blocks.tsx",
+        "Register in interpreter.tsx ComposeBlockView switch",
+        "Export types from lib/blog/compose/index.ts if needed"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Annotation features (highlight, underline, future marks) use string arrays on explain blocks. AnnotatedText splits text by phrase matches — phrases must appear exactly in the body text."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Install wiring"
+    },
+    {
+      "type": "list",
+      "items": [
+        "copyModulesIntoProject copies paths from modules.json",
+        "appendPrismaFragment adds BlogPost to prisma/domain.prisma",
+        "enableFeatureFlag sets SITE.features.blogCompose",
+        "applyAdminTabRegistry merges Blog articles tab (BookOpen icon) into app/admin/registry.ts",
+        "applyModulesHomePage adds BlogSection to scaffold app/page.tsx",
+        "scripts/template-modules-admin.mjs — mergeOptionalModuleTabs for vertical templates"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Future engines"
+    },
+    {
+      "type": "paragraph",
+      "text": "BlogPost.engine defaults to compose. A future editor-based engine would use a different engine id, content shape, and interpreter. Keep compose isolated under lib/blog/compose/ so new engines can live alongside (e.g. lib/blog/editor/)."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Validate after changes"
+    },
+    {
+      "type": "code",
+      "code": "pnpm new-template blog-test scaffold --name \"Blog Test\" --modules blog-compose,seo\npnpm template:validate blog-test\npnpm template:diff-core blog-test"
+    }
+  ]
+}

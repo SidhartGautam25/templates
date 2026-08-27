@@ -1,0 +1,260 @@
+{
+  "title": "Template validate & diff-core",
+  "description": "How to use pnpm template:validate and pnpm template:diff-core — when to run them, what they check, and scenario examples.",
+  "blocks": [
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "Why these commands exist",
+      "text": "Templates are standalone projects copied once from packages/core. You edit templates/<name>/ directly most days. These two commands help before release: validate catches broken Prisma/TypeScript/ESLint, and diff-core shows exactly what would change if you propagate a core fix."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Command reference"
+    },
+    {
+      "type": "command-builder",
+      "builderId": "maintainer-template-validate"
+    },
+    {
+      "type": "table",
+      "headers": ["Command", "What it does"],
+      "rows": [
+        ["pnpm template:diff-core hotel", "Detailed report: matches / differs / missing vs packages/core, plus template-only files"],
+        ["pnpm template:diff-core", "Same for all templates listed in templates.json"],
+        ["pnpm template:validate hotel", "prisma validate → tsc --noEmit → pnpm lint"],
+        ["pnpm template:validate", "Validate all templates"],
+        ["pnpm template:validate hotel --skip-install", "Skip auto-install if node_modules is missing"]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Both commands accept a template id (hotel) or directory name (hotel-website-template). Resolution reads templates.json — you do not need to cd into the template folder."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "pnpm template:diff-core exits with code 1 if propagate would change files (differs or missing core paths). This matches the idea behind pnpm sync-templates:check, but with a richer per-file report."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "pnpm template:diff-core"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "What it does"
+    },
+    {
+      "type": "paragraph",
+      "text": "Compares templates/<directory>/ against packages/core for every path that sync-templates would overwrite. It does not write anything."
+    },
+    {
+      "type": "list",
+      "items": [
+        "Lists files under packages/core (excluding scaffold/, scripts/dev/, node_modules, and maintainer-only files like core README)",
+        "Hashes each core file and the matching path in the template",
+        "Rebuilds the expected prisma/schema.prisma from core schema + template prisma/domain.prisma and compares to the template’s merged schema",
+        "Lists template-only files (pages, domain features, seeds, assets) that sync would never touch"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Report categories"
+    },
+    {
+      "type": "table",
+      "headers": ["Symbol", "Category", "Meaning"],
+      "rows": [
+        ["✓", "matches core", "Template file is byte-identical to packages/core — propagate would not change it"],
+        ["≠", "differs from core", "Template diverged from core — pnpm sync-templates would overwrite this path"],
+        ["−", "missing in template", "Core has a file the template lacks — sync would add it"],
+        ["+", "template-only", "Exists only in the template — sync ignores these (your Hero, domain CRUD, domain.prisma, etc.)"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "When to use"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Before pnpm sync-templates — see which files would be overwritten",
+        "After editing packages/core — confirm hotel and real-estate still align or need propagate",
+        "After accidentally editing a core-owned file in a template (e.g. auth.ts) — see if you should revert locally or propagate from core",
+        "In CI — fail the job if templates drift from core without an intentional propagate"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Scenario examples"
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Scenario A — You fixed a lead API bug in core",
+      "text": "You edited packages/core/lib/features/leads/lead.service.ts. Run pnpm template:diff-core hotel. You expect ≠ lib/features/leads/lead.service.ts (template still has old code). Run pnpm sync-templates --template hotel-website-template, then pnpm template:diff-core hotel again — should show 0 differs."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Scenario B — Normal hotel feature work",
+      "text": "You only changed templates/hotel-website-template/app/components/Hero.tsx. Run pnpm template:diff-core hotel. Core paths should still match (✓ 59 matches, 0 differs). Template-only list includes Hero.tsx — that is expected."
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "title": "Scenario C — Template customized a core file on purpose",
+      "text": "Hotel admin tweaked Navbar.tsx in the template folder. diff-core shows ≠ app/components/Navbar.tsx. sync-templates would wipe that customization. Either move the change into packages/core (if all templates need it) or revert the template copy and keep the override only in the template — do not run sync blindly."
+    },
+    {
+      "type": "command-ref",
+      "id": "template-diff-core"
+    },
+    {
+      "type": "code",
+      "code": "pnpm template:diff-core hotel\n\n# Example output (abbreviated):\n# hotel → templates/hotel-website-template\n#   ✓ matches core:     59\n#   ≠ differs from core: 0\n#   − missing in template: 0\n#   + template-only:    75"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "pnpm template:validate"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "What it does"
+    },
+    {
+      "type": "paragraph",
+      "text": "Runs a three-step quality gate inside templates/<directory>/ from the monorepo root:"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Install — if node_modules is missing, runs pnpm install in the template folder (skipped with --skip-install)",
+        "prisma validate — checks prisma/schema.prisma syntax and generator/datasource config via prisma.config.ts",
+        "tsc --noEmit — full TypeScript check with the template tsconfig (paths, strict mode, Next.js types)",
+        "pnpm lint — ESLint via the template’s package.json lint script"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "If any step fails, the command stops and reports which template failed. Exit code 1 on failure."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "When to use"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Before tempjs version inc — catch type errors and invalid Prisma before shipping",
+        "After changing prisma/domain.prisma — ensure merged schema still validates",
+        "After adding API routes or admin components — TypeScript catches bad imports and props",
+        "After pnpm new-template — confirm the scaffolded template builds cleanly",
+        "Locally before opening a PR — same checks you want in future CI"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Scenario examples"
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Scenario D — Release hotel 1.4.0",
+      "text": "pnpm template:validate hotel → tempjs version check → edit CHANGELOG → tempjs version inc minor hotel. Validate first so you do not bump a broken template."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Scenario E — New domain model",
+      "text": "You added Review to prisma/domain.prisma and new lib/features/reviews/. Run pnpm template:validate hotel. Prisma validate fails if domain.prisma has syntax errors; tsc fails if repository types do not match the Prisma client."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Scenario F — CI or offline machine",
+      "text": "Deps already installed in templates/hotel-website-template/node_modules. Use pnpm template:validate hotel --skip-install to avoid network and speed up the run."
+    },
+    {
+      "type": "command-ref",
+      "id": "template-validate"
+    },
+    {
+      "type": "code",
+      "code": "pnpm template:validate hotel\npnpm template:validate              # all templates in templates.json\npnpm template:validate hotel --skip-install"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "How they relate to sync-templates"
+    },
+    {
+      "type": "table",
+      "headers": ["Command", "Writes files?", "Best for"],
+      "rows": [
+        ["pnpm template:diff-core", "No", "Detailed preview before propagate; lists template-only files"],
+        ["pnpm sync-templates:check", "No", "Quick pass/fail across all templates"],
+        ["pnpm sync-templates", "Yes", "Apply core files into template folders"],
+        ["pnpm template:validate", "No", "Quality gate — unrelated to core drift"]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Typical core-fix workflow: edit packages/core → template:diff-core hotel → sync-templates --template hotel-website-template → template:validate hotel → version bump."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Implementation (scripts)"
+    },
+    {
+      "type": "list",
+      "items": [
+        "scripts/template-cli-utils.mjs — resolves hotel or hotel-website-template via templates.json",
+        "scripts/template-diff-core.mjs — uses template-core-utils.mjs (listCoreFiles, buildMergedPrismaSchema)",
+        "scripts/template-validate.mjs — spawnSync pnpm exec prisma validate, tsc, lint in template cwd"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Next tasks (roadmap)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Planned improvements after validate and diff-core. See ROADMAP.md in the repo for full detail."
+    },
+    {
+      "type": "table",
+      "headers": ["Priority", "Task", "Status"],
+      "rows": [
+        ["Near", "Admin tab registry — single dashboard registers module admin UIs", "✅"],
+        ["Near", "pnpm new-template --with-docs — docsite registry stub", "✅"],
+        ["Near", "Hotel naming cleanup — useProjects → room-type naming", "✅"],
+        ["Near", "Dedupe Hero/Footer — align shipped templates with hero-simple/footer modules", "✅"],
+        ["Done", "templates.json coreModules + templateModules for shipped templates", "✅"],
+        ["Done", "template:diff-core optional module drift reporting", "✅"],
+        ["Done", "Visual theme editor (admin Theme & Colors tab)", "✅"],
+        ["Near", "tempjs doctor + GETTING_STARTED audit", "Ongoing"],
+        ["Done", "Optional core modules (7 modules + --modules + template:add-module)", "✅"],
+        ["Done", "tempjs add-module for client projects", "✅"],
+        ["Done", "Template vertical modules (assemble/extract)", "✅"],
+        ["Done", "Hotel/real-estate core seo (+ gallery/reviews on hotel)", "✅"],
+        ["Medium", "CI matrix on PR — pnpm template:validate every template", "Planned"],
+        ["Medium", "tempjs init wizard in CLI", "Planned"],
+        ["Long", "Template preview URLs", "Planned"],
+        ["Long", "Plugin registry for third-party modules", "Planned"]
+      ]
+    }
+  ]
+}

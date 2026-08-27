@@ -1,0 +1,135 @@
+{
+  "title": "Compose blog module",
+  "description": "Declarative block-based blogging with the Compose Blog Engine — JSON documents, public /blog routes, and an admin compose editor.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "The blog-compose core module adds a full blogging stack without a WYSIWYG editor. Articles are Compose documents: ordered arrays of typed blocks (headings, explanations with highlight/underline phrases, code, terminal commands, callouts, and more). The interpreter renders those blocks as Tailwind-styled React components on /blog and in the admin live preview."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Live demo on this docsite",
+      "text": "Open the Blog section in the sidebar: Live articles (/blog), Playground (/blog/playground), and this module guide. Posts use static JSON in content/blog/posts.json — same Compose shape as client templates."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Optional blog sidebar"
+    },
+    {
+      "type": "paragraph",
+      "text": "By default, /blog pages are full-width without a docs-style left sidebar. To add an article list and on-page H2 table of contents (like this docsite blog section), install with the +sidebar suffix. This sets SITE.features.blogSidebar to true."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Dev Agency template example",
+      "text": "The dev-agency vertical ships without blog-compose. See Developers → Templates → Dev Agency Website for a full walkthrough: tempjs add-module blog-compose+sidebar after generation, prisma db push, and optional BlogSection on the homepage."
+    },
+    {
+      "type": "code",
+      "code": "tempjs add-module blog-compose+sidebar\npnpm new-template bakery --modules blog-compose+sidebar,seo"
+    },
+    {
+      "type": "paragraph",
+      "text": "You can also enable later in constants/site.ts: SITE.features.blogSidebar = true (requires blog-compose files already installed)."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "Module id: blog-compose",
+      "text": "Feature flag SITE.features.blogCompose. Engine id compose (Compose Blog Engine). Future engines (e.g. rich-text editor) would use a different engine field and interpreter."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Install"
+    },
+    {
+      "type": "command-builder",
+      "builderId": "developer-add-module"
+    },
+    {
+      "type": "paragraph",
+      "text": "Install blog-compose alone or with other modules, then push the Prisma schema:"
+    },
+    {
+      "type": "code",
+      "code": "tempjs add-module blog-compose\npnpm prisma db push\npnpm dev"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What you get"
+    },
+    {
+      "type": "list",
+      "items": [
+        "lib/blog/compose/* — engine types, block registry, interpreter, and block components",
+        "BlogPost Prisma model with contentJson storing the Compose document",
+        "/api/blog-posts — public list of published posts; full CRUD when admin session is present",
+        "/blog and /blog/[slug] — public index and article pages",
+        "BlogSection — homepage teaser grid (SITE.blog.homepageLimit recent posts)",
+        "Admin → Blog articles tab — block picker, property forms driven by COMPOSE_BLOCK_REGISTRY, live preview"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Compose document shape"
+    },
+    {
+      "type": "paragraph",
+      "text": "Each post stores JSON matching ComposeDocument. Blocks are validated with isComposeDocument() before save."
+    },
+    {
+      "type": "code",
+      "code": "{\n  \"engine\": \"compose\",\n  \"version\": 1,\n  \"blocks\": [\n    {\n      \"type\": \"heading\",\n      \"level\": \"h2\",\n      \"variant\": \"underline-bar\",\n      \"text\": \"Getting started\"\n    },\n    {\n      \"type\": \"explain\",\n      \"text\": \"Run pnpm dev to start the site locally.\",\n      \"highlight\": [\"pnpm dev\"],\n      \"underline\": [\"locally\"]\n    },\n    {\n      \"type\": \"command\",\n      \"title\": \"Dev server\",\n      \"command\": \"pnpm dev\"\n    },\n    {\n      \"type\": \"code\",\n      \"language\": \"typescript\",\n      \"code\": \"import { ComposeBlogRenderer } from '@/lib/blog/compose';\"\n    }\n  ]\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Block types (v1)"
+    },
+    {
+      "type": "table",
+      "headers": ["Block", "Purpose"],
+      "rows": [
+        ["heading", "Page title, H2, or H3 with design variants (default, accent, serif, underline-bar)"],
+        ["explain", "Body text with highlight and underline phrase arrays (exact substring match)"],
+        ["paragraph", "Simple paragraph"],
+        ["code", "Code block with language and optional line numbers"],
+        ["command", "Terminal command with copy button (docsite-style)"],
+        ["callout", "Info, tip, or warning box"],
+        ["divider", "Visual separator"],
+        ["list", "Bulleted or numbered list"],
+        ["quote", "Blockquote with optional attribution"],
+        ["image", "Image with alt text and optional caption"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "SITE.blog strings"
+    },
+    {
+      "type": "paragraph",
+      "text": "Customize labels in constants/site.ts after install — section eyebrow/title for BlogSection, /blog page title, empty states, and view-all link text."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Homepage wiring"
+    },
+    {
+      "type": "paragraph",
+      "text": "Scaffold templates get BlogSection on app/page.tsx when blog-compose is installed via new-template or add-module. Shipped vertical templates (hotel, real-estate) may need a manual import if you add the module later."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Use ComposeBlogRenderer anywhere in your template to render a static Compose document from code or a fetched JSON file — the engine is not limited to database-backed posts."
+    }
+  ]
+}

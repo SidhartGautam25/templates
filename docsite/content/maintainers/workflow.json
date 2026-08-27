@@ -38,6 +38,10 @@
       "text": "Only when you changed packages/core and want existing templates to pick up those files:"
     },
     {
+      "type": "command-builder",
+      "builderId": "maintainer-sync-templates"
+    },
+    {
       "type": "command-ref",
       "id": "sync-templates"
     },
@@ -45,6 +49,23 @@
       "type": "callout",
       "variant": "tip",
       "text": "pnpm sync-templates:check shows whether templates still match core. Pre-commit no longer forces sync — propagate is intentional."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Before release"
+    },
+    {
+      "type": "paragraph",
+      "text": "Run validate before version bumps. Run diff-core before propagate. Full scenarios and internals: see Validate & diff-core page."
+    },
+    {
+      "type": "command-ref",
+      "id": "template-validate"
+    },
+    {
+      "type": "command-ref",
+      "id": "template-diff-core"
     },
     {
       "type": "heading",
@@ -65,11 +86,16 @@
       "headers": ["Script", "Purpose"],
       "rows": [
         ["pnpm new-template", "Copy core + scaffold → new templates/<dir>/"],
+        ["pnpm template:add-module", "Add core module(s) to existing template"],
+        ["pnpm template:assemble", "Copy templates/<dir>/modules/* → template root"],
+        ["pnpm template:extract-modules", "Copy template root paths → modules/<id>/"],
         ["pnpm dev:hotel", "Run hotel template dev server (no sync)"],
         ["pnpm dev:real-estate", "Run real-estate template dev server"],
         ["pnpm sync-templates", "Optional: propagate packages/core into all templates"],
         ["pnpm sync-templates --template hotel-website-template", "Propagate core into one template"],
         ["pnpm sync-templates:check", "Diff templates vs core without writing"],
+        ["pnpm template:diff-core hotel", "Detailed diff for one template vs core"],
+        ["pnpm template:validate hotel", "prisma validate + tsc + eslint"],
         ["pnpm version:check", "Alias for tempjs version check"],
         ["pnpm setup-hooks", "Install git hooks (optional)"]
       ]

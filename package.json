@@ -1,6 +1,6 @@
 {
   "name": "@navneet_25/tempjs",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "CLI to instantiate website project templates from a single GitHub repository",
   "type": "module",
   "bin": {
@@ -8,7 +8,13 @@
   },
   "files": [
     "cli",
-    "templates.json"
+    "templates.json",
+    "packages/core/modules.json",
+    "packages/core/modules/**",
+    "packages/core/prisma/schema.prisma",
+    "scripts/module-installer-core.mjs",
+    "scripts/template-modules-home.mjs",
+    "scripts/template-modules-admin.mjs"
   ],
   "engines": {
     "node": ">=18"
@@ -26,6 +32,11 @@
     "sync-templates:check": "node scripts/sync-templates.mjs --check",
     "propagate-core": "node scripts/sync-templates.mjs",
     "new-template": "node scripts/new-template.mjs",
+    "template:add-module": "node scripts/template-add-module.mjs",
+    "template:assemble": "node scripts/template-assemble.mjs",
+    "template:extract-modules": "node scripts/template-extract-modules.mjs",
+    "template:validate": "node scripts/template-validate.mjs",
+    "template:diff-core": "node scripts/template-diff-core.mjs",
     "setup-hooks": "git config core.hooksPath .githooks && chmod +x .githooks/pre-commit",
     "dev:hotel": "cd templates/hotel-website-template && pnpm dev",
     "dev:real-estate": "cd templates/real-estate-website-template && pnpm dev",
@@ -34,6 +45,7 @@
     "docsite:dev": "cd docsite && pnpm dev",
     "docsite:build": "cd docsite && pnpm build",
     "version:check": "node cli/index.js version check",
-    "version:inc": "node cli/index.js version inc"
+    "version:inc": "node cli/index.js version inc",
+    "dev:dev-agency": "cd templates/dev-agency-website-template && pnpm dev"
   }
 }

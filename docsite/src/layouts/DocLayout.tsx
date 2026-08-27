@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { siteMeta, nav, buildDeveloperSidebar } from "@/lib/content";
+import { siteMeta, nav, buildDeveloperSidebar, buildMaintainerSidebar } from "@/lib/content";
 import { Sidebar } from "@/components/Sidebar";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -11,7 +11,7 @@ export function DocLayout({
   children: React.ReactNode;
 }) {
   const sidebarItems =
-    activeAudience === "maintainers" ? nav.maintainers : buildDeveloperSidebar();
+    activeAudience === "maintainers" ? buildMaintainerSidebar() : buildDeveloperSidebar();
   const sidebarTitle = activeAudience === "maintainers" ? "Maintainers" : "Developers";
 
   return (

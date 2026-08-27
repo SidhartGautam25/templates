@@ -7,19 +7,21 @@ import { SITE } from "@/constants";
 
 interface LeadsTableProps {
   leads: LeadData[];
+  listingFilterLabel?: string;
 }
 
-export default function LeadsTable({ leads }: LeadsTableProps) {
+export default function LeadsTable({
+  leads,
+  listingFilterLabel = "All listings",
+}: LeadsTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedProject, setSelectedProject] = useState("all");
+  const [selectedListing, setSelectedListing] = useState("all");
 
-  // Get unique project names for filter dropdown
-  const projectsList = useMemo(() => {
+  const listings = useMemo(() => {
     const names = new Set(leads.map((l) => l.projectName));
     return Array.from(names).sort();
   }, [leads]);
 
-  // Filter leads
   const filteredLeads = useMemo(() => {
     return leads.filter((lead) => {
       const query = searchQuery.toLowerCase();
@@ -29,16 +31,15 @@ export default function LeadsTable({ leads }: LeadsTableProps) {
         lead.phone.includes(query) ||
         (lead.message && lead.message.toLowerCase().includes(query));
 
-      const matchesProject =
-        selectedProject === "all" || lead.projectName === selectedProject;
+      const matchesListing =
+        selectedListing === "all" || lead.projectName === selectedListing;
 
-      return matchesSearch && matchesProject;
+      return matchesSearch && matchesListing;
     });
-  }, [leads, searchQuery, selectedProject]);
+  }, [leads, searchQuery, selectedListing]);
 
-  // CSV Export Utility
   const downloadCSV = () => {
-    const headers = ["Date", "Project Name", "Client Name", "Email", "Phone", "Message"];
+    const headers = ["Date", "Listing", "Client Name", "Email", "Phone", "Message"];
     const rows = filteredLeads.map((lead) => [
       new Date(lead.createdAt).toLocaleString(),
       lead.projectName,
@@ -50,8 +51,8 @@ export default function LeadsTable({ leads }: LeadsTableProps) {
 
     const csvContent =
       "data:text/csv;charset=utf-8," +
-      [headers.join(","), ...rows.map((e) => e.map(val => `"${val.replace(/"/g, '""')}"`).join(","))].join("\n");
-      
+      [headers.join(","), ...rows.map((e) => e.map((val) => `"${val.replace(/"/g, '""')}"`).join(","))].join("\n");
+
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -63,10 +64,8 @@ export default function LeadsTable({ leads }: LeadsTableProps) {
 
   return (
     <div className="space-y-4">
-      {/* Table Filters Bar */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 border border-black/[0.06] rounded-2xl shadow-sm">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1 max-w-2xl">
-          {/* Search box */}
           <div className="relative flex-1">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-text-muted">
               <Search className="w-4 h-4" />
@@ -80,18 +79,17 @@ export default function LeadsTable({ leads }: LeadsTableProps) {
             />
           </div>
 
-          {/* Project filter */}
           <div className="relative min-w-[200px]">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-text-muted pointer-events-none">
               <Filter className="w-3.5 h-3.5" />
             </span>
             <select
-              value={selectedProject}
-              onChange={(e) => setSelectedProject(e.target.value)}
+              value={selectedListing}
+              onChange={(e) => setSelectedListing(e.target.value)}
               className="w-full bg-bg-tan/40 border border-black/[0.08] rounded-xl pl-9 pr-4 py-2.5 text-xs text-primary focus:outline-none focus:border-accent-gold appearance-none cursor-pointer"
             >
-              <option value="all">All Projects</option>
-              {projectsList.map((name) => (
+              <option value="all">{listingFilterLabel}</option>
+              {listings.map((name) => (
                 <option key={name} value={name}>
                   {name}
                 </option>
@@ -100,8 +98,8 @@ export default function LeadsTable({ leads }: LeadsTableProps) {
           </div>
         </div>
 
-        {/* Download CSV button */}
         <button
+          type="button"
           onClick={downloadCSV}
           disabled={filteredLeads.length === 0}
           className="flex items-center justify-center gap-2 bg-primary hover:bg-primary/95 text-white disabled:opacity-50 px-5 py-2.5 rounded-xl text-xs font-bold tracking-wide transition-all shadow-sm cursor-pointer"
@@ -111,7 +109,6 @@ export default function LeadsTable({ leads }: LeadsTableProps) {
         </button>
       </div>
 
-      {/* Datatable */}
       <div className="bg-white border border-black/[0.06] rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -119,8 +116,8 @@ export default function LeadsTable({ leads }: LeadsTableProps) {
               <tr className="bg-bg-tan/30 border-b border-black/[0.05] text-[10px] uppercase tracking-wider text-text-muted font-bold">
                 <th className="px-6 py-4">Submission Date</th>
                 <th className="px-6 py-4">Client Contact</th>
-                <th className="px-6 py-4">Project Requested</th>
-                <th className="px-6 py-4">Message Details</th>
+                <th className="px-6 py-4">Interest</th>
+                <th className="px-6 py-4">Message</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/[0.04] text-xs text-text-main">
@@ -137,27 +134,17 @@ export default function LeadsTable({ leads }: LeadsTableProps) {
                             year: "numeric",
                           })}
                         </span>
-                        <span className="text-[10px] text-text-muted bg-black/[0.04] px-1.5 py-0.5 rounded">
-                          {new Date(lead.createdAt).toLocaleTimeString(undefined, {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div>
-                        <span className="font-extrabold text-sm text-primary block">
-                          {lead.name}
-                        </span>
-                        <span className="text-text-muted block mt-0.5">{lead.email}</span>
-                        <a
-                          href={`tel:+91${lead.phone}`}
-                          className="text-accent-gold-dark hover:underline font-bold mt-1 block"
-                        >
-                          +91 {lead.phone}
-                        </a>
-                      </div>
+                      <span className="font-extrabold text-sm text-primary block">{lead.name}</span>
+                      <span className="text-text-muted block mt-0.5">{lead.email}</span>
+                      <a
+                        href={`tel:+${SITE.contact.countryCode}${lead.phone}`}
+                        className="text-accent-gold-dark hover:underline font-bold mt-1 block"
+                      >
+                        {SITE.contact.phoneDisplay}
+                      </a>
                     </td>
                     <td className="px-6 py-4">
                       <span className="inline-flex px-3 py-1.5 rounded-lg bg-primary/5 border border-primary/10 text-primary font-bold">
@@ -166,11 +153,9 @@ export default function LeadsTable({ leads }: LeadsTableProps) {
                     </td>
                     <td className="px-6 py-4 max-w-xs">
                       {lead.message ? (
-                        <p className="text-text-main/80 line-clamp-3 leading-relaxed">
-                          {lead.message}
-                        </p>
+                        <p className="text-text-main/80 line-clamp-3 leading-relaxed">{lead.message}</p>
                       ) : (
-                        <span className="text-text-muted italic">No message provided</span>
+                        <span className="text-text-muted italic">No message</span>
                       )}
                     </td>
                   </tr>
@@ -178,7 +163,7 @@ export default function LeadsTable({ leads }: LeadsTableProps) {
               ) : (
                 <tr>
                   <td colSpan={4} className="px-6 py-12 text-center text-text-muted italic">
-                    No leads found matching current query filters.
+                    No leads match the current filters.
                   </td>
                 </tr>
               )}

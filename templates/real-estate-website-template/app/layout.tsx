@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Outfit } from "next/font/google";
 import "./globals.css";
+import SiteJsonLd from "@/app/components/SiteJsonLd";
 import type { Viewport } from "next";
 import QueryProvider from "@/app/components/QueryProvider";
-import { SITE, getSiteUrl } from "@/constants";
+import { SITE } from "@/constants";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -80,27 +81,7 @@ export default function RootLayout({
       className={`${playfair.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": SITE.seo.schemaType,
-              name: SITE.brand.name,
-              image: getSiteUrl(SITE.assets.logoOfficial),
-              url: SITE.domain.baseUrl,
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: SITE.contact.address.locality,
-                addressRegion: SITE.contact.address.region,
-                addressCountry: SITE.contact.address.country,
-              },
-              description: SITE.seo.defaultDescription,
-              priceRange: SITE.seo.priceRange,
-              telephone: `+${SITE.contact.countryCode}${SITE.contact.phone}`,
-            }),
-          }}
-        />
+        <SiteJsonLd />
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>

@@ -1,0 +1,69 @@
+datasource db {
+  provider = "mysql"
+}
+
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+model Lead {
+  id          String   @id @default(uuid())
+  projectName String
+  name        String
+  email       String
+  phone       String
+  message     String?
+  createdAt   DateTime @default(now())
+}
+
+model PromoBanner {
+  id               String   @id @default("global")
+  imageUrl         String   @db.Text
+  sec1Title        String
+  sec1Sub          String
+  sec2Title        String
+  sec2Sub          String
+  sec3Title        String
+  sec3Sub          String
+  sec4Title        String
+  sec4Sub          String
+  newLaunchLogoUrl String?  @db.Text
+  updatedAt        DateTime @updatedAt
+}
+
+model AgencyExpertise {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  iconKey     String   @default("code")
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AgencyTeamMember {
+  id          String   @id @default(uuid())
+  name        String
+  role        String
+  avatarColor String   @default("blue")
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AgencyFeaturedWork {
+  id          String   @id @default(uuid())
+  clientName  String
+  websiteUrl  String
+  category    String   @default("Web Project")
+  review      String?  @db.Text
+  logoUrl     String?  @db.Text
+  gradient    String   @default("purple")
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

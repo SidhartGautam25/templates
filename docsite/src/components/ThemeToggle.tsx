@@ -27,6 +27,7 @@ export function ThemeToggle() {
     const next: Theme = theme === "light" ? "dark" : "light";
     setTheme(next);
     document.documentElement.setAttribute("data-theme", next);
+    document.documentElement.style.colorScheme = next;
     localStorage.setItem("docsite-theme", next);
   }
 

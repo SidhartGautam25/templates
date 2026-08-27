@@ -1,0 +1,35 @@
+model AgencyExpertise {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  iconKey     String   @default("code")
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AgencyTeamMember {
+  id          String   @id @default(uuid())
+  name        String
+  role        String
+  avatarColor String   @default("blue")
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AgencyFeaturedWork {
+  id          String   @id @default(uuid())
+  clientName  String
+  websiteUrl  String
+  category    String   @default("Web Project")
+  review      String?  @db.Text
+  logoUrl     String?  @db.Text
+  gradient    String   @default("purple")
+  sortOrder   Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

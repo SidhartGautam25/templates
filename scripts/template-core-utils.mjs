@@ -25,6 +25,7 @@ export const CORE_EXCLUDE = new Set([
   "pnpm-lock.yaml",
   "pnpm-workspace.yaml",
   "tsconfig.tsbuildinfo",
+  "modules.json",
 ]);
 /** Files compared loosely — templates may legitimately differ after scaffold merge. */
 export const CORE_CHECK_SKIP = new Set(["tsconfig.json"]);
@@ -32,23 +33,28 @@ export const CORE_CHECK_SKIP = new Set(["tsconfig.json"]);
 /** Merged from core + prisma/domain.prisma — not copied verbatim from core. */
 export const CORE_MERGED_PATHS = new Set(["prisma/schema.prisma"]);
 
-export const CORE_PATH_PREFIX_EXCLUDE = ["scripts/dev", "scaffold", "node_modules", ".next"];
+export const CORE_PATH_PREFIX_EXCLUDE = ["scripts/dev", "scaffold", "modules", "node_modules", ".next"];
 
 /**
  * @param {string} dir
  * @returns {string[]}
  */
-export function listFilesRecursive(dir) {
+export function listFilesRecursive(dir, skipDirNames = new Set(["node_modules", ".next", ".git", "dist", "coverage"])) {
   const results = [];
   if (!existsSync(dir)) return results;
 
   for (const entry of readdirSync(dir)) {
+    if (skipDirNames.has(entry)) continue;
     const full = join(dir, entry);
-    const stat = statSync(full);
-    if (stat.isDirectory()) {
-      results.push(...listFilesRecursive(full));
-    } else {
-      results.push(full);
+    try {
+      const stat = statSync(full);
+      if (stat.isDirectory()) {
+        results.push(...listFilesRecursive(full, skipDirNames));
+      } else {
+        results.push(full);
+      }
+    } catch {
+      // Skip broken symlinks or unreadable paths (e.g. partial node_modules)
     }
   }
   return results;
@@ -147,6 +153,9 @@ export function copyCoreFilesIntoTemplate(templateRoot) {
   for (const coreFile of listCoreFiles()) {
     const rel = relative(coreDir, coreFile).replace(/\\/g, "/");
     const dest = join(templateRoot, rel);
+    if (rel === "constants/site.ts" && existsSync(dest)) {
+      continue;
+    }
     mkdirSync(dirname(dest), { recursive: true });
     cpSync(coreFile, dest, { force: true });
   }

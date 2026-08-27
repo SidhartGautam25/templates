@@ -1,0 +1,454 @@
+{
+  "builders": {
+    "developer-add-module": {
+      "id": "developer-add-module",
+      "label": "Add optional core modules",
+      "segment": "developers",
+      "description": "Install SEO, gallery, reviews, and other modules into an existing client project.",
+      "pagePath": "/developers/optional-modules",
+      "presets": [
+        {
+          "id": "seo-stack",
+          "label": "SEO + gallery + reviews",
+          "description": "Full CMS slice for marketing sites.",
+          "command": "tempjs add-module seo,gallery,reviews"
+        },
+        {
+          "id": "ui-basics",
+          "label": "Footer + hero",
+          "description": "Basic homepage UI without CMS.",
+          "command": "tempjs add-module footer,hero-simple"
+        },
+        {
+          "id": "blog-sidebar",
+          "label": "Compose blog + sidebar",
+          "description": "Blog engine with docs-style article sidebar (dev-agency add-on example).",
+          "command": "tempjs add-module blog-compose+sidebar"
+        },
+        {
+          "id": "theme-modes",
+          "label": "Light & dark themes",
+          "description": "Visitor toggle + dual palettes in admin Theme editor.",
+          "command": "tempjs add-module theme-modes"
+        },
+        {
+          "id": "list-modules",
+          "label": "List available modules",
+          "description": "Show all module ids from packages/core/modules.json.",
+          "command": "tempjs add-module list"
+        }
+      ],
+      "modes": [
+        {
+          "id": "install",
+          "label": "Install modules",
+          "description": "Comma-separated module ids. Run from project root with .tempjs.json.",
+          "baseCommand": "tempjs add-module",
+          "wizardSteps": [
+            {
+              "id": "modules",
+              "title": "Choose modules",
+              "description": "Pick one or more ids. Gallery/reviews also wire admin tabs on /admin.",
+              "fieldKeys": ["moduleIds"]
+            }
+          ]
+        }
+      ]
+    },
+    "developer-project-theme": {
+      "id": "developer-project-theme",
+      "label": "Theme & typography",
+      "segment": "developers",
+      "description": "Change colors and fonts in an existing generated project.",
+      "pagePath": "/developers/customization",
+      "presets": [
+        {
+          "id": "theme3",
+          "label": "Purple theme",
+          "description": "Apply theme3 preset non-interactively.",
+          "command": "tempjs theme --theme theme3 --yes"
+        },
+        {
+          "id": "font-modern",
+          "label": "Inter font",
+          "description": "Switch to Inter typography preset.",
+          "command": "tempjs font --font inter --yes"
+        }
+      ],
+      "modes": [
+        {
+          "id": "theme",
+          "label": "Change color theme",
+          "baseCommand": "tempjs theme",
+          "wizardSteps": [
+            {
+              "id": "theme",
+              "title": "Theme preset",
+              "fieldKeys": ["theme", "yes"]
+            }
+          ]
+        },
+        {
+          "id": "font",
+          "label": "Change font pairing",
+          "baseCommand": "tempjs font",
+          "wizardSteps": [
+            {
+              "id": "font",
+              "title": "Font preset",
+              "fieldKeys": ["font", "yes"]
+            }
+          ]
+        }
+      ]
+    },
+    "developer-project-brand": {
+      "id": "developer-project-brand",
+      "label": "Brand & contact",
+      "segment": "developers",
+      "description": "Update constants/site.ts brand fields without re-copying the template.",
+      "pagePath": "/developers/customization",
+      "presets": [
+        {
+          "id": "quick-brand",
+          "label": "Name + URL + email",
+          "description": "Minimal brand update.",
+          "command": "tempjs brand --yes --name \"My Business\" --base-url https://example.com --email hello@example.com"
+        }
+      ],
+      "modes": [
+        {
+          "id": "brand",
+          "label": "Update brand fields",
+          "baseCommand": "tempjs brand",
+          "wizardSteps": [
+            {
+              "id": "options",
+              "title": "Run mode",
+              "fieldKeys": ["yes"]
+            },
+            {
+              "id": "brand",
+              "title": "Brand & contact",
+              "fieldKeys": ["name", "shortName", "baseUrl", "phone", "phoneDisplay", "countryCode", "email", "address", "tagline", "developerName", "channelPartner"]
+            }
+          ]
+        }
+      ]
+    },
+    "developer-project-database": {
+      "id": "developer-project-database",
+      "label": "Database & admin login",
+      "segment": "developers",
+      "description": "Configure .env and optional prisma db push.",
+      "pagePath": "/developers/docker",
+      "presets": [
+        {
+          "id": "docker-local",
+          "label": "Local Docker MariaDB",
+          "description": "Typical docker-compose defaults.",
+          "command": "tempjs init-db --yes --db-host localhost --db-user root --db-password password --db-name app_db"
+        }
+      ],
+      "modes": [
+        {
+          "id": "init-db",
+          "label": "Configure database",
+          "baseCommand": "tempjs init-db",
+          "wizardSteps": [
+            {
+              "id": "options",
+              "title": "Run mode",
+              "fieldKeys": ["yes", "skipDbPush", "dbPush"]
+            },
+            {
+              "id": "database",
+              "title": "Connection & admin",
+              "fieldKeys": ["dbHost", "dbPort", "dbUser", "dbPassword", "dbName", "adminUser", "adminPassword"]
+            }
+          ]
+        }
+      ]
+    },
+    "developer-update": {
+      "id": "developer-update",
+      "label": "Template updates",
+      "segment": "developers",
+      "description": "Check or merge upstream template changes into a client project.",
+      "pagePath": "/developers/updates",
+      "presets": [
+        {
+          "id": "check",
+          "label": "Check for updates (read-only)",
+          "description": "Compare project to latest template without writing files.",
+          "command": "tempjs update --check"
+        },
+        {
+          "id": "merge",
+          "label": "Merge safe updates",
+          "description": "Apply non-conflicting template files.",
+          "command": "tempjs update --merge --yes"
+        }
+      ],
+      "modes": [
+        {
+          "id": "check",
+          "label": "Check updates",
+          "baseCommand": "tempjs update --check",
+          "wizardSteps": []
+        },
+        {
+          "id": "merge",
+          "label": "Merge updates",
+          "baseCommand": "tempjs update --merge",
+          "wizardSteps": [
+            {
+              "id": "options",
+              "title": "Confirmation",
+              "fieldKeys": ["updateYes"]
+            }
+          ]
+        }
+      ]
+    },
+    "maintainer-new-template": {
+      "id": "maintainer-new-template",
+      "label": "Create new template",
+      "segment": "maintainers",
+      "description": "Scaffold a new template from packages/core + optional modules.",
+      "pagePath": "/maintainers/new-template",
+      "presets": [
+        {
+          "id": "minimal",
+          "label": "Minimal scaffold",
+          "description": "Core only — no optional modules.",
+          "command": "pnpm new-template bakery bakery-website-template --name \"Bakery Website\""
+        },
+        {
+          "id": "with-modules",
+          "label": "Lean site with UI modules",
+          "description": "Hero, footer, enquiry modal, SEO.",
+          "command": "pnpm new-template bakery --name \"Bakery\" --modules enquiry-modal,footer,hero-simple,seo"
+        },
+        {
+          "id": "full-cms",
+          "label": "Full CMS slice + docsite",
+          "description": "All common modules and docsite registry stub.",
+          "command": "pnpm new-template bakery --modules enquiry-modal,footer,hero-simple,seo,gallery,reviews,legal-pages --with-docs"
+        }
+      ],
+      "modes": [
+        {
+          "id": "scaffold",
+          "label": "Scaffold new template",
+          "baseCommand": "pnpm new-template",
+          "wizardSteps": [
+            {
+              "id": "identity",
+              "title": "Template identity",
+              "fieldKeys": ["newTemplateId", "newTemplateDirectory", "name"]
+            },
+            {
+              "id": "modules",
+              "title": "Optional modules & docs",
+              "fieldKeys": ["modules", "withDocs"]
+            }
+          ]
+        }
+      ]
+    },
+    "maintainer-template-add-module": {
+      "id": "maintainer-template-add-module",
+      "label": "Add module to template",
+      "segment": "maintainers",
+      "description": "Copy core modules into a monorepo template folder.",
+      "pagePath": "/maintainers/modules",
+      "presets": [
+        {
+          "id": "hotel-seo",
+          "label": "SEO stack on hotel",
+          "description": "Install seo, gallery, and reviews on hotel template.",
+          "command": "pnpm template:add-module hotel seo,gallery,reviews"
+        },
+        {
+          "id": "bakery-footer",
+          "label": "Footer on bakery",
+          "description": "Add footer module to a scaffold template.",
+          "command": "pnpm template:add-module bakery footer"
+        },
+        {
+          "id": "dev-agency-blog",
+          "label": "Blog + sidebar on dev-agency",
+          "description": "Optional compose blog with article sidebar on the agency template.",
+          "command": "pnpm template:add-module dev-agency blog-compose+sidebar"
+        },
+        {
+          "id": "dev-agency-theme-modes",
+          "label": "Theme modes on dev-agency",
+          "description": "Light/dark toggle and dual palette admin on agency template.",
+          "command": "pnpm template:add-module dev-agency theme-modes"
+        }
+      ],
+      "modes": [
+        {
+          "id": "add",
+          "label": "Add modules to template",
+          "baseCommand": "pnpm template:add-module",
+          "wizardSteps": [
+            {
+              "id": "target",
+              "title": "Template and modules",
+              "fieldKeys": ["templateRef", "moduleIds"]
+            }
+          ]
+        }
+      ]
+    },
+    "maintainer-template-assemble": {
+      "id": "maintainer-template-assemble",
+      "label": "Assemble vertical modules",
+      "segment": "maintainers",
+      "description": "Copy modules/<id>/ source into template root.",
+      "pagePath": "/maintainers/modules",
+      "presets": [
+        {
+          "id": "hotel-all",
+          "label": "Assemble all hotel modules",
+          "command": "pnpm template:assemble hotel"
+        },
+        {
+          "id": "hotel-room-types",
+          "label": "Room types only",
+          "command": "pnpm template:assemble hotel room-types,facilities"
+        }
+      ],
+      "modes": [
+        {
+          "id": "assemble",
+          "label": "Assemble modules",
+          "baseCommand": "pnpm template:assemble",
+          "wizardSteps": [
+            {
+              "id": "target",
+              "title": "Template and module ids",
+              "description": "Leave module ids empty to assemble all registered vertical modules.",
+              "fieldKeys": ["templateRef", "moduleIds"]
+            }
+          ]
+        }
+      ]
+    },
+    "maintainer-sync-templates": {
+      "id": "maintainer-sync-templates",
+      "label": "Propagate core to templates",
+      "segment": "maintainers",
+      "description": "Optional propagate packages/core into shipped templates.",
+      "pagePath": "/maintainers/workflow",
+      "presets": [
+        {
+          "id": "all",
+          "label": "All templates",
+          "command": "pnpm sync-templates"
+        },
+        {
+          "id": "hotel",
+          "label": "Hotel only",
+          "command": "pnpm sync-templates --template hotel-website-template"
+        },
+        {
+          "id": "check",
+          "label": "Check without writing",
+          "command": "pnpm sync-templates:check"
+        }
+      ],
+      "modes": [
+        {
+          "id": "sync",
+          "label": "Run sync-templates",
+          "baseCommand": "pnpm sync-templates",
+          "wizardSteps": [
+            {
+              "id": "target",
+              "title": "Scope",
+              "description": "Leave directory empty to propagate all templates in templates.json.",
+              "fieldKeys": ["syncTemplateDirectory"]
+            }
+          ]
+        }
+      ]
+    },
+    "maintainer-template-validate": {
+      "id": "maintainer-template-validate",
+      "label": "Validate template",
+      "segment": "maintainers",
+      "description": "Prisma validate, TypeScript, and ESLint in a template folder.",
+      "pagePath": "/maintainers/template-tools",
+      "presets": [
+        {
+          "id": "hotel",
+          "label": "Validate hotel",
+          "description": "Prisma + TypeScript + ESLint for hotel template.",
+          "command": "pnpm template:validate hotel"
+        },
+        {
+          "id": "all",
+          "label": "Validate all templates",
+          "description": "Run validate for every entry in templates.json.",
+          "command": "pnpm template:validate"
+        }
+      ],
+      "modes": [
+        {
+          "id": "validate",
+          "label": "Run template:validate",
+          "baseCommand": "pnpm template:validate",
+          "wizardSteps": [
+            {
+              "id": "target",
+              "title": "Template and options",
+              "fieldKeys": ["templateRef", "skipInstall"]
+            }
+          ]
+        }
+      ]
+    },
+    "maintainer-version-inc": {
+      "id": "maintainer-version-inc",
+      "label": "Bump versions",
+      "segment": "maintainers",
+      "description": "Increment CLI or template versions in the monorepo.",
+      "pagePath": "/maintainers/versioning",
+      "presets": [
+        {
+          "id": "cli-patch",
+          "label": "CLI patch bump",
+          "command": "tempjs version inc patch cli"
+        },
+        {
+          "id": "hotel-minor",
+          "label": "Hotel minor release",
+          "command": "tempjs version inc minor hotel"
+        },
+        {
+          "id": "all-patch",
+          "label": "Bump everything (patch)",
+          "command": "tempjs version inc patch all"
+        }
+      ],
+      "modes": [
+        {
+          "id": "inc",
+          "label": "Version increment",
+          "baseCommand": "tempjs version inc",
+          "wizardSteps": [
+            {
+              "id": "bump",
+              "title": "Bump type and target",
+              "fieldKeys": ["versionBump", "versionTarget"]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --animate-agency-marquee: agency-marquee 40s linear infinite;
+}
+
+@keyframes agency-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-agency-marquee {
+  animation: agency-marquee 40s linear infinite;
+  width: max-content;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background-color: #020617;
+  color: #f8fafc;
+}

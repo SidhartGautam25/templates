@@ -53,7 +53,8 @@
         "Start MariaDB — docker compose up -d is the usual local path; then pnpm prisma db push && pnpm prisma db seed.",
         "pnpm dev — open /admin with credentials from .env; use GET /api/health to verify database connectivity.",
         "Customize constants/site.ts for copy, images, and colors; deploy when ready.",
-        "Later: tempjs update --check in the project folder to see if the upstream template has fixes you can merge."
+        "Later: tempjs update --check in the project folder to see if the upstream template has fixes you can merge.",
+        "Optional: tempjs add-module seo,gallery,reviews to add core features after generation (see Optional modules page)"
       ]
     },
     {
