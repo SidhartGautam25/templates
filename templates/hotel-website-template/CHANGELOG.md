@@ -26,7 +26,7 @@ All notable template changes are documented here. When you run `tempjs update --
 
 ## [1.2.0]
 
-- Shared core + overlay build via `pnpm sync-templates`
+- Shared core starter kit; optional propagate via `pnpm sync-templates`
 - `tempjs update --check` and `--merge` with `.tempjs.json` file hashes
 - Non-interactive CLI flags (`--yes`, `--theme`, brand and DB options)
 

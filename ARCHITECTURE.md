@@ -76,9 +76,11 @@ Not in core: home page, Hero, domain CRUD, `constants/site.ts` content (stub onl
 It is **not** part of normal development. Use it only when you changed `packages/core` and want to **propagate** that change into existing templates without manually copying files.
 
 ```bash
-pnpm sync-templates:check    # see if templates differ from core
-pnpm sync-templates          # apply core files into all templates
+pnpm template:diff-core hotel    # detailed drift report before propagate
+pnpm sync-templates:check        # quick pass/fail all templates
+pnpm sync-templates              # apply core files into all templates
 pnpm sync-templates --template hotel-website-template
+pnpm template:validate hotel    # prisma + tsc + lint before release
 ```
 
 ## Versioning

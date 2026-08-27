@@ -25,6 +25,7 @@ export const CORE_EXCLUDE = new Set([
   "pnpm-lock.yaml",
   "pnpm-workspace.yaml",
   "tsconfig.tsbuildinfo",
+  "modules.json",
 ]);
 /** Files compared loosely — templates may legitimately differ after scaffold merge. */
 export const CORE_CHECK_SKIP = new Set(["tsconfig.json"]);
@@ -32,7 +33,7 @@ export const CORE_CHECK_SKIP = new Set(["tsconfig.json"]);
 /** Merged from core + prisma/domain.prisma — not copied verbatim from core. */
 export const CORE_MERGED_PATHS = new Set(["prisma/schema.prisma"]);
 
-export const CORE_PATH_PREFIX_EXCLUDE = ["scripts/dev", "scaffold", "node_modules", ".next"];
+export const CORE_PATH_PREFIX_EXCLUDE = ["scripts/dev", "scaffold", "modules", "node_modules", ".next"];
 
 /**
  * @param {string} dir

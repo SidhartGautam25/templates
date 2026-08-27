@@ -32,7 +32,7 @@
       "type": "callout",
       "variant": "tip",
       "title": "CHANGELOG location",
-      "text": "Edit templates/<directory>/CHANGELOG.md in the template folder (not overlays)."
+      "text": "Edit templates/<directory>/CHANGELOG.md in the template folder."
     },
     {
       "type": "heading",

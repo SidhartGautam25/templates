@@ -28,6 +28,7 @@
         "Maintainers → Core starter kit — what is copied from packages/core",
         "Maintainers → New template — pnpm new-template walkthrough",
         "Maintainers → Daily workflow — dev, optional sync, release",
+        "Maintainers → Validate & diff-core — pnpm template:validate and pnpm template:diff-core",
         "Repo MAINTAINERS.md and ROADMAP.md — full handbook + future plans"
       ]
     },

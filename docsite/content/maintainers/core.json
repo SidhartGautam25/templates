@@ -72,9 +72,13 @@
       "id": "sync-templates"
     },
     {
+      "type": "command-ref",
+      "id": "template-diff-core"
+    },
+    {
       "type": "callout",
       "variant": "tip",
-      "text": "Normal template development does not use sync. Only run propagate when you changed packages/core on purpose."
+      "text": "Normal template development does not use sync. Use pnpm template:diff-core before propagate to see what would change."
     },
     {
       "type": "heading",
@@ -83,7 +87,7 @@
     },
     {
       "type": "paragraph",
-      "text": "Planned: optional core modules (gallery CMS, CRM hooks) selected at new-template time or added later via tempjs add-module. Always-on core stays small; vertical-specific code stays in the template folder. See ROADMAP.md in the repo."
+      "text": "First slice implemented: enquiry-modal, footer, hero-simple via pnpm new-template --modules and pnpm template:add-module. Next: gallery, reviews, leadrat, seo, and tempjs add-module for client projects."
     }
   ]
 }

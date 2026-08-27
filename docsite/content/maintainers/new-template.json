@@ -13,7 +13,20 @@
     {
       "type": "heading",
       "level": 2,
-      "text": "What you get"
+      "text": "Optional core modules"
+    },
+    {
+      "type": "paragraph",
+      "text": "Use --modules to copy optional UI from packages/core/modules/ instead of baking everything into the default scaffold. Available: enquiry-modal, footer, hero-simple."
+    },
+    {
+      "type": "code",
+      "code": "pnpm new-template bakery bakery-website-template --name \"Bakery\" --modules enquiry-modal,footer,hero-simple\npnpm template:add-module bakery footer"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What you get (default)"
     },
     {
       "type": "list",

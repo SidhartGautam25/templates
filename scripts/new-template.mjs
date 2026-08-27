@@ -4,6 +4,7 @@
  *
  * Usage:
  *   node scripts/new-template.mjs <template-id> [directory-name] [--name "Display Name"]
+ *   node scripts/new-template.mjs bakery bakery-website-template --name "Bakery" --modules enquiry-modal,footer,hero-simple
  *
  * Example:
  *   node scripts/new-template.mjs bakery bakery-website-template --name "Bakery Website"
@@ -18,10 +19,15 @@ import {
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { writeMergedPrismaSchema } from "./template-core-utils.mjs";
+import { coreDir, CORE_EXCLUDE, shouldCopyCorePath, writeMergedPrismaSchema } from "./template-core-utils.mjs";
+import {
+  copyModulesIntoTemplate,
+  applyModulesHomePage,
+  parseModulesArg,
+  listModuleIds,
+} from "./template-modules.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const coreDir = join(root, "packages", "core");
 const scaffoldDir = join(coreDir, "scaffold");
 const templatesDir = join(root, "templates");
 const manifestPath = join(root, "templates.json");
@@ -31,17 +37,23 @@ const args = process.argv.slice(2);
 let templateId = args[0];
 let directory = args[1];
 let displayNameArg = null;
+let modulesArg = null;
 
 for (let i = 2; i < args.length; i++) {
   if (args[i] === "--name" && args[i + 1]) {
     displayNameArg = args[++i];
+  } else if (args[i] === "--modules" && args[i + 1]) {
+    modulesArg = args[++i];
+  } else if (args[i]?.startsWith("--modules=")) {
+    modulesArg = args[i].slice("--modules=".length);
   }
 }
 
 if (!templateId) {
   console.error(
-    "Usage: node scripts/new-template.mjs <template-id> [directory-name] [--name \"Display Name\"]"
+    "Usage: node scripts/new-template.mjs <template-id> [directory-name] [--name \"Display Name\"] [--modules enquiry-modal,footer,hero-simple]"
   );
+  console.error(`Available modules: ${listModuleIds().join(", ")}`);
   process.exit(1);
 }
 
@@ -67,17 +79,7 @@ const displayName =
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
 
-const CORE_EXCLUDE = new Set(["package.json", "README.md", "MAINTAINERS.md"]);
-const CORE_PATH_PREFIX_EXCLUDE = ["scripts/dev", "scaffold"];
-
-function shouldCopyCorePath(rel) {
-  if (!rel) return true;
-  if (CORE_PATH_PREFIX_EXCLUDE.some((prefix) => rel === prefix || rel.startsWith(`${prefix}/`))) {
-    return false;
-  }
-  const base = rel.split("/").pop() ?? "";
-  return !CORE_EXCLUDE.has(base);
-}
+const moduleIds = parseModulesArg(modulesArg);
 
 function copyTreeFiltered(src, dest) {
   cpSync(src, dest, {
@@ -85,7 +87,7 @@ function copyTreeFiltered(src, dest) {
     force: true,
     filter: (path) => {
       const rel = relative(src, path).replace(/\\/g, "/");
-      return shouldCopyCorePath(rel);
+      return shouldCopyCorePath(rel, CORE_EXCLUDE);
     },
   });
 }
@@ -99,38 +101,40 @@ if (existsSync(scaffoldDir)) {
 
 writeFileSync(
   join(templatePath, "constants/site.ts"),
-  readFileSync(join(coreDir, "constants/site.ts"), "utf8").replace(
-    'id: "demo-site"',
-    `id: "${templateId}"`
-  ).replace(
-    'name: "Demo Client Site"',
-    `name: "${displayName}"`
-  ).replace(
-    'shortName: "Demo"',
-    `shortName: "${displayName.split(" ")[0]}"`
-  ).replace(
-    'developerName: "Demo Client Site"',
-    `developerName: "${displayName}"`
-  ).replace(
-    'leadsExportPrefix: "demo_leads"',
-    `leadsExportPrefix: "${templateId}_leads"`
-  )
+  readFileSync(join(coreDir, "constants/site.ts"), "utf8")
+    .replace('id: "demo-site"', `id: "${templateId}"`)
+    .replace('name: "Demo Client Site"', `name: "${displayName}"`)
+    .replace('shortName: "Demo"', `shortName: "${displayName.split(" ")[0]}"`)
+    .replace('developerName: "Demo Client Site"', `developerName: "${displayName}"`)
+    .replace('leadsExportPrefix: "demo_leads"', `leadsExportPrefix: "${templateId}_leads"`)
 );
 
 const pkg = JSON.parse(readFileSync(join(templatePath, "package.json"), "utf8"));
 pkg.name = directory.replace(/-website-template$/, "") + "-website";
 writeFileSync(join(templatePath, "package.json"), JSON.stringify(pkg, null, 2) + "\n");
 
+if (moduleIds.length > 0) {
+  console.log("Installing core modules:");
+  const installed = copyModulesIntoTemplate(templatePath, moduleIds, { displayName });
+  applyModulesHomePage(templatePath, installed);
+}
+
 writeFileSync(
   join(templatePath, "README.md"),
-  `# ${displayName} Website Template\n\nStandalone Next.js project. Edit everything in this folder.\n\nCore was copied once from \`packages/core\` at creation — you do not need sync for day-to-day work.\n\nSee GETTING_STARTED.md.\n`
+  `# ${displayName} Website Template\n\nStandalone Next.js project. Edit everything in this folder.\n\nCore was copied once from \`packages/core\` at creation — you do not need sync for day-to-day work.\n\n${
+    moduleIds.length > 0
+      ? `Core modules installed: ${moduleIds.join(", ")}\n\n`
+      : ""
+  }See GETTING_STARTED.md.\n`
 );
 
 writeMergedPrismaSchema(templatePath);
 
 writeFileSync(
   join(templatePath, "CHANGELOG.md"),
-  `# Changelog — ${displayName}\n\n## [1.0.0] — ${new Date().toISOString().slice(0, 10)}\n\n- Initial scaffold via \`pnpm new-template\`\n`
+  `# Changelog — ${displayName}\n\n## [1.0.0] — ${new Date().toISOString().slice(0, 10)}\n\n- Initial scaffold via \`pnpm new-template\`${
+    moduleIds.length > 0 ? `\n- Core modules: ${moduleIds.join(", ")}` : ""
+  }\n`
 );
 
 mkdirSync(join(templatePath, "lib/features"), { recursive: true });
@@ -139,7 +143,7 @@ writeFileSync(
   `// Export template-specific features, e.g.:\n// export * from "./listings";\n`
 );
 
-manifest.templates[templateId] = {
+const templateEntry = {
   directory,
   name: `${displayName} Website`,
   description: `${displayName} website template`,
@@ -178,6 +182,12 @@ manifest.templates[templateId] = {
   },
 };
 
+if (moduleIds.length > 0) {
+  templateEntry.coreModules = moduleIds;
+}
+
+manifest.templates[templateId] = templateEntry;
+
 writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n", "utf8");
 
 const rootPkg = JSON.parse(readFileSync(rootPackagePath, "utf8"));
@@ -190,8 +200,14 @@ if (!rootPkg.scripts[devScript]) {
 
 console.log(`Created template: templates/${directory}/`);
 console.log(`Added templates.json entry: "${templateId}"`);
+if (moduleIds.length > 0) {
+  console.log(`Core modules: ${moduleIds.join(", ")}`);
+}
 console.log("\nNext steps:");
 console.log("  1. Edit templates/" + directory + "/ — add app pages, lib/features/, prisma/domain.prisma");
 console.log("  2. Customize constants/site.ts");
 console.log(`  3. pnpm dev:${templateId}`);
+if (moduleIds.length === 0) {
+  console.log("\nTip: add optional UI on next template with --modules enquiry-modal,footer,hero-simple");
+}
 console.log("\nNote: packages/core is only a starter kit. This template is independent after creation.");

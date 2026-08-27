@@ -6,11 +6,13 @@ Priorities after the **copy-once core starter kit** architecture. Ordered by imp
 
 ## Near term (high value, low risk)
 
-### 1. Maintainer docs & tooling clarity ✅ (in progress)
+### 1. Maintainer docs & tooling clarity ✅
 
 - Root [MAINTAINERS.md](./MAINTAINERS.md), updated docsite Maintainers section
 - `pnpm dev:<id>` without forced sync
 - `pnpm sync-templates --template <directory>` for single-template propagate
+- `pnpm template:validate` and `pnpm template:diff-core`
+- Removed legacy `templates/overlays/`
 
 ### 2. `tempjs doctor` + `GETTING_STARTED` in every template
 
@@ -20,11 +22,14 @@ Already in generated projects — ensure each template’s checklist is accurate
 
 ```bash
 pnpm new-template bakery --name "Bakery" --with-docs
+pnpm new-template bakery --modules enquiry-modal,footer,hero-simple
 ```
 
-- Auto-add docsite registry stub
+- Auto-add docsite registry stub (`--with-docs` — planned)
 - Optional `--description` for `templates.json`
-- Validate template folder builds (`pnpm install && pnpm exec tsc --noEmit`)
+- Validate template folder builds (`pnpm template:validate`)
+- ✅ `--modules` for optional core modules
+- ✅ `pnpm template:add-module` for existing templates
 
 ### 4. Reduce duplication inside templates
 
@@ -36,11 +41,19 @@ Rename hotel admin `useProjects` / `ProjectsList` to room-type naming for mainta
 
 ---
 
-## Medium term — optional core modules
+## Medium term — optional core modules (in progress)
 
 **Goal:** Core features that are **not always needed** can be omitted at template creation or added later.
 
-### Concept: `core-modules` manifest
+### Implemented (first slice)
+
+- `packages/core/modules.json` registry
+- Modules: `enquiry-modal`, `footer`, `hero-simple`
+- `pnpm new-template --modules …`
+- `pnpm template:add-module <id> <modules>`
+- `.tempjs-modules.json` in template folder
+
+### Concept: extended `core-modules` manifest
 
 ```json
 // packages/core/modules.json (future)
@@ -97,8 +110,8 @@ Modules copy files from `packages/core/modules/<name>/` into the template and ap
 
 | Feature | Benefit |
 |---------|---------|
-| `pnpm template:validate hotel` | Lint + typecheck + prisma validate |
-| `pnpm template:diff-core hotel` | See what differs from `packages/core` before propagate |
+| `pnpm template:validate hotel` ✅ | Lint + typecheck + prisma validate |
+| `pnpm template:diff-core hotel` ✅ | See what differs from `packages/core` before propagate |
 | Hot reload core into one template | Safer than full sync (preview diff) |
 | Shared test fixtures in core | Seed helpers for leads/promo in all templates |
 

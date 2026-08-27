@@ -134,6 +134,17 @@ export const SITE = {
     formTitle: "Request a callback:",
     successMessage: "Thank you! We will contact you soon.",
     aboutSuccessMessage: "We received your enquiry.",
+    selectionLabel: "Interest",
+    selectionOptions: [] as { value: string; label: string }[],
+    /** Optional API path returning { success, data: [{ name }] } for enquiry dropdown */
+    listingsApiPath: "",
+  },
+
+  /** Enabled by optional core modules (pnpm new-template --modules). */
+  features: {
+    enquiryModal: false,
+    footer: false,
+    heroSimple: false,
   },
 
   admin: {

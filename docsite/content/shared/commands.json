@@ -156,6 +156,27 @@
         { "label": "Check without writing", "command": "pnpm sync-templates:check" }
       ]
     },
+    "template-diff-core": {
+      "syntax": "pnpm template:diff-core [template-id|directory]",
+      "title": "Diff template vs core",
+      "description": "Reports which core-owned paths match, differ, or are missing — plus template-only files sync would not touch. Exit code 1 if propagate would change files.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "Hotel template", "command": "pnpm template:diff-core hotel" },
+        { "label": "All templates", "command": "pnpm template:diff-core" }
+      ]
+    },
+    "template-validate": {
+      "syntax": "pnpm template:validate [template-id|directory] [--skip-install]",
+      "title": "Validate template",
+      "description": "Runs prisma validate, TypeScript (tsc --noEmit), and ESLint in the template folder. Installs deps if node_modules is missing.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "Validate hotel", "command": "pnpm template:validate hotel" },
+        { "label": "All templates", "command": "pnpm template:validate" },
+        { "label": "Skip install step", "command": "pnpm template:validate hotel --skip-install" }
+      ]
+    },
     "dev-hotel": {
       "syntax": "pnpm dev:hotel",
       "title": "Dev server (hotel)",
@@ -187,16 +208,28 @@
       ]
     },
     "new-template": {
-      "syntax": "pnpm new-template <id> [directory] [--name \"Display Name\"]",
+      "syntax": "pnpm new-template <id> [directory] [--name \"Display Name\"] [--modules enquiry-modal,footer,hero-simple]",
       "title": "Create new template",
-      "description": "Copies packages/core + scaffold into templates/<directory>/, merges Prisma, updates templates.json, adds pnpm dev:<id>. One-time core copy — no sync needed afterward.",
+      "description": "Copies packages/core + scaffold into templates/<directory>/, merges Prisma, updates templates.json, adds pnpm dev:<id>. Use --modules to copy optional UI from packages/core/modules/.",
       "audience": ["maintainers"],
       "arguments": [
         { "name": "id", "required": true, "description": "CLI id (e.g. bakery)" },
-        { "name": "directory", "required": false, "description": "Defaults to <id>-website-template" }
+        { "name": "directory", "required": false, "description": "Defaults to <id>-website-template" },
+        { "name": "--modules", "required": false, "description": "Comma-separated core module ids (enquiry-modal, footer, hero-simple)" }
       ],
       "examples": [
-        { "label": "New bakery template", "command": "pnpm new-template bakery bakery-website-template --name \"Bakery Website\"" }
+        { "label": "Minimal scaffold", "command": "pnpm new-template bakery bakery-website-template --name \"Bakery Website\"" },
+        { "label": "With optional UI modules", "command": "pnpm new-template bakery bakery-website-template --name \"Bakery\" --modules enquiry-modal,footer,hero-simple" }
+      ]
+    },
+    "template-add-module": {
+      "syntax": "pnpm template:add-module <template-id|directory> <module-id>[,<module-id>...]",
+      "title": "Add core module to template",
+      "description": "Copies optional module files from packages/core/modules/ into an existing template, enables SITE.features flags, and wires app/page.tsx when needed.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "Add footer to bakery template", "command": "pnpm template:add-module bakery footer" },
+        { "label": "Add multiple modules", "command": "pnpm template:add-module hotel enquiry-modal,footer" }
       ]
     }
   }

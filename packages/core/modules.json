@@ -1,0 +1,25 @@
+{
+  "modules": {
+    "enquiry-modal": {
+      "label": "Enquiry modal",
+      "description": "Lead capture modal wired to /api/leads. Uses SITE.enquiry.selectionOptions or optional listings API.",
+      "paths": ["app/components/EnquiryModal.tsx"],
+      "featureFlag": "enquiryModal",
+      "default": false
+    },
+    "footer": {
+      "label": "Site footer",
+      "description": "Footer with legal disclaimer and optional RERA blocks from SITE.footer and SITE.legal.",
+      "paths": ["app/components/Footer.tsx"],
+      "featureFlag": "footer",
+      "default": false
+    },
+    "hero-simple": {
+      "label": "Simple hero",
+      "description": "Carousel hero driven by SITE.hero and SITE.assets.heroDesktop / heroMobile.",
+      "paths": ["app/components/Hero.tsx"],
+      "featureFlag": "heroSimple",
+      "default": false
+    }
+  }
+}

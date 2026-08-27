@@ -20,6 +20,7 @@ import maintIntro from "@content/maintainers/intro.json";
 import maintArchitecture from "@content/maintainers/architecture.json";
 import maintCore from "@content/maintainers/core.json";
 import maintWorkflow from "@content/maintainers/workflow.json";
+import maintTemplateTools from "@content/maintainers/template-tools.json";
 import maintNewTemplate from "@content/maintainers/new-template.json";
 import maintVersioning from "@content/maintainers/versioning.json";
 import maintCommands from "@content/maintainers/commands.json";
@@ -66,6 +67,7 @@ export const maintainerPages: Record<string, PageContent> = {
   architecture: maintArchitecture as PageContent,
   core: maintCore as PageContent,
   workflow: maintWorkflow as PageContent,
+  "template-tools": maintTemplateTools as PageContent,
   "new-template": maintNewTemplate as PageContent,
   versioning: maintVersioning as PageContent,
   commands: maintCommands as PageContent,

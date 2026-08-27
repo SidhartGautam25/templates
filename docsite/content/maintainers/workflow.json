@@ -49,6 +49,23 @@
     {
       "type": "heading",
       "level": 2,
+      "text": "Before release"
+    },
+    {
+      "type": "paragraph",
+      "text": "Run validate before version bumps. Run diff-core before propagate. Full scenarios and internals: see Validate & diff-core page."
+    },
+    {
+      "type": "command-ref",
+      "id": "template-validate"
+    },
+    {
+      "type": "command-ref",
+      "id": "template-diff-core"
+    },
+    {
+      "type": "heading",
+      "level": 2,
       "text": "Release"
     },
     {
@@ -70,6 +87,8 @@
         ["pnpm sync-templates", "Optional: propagate packages/core into all templates"],
         ["pnpm sync-templates --template hotel-website-template", "Propagate core into one template"],
         ["pnpm sync-templates:check", "Diff templates vs core without writing"],
+        ["pnpm template:diff-core hotel", "Detailed diff for one template vs core"],
+        ["pnpm template:validate hotel", "prisma validate + tsc + eslint"],
         ["pnpm version:check", "Alias for tempjs version check"],
         ["pnpm setup-hooks", "Install git hooks (optional)"]
       ]

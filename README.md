@@ -681,7 +681,7 @@ A normal Next.js project with organized `lib/`:
 - `lib/database/` — Prisma client
 - `lib/features/leads/` — shared lead module
 - `lib/storage/` — FTP uploads
-- `lib/features/<domain>/` — template-specific modules (rooms, projects, …) in overlay
+- `lib/features/<domain>/` — template-specific modules (rooms, projects, …)
 - `app/` — routes and UI
 
 All source is on disk; no submodule, no `@tempjs/core` npm dependency in client projects.
@@ -690,7 +690,7 @@ All source is on disk; no submodule, no `@tempjs/core` npm dependency in client 
 
 | Approach | User gets full source? | Maintained in this repo |
 |----------|------------------------|-------------------------|
-| **Option 1 — pre-merge sync** (current) | Yes | `packages/core` + overlays |
+| **Copy-once core** (current) | Yes | `packages/core` starter + `templates/<name>/` |
 | CLI merge at copy time | Yes | `packages/core` only in git |
 | npm `@tempjs/core` package | Partial (core in node_modules) | Published package |
 
