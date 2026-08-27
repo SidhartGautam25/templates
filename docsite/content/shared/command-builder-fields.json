@@ -216,6 +216,91 @@
       "description": "Run prisma db push after writing .env.",
       "type": "toggle",
       "default": false
+    },
+    "withDocs": {
+      "flag": "--with-docs",
+      "label": "Register docsite stubs",
+      "description": "Add templates-registry.json + developers/templates/<id>.json entry.",
+      "type": "toggle",
+      "default": false
+    },
+    "modules": {
+      "flag": "--modules",
+      "label": "Core modules",
+      "description": "Comma-separated module ids from packages/core/modules.json.",
+      "type": "text",
+      "placeholder": "enquiry-modal,footer,hero-simple,seo",
+      "quote": true
+    },
+    "templateRef": {
+      "flag": "",
+      "label": "Template id or directory",
+      "description": "templates.json id (hotel) or directory (hotel-website-template).",
+      "type": "arg",
+      "argOrder": 0,
+      "optionSet": "templates",
+      "placeholder": "hotel"
+    },
+    "moduleIds": {
+      "flag": "",
+      "label": "Module ids",
+      "description": "Comma-separated core module ids.",
+      "type": "arg",
+      "argOrder": 1,
+      "placeholder": "seo,gallery,reviews"
+    },
+    "newTemplateId": {
+      "flag": "",
+      "label": "New template CLI id",
+      "description": "Short id used in templates.json and tempjs list (e.g. bakery).",
+      "type": "arg",
+      "argOrder": 0,
+      "placeholder": "bakery"
+    },
+    "newTemplateDirectory": {
+      "flag": "",
+      "label": "Directory name (optional)",
+      "description": "Folder under templates/. Defaults to <id>-website-template.",
+      "type": "arg",
+      "argOrder": 1,
+      "placeholder": "bakery-website-template"
+    },
+    "syncTemplateDirectory": {
+      "flag": "--template",
+      "label": "Template directory",
+      "description": "Only propagate to one template folder. Leave empty for all templates.",
+      "type": "text",
+      "placeholder": "hotel-website-template"
+    },
+    "updateYes": {
+      "flag": "--yes",
+      "label": "Skip confirmation",
+      "description": "Non-interactive merge.",
+      "type": "toggle",
+      "default": true
+    },
+    "skipInstall": {
+      "flag": "--skip-install",
+      "label": "Skip dependency install",
+      "description": "Skip pnpm install when node_modules is missing.",
+      "type": "toggle",
+      "default": false
+    },
+    "versionBump": {
+      "flag": "",
+      "label": "Bump type",
+      "description": "patch, minor, or major",
+      "type": "arg",
+      "optionSet": "versionBump",
+      "argOrder": 0
+    },
+    "versionTarget": {
+      "flag": "",
+      "label": "Target",
+      "description": "cli, all, or template id",
+      "type": "arg",
+      "optionSet": "versionTarget",
+      "argOrder": 1
     }
   },
   "databaseFieldKeys": [

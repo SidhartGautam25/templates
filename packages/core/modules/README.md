@@ -13,10 +13,11 @@ Copy on demand via `pnpm new-template --modules`, `pnpm template:add-module` (mo
 | `gallery` | `gallery` | `GalleryImage` | GalleryList tab on unified dashboard |
 | `reviews` | `reviews` | `Review` | ReviewsList tab on unified dashboard |
 | `legal-pages` | `legalPages` | — | — |
+| `blog-compose` | `blogCompose` | `BlogPost` | BlogComposePanel tab — compose editor + preview |
 
 Registry: `packages/core/modules.json`
 
-**Admin tab registry:** gallery/reviews update `app/admin/registry.ts` on install; unified `app/admin/page.tsx` uses `lib/admin/AdminShell` + `getAdminTabs()`.
+**Admin tab registry:** gallery/reviews/blog-compose update `app/admin/registry.ts` on install; unified `app/admin/page.tsx` uses `lib/admin/AdminShell` + `getAdminTabs()`.
 
 ## Monorepo
 
@@ -47,12 +48,19 @@ Published CLI ships `packages/core/modules/` and fetches from GitHub when not in
 
 Template vertical modules (hotel `lib/hotel/register-sitemap.ts`, real-estate `lib/real-estate/register-sitemap.ts`) register dynamic routes.
 
-## Gallery / reviews
+## Gallery / reviews / blog-compose
 
 - Appends Prisma models to `prisma/domain.prisma` and regenerates `schema.prisma`
 - Public API + admin CRUD components
 - Scaffold templates: wires `app/page.tsx` and updates `app/admin/registry.ts` (removes legacy `/admin/content` if present)
-- Shipped hotel/real-estate: custom `registry.ts` with vertical tabs; gallery/reviews tabs when modules are enabled
+- Shipped hotel/real-estate: custom `registry.ts` with vertical tabs; optional module tabs when modules are enabled
+
+## Compose blog (`blog-compose`)
+
+- Compose Blog Engine under `lib/blog/compose/` — declarative JSON blocks, interpreter, registry
+- `BlogPost` model with `contentJson` Compose document
+- `/blog`, `/blog/[slug]`, `BlogSection`, admin `BlogComposePanel` with live preview
+- `lib/blog/register-sitemap.ts` — dynamic post slugs when `seo` module is installed (`add-module` patches `app/sitemap.ts`)
 
 ## Legal pages
 

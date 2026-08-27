@@ -50,6 +50,8 @@ export interface TemplateCommandBlock extends ContentBlockBase {
 
 export interface CommandBuilderBlock extends ContentBlockBase {
   type: "command-builder";
+  /** Registry id from command-builders-registry.json, or omit on template pages to use templates-registry commandBuilder */
+  builderId?: string;
 }
 
 export interface TemplateCardsBlock extends ContentBlockBase {
@@ -132,7 +134,7 @@ export interface TemplateRegistryEntry {
 export interface CommandBuilderPreset {
   id: string;
   label: string;
-  description: string;
+  description?: string;
   command: string;
 }
 
@@ -156,15 +158,32 @@ export interface TemplateCommandBuilderConfig {
   modes: CommandBuilderMode[];
 }
 
+/** Alias — same shape for template and segment command builders */
+export type CommandBuilderConfig = TemplateCommandBuilderConfig;
+
+export interface CommandBuilderRegistryEntry extends CommandBuilderConfig {
+  id: string;
+  label: string;
+  segment: "developers" | "maintainers" | "templates" | string;
+  description?: string;
+  pagePath?: string;
+}
+
+export interface CommandBuildersRegistry {
+  builders: Record<string, CommandBuilderRegistryEntry>;
+}
+
 export interface CommandBuilderFieldDef {
   flag: string;
   label: string;
   description: string;
-  type: "text" | "select" | "toggle";
+  type: "text" | "select" | "toggle" | "arg";
   optionSet?: string;
   placeholder?: string;
   quote?: boolean;
   default?: boolean;
+  /** For type arg — order after baseCommand (0 = first positional arg) */
+  argOrder?: number;
 }
 
 export interface CommandBuilderFieldsRegistry {
@@ -181,6 +200,8 @@ export interface CommandBuilderOption {
 export interface CommandBuilderOptionsRegistry {
   themes: CommandBuilderOption[];
   fonts: CommandBuilderOption[];
+  coreModules: CommandBuilderOption[];
+  templates: CommandBuilderOption[];
 }
 
 export interface TemplateRegistry {

@@ -7,6 +7,10 @@
       "text": ".tempjs-version.json records the git commit at each bump. tempjs version check diffs watched paths since that commit."
     },
     {
+      "type": "command-builder",
+      "builderId": "maintainer-version-inc"
+    },
+    {
       "type": "command-ref",
       "id": "version-check"
     },

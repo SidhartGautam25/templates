@@ -79,7 +79,7 @@ function ensureSiteImport(content) {
 }
 
 /**
- * Merge gallery/reviews tab blocks into an existing vertical template registry.
+ * Merge gallery/reviews/blog-compose tab blocks into an existing vertical template registry.
  * @param {string} registryPath
  * @param {string[]} moduleIds
  */
@@ -87,8 +87,9 @@ export function mergeGalleryReviewsIntoRegistry(registryPath, moduleIds) {
   let content = readFileSync(registryPath, "utf8");
   const hasGallery = moduleIds.includes("gallery");
   const hasReviews = moduleIds.includes("reviews");
+  const hasBlogCompose = moduleIds.includes("blog-compose");
 
-  if (hasGallery || hasReviews) {
+  if (hasGallery || hasReviews || hasBlogCompose) {
     content = ensureSiteImport(content);
   }
 
@@ -138,6 +139,29 @@ export function mergeGalleryReviewsIntoRegistry(registryPath, moduleIds) {
     }
   }
 
+  if (hasBlogCompose) {
+    content = addLucideIcon(content, "BookOpen");
+    content = ensureComponentImport(
+      content,
+      'import BlogComposePanel from "./panels/BlogComposePanel";'
+    );
+
+    if (!content.includes('id: "blog-compose"')) {
+      const blogBlock = `
+  if (SITE.features.blogCompose) {
+    tabs.push({
+      id: "blog-compose",
+      label: "Blog articles",
+      icon: BookOpen,
+      Panel: BlogComposePanel,
+      featureFlag: "blogCompose",
+    });
+  }`;
+
+      content = content.replace(/\n  return tabs;/, `${blogBlock}\n\n  return tabs;`);
+    }
+  }
+
   writeFileSync(registryPath, content, "utf8");
 }
 
@@ -149,6 +173,7 @@ export function mergeGalleryReviewsIntoRegistry(registryPath, moduleIds) {
 export function buildScaffoldAdminRegistrySource(moduleIds) {
   const hasGallery = moduleIds.includes("gallery");
   const hasReviews = moduleIds.includes("reviews");
+  const hasBlogCompose = moduleIds.includes("blog-compose");
 
   const imports = [
     'import type { AdminTabDefinition } from "@/lib/admin/types";',
@@ -159,7 +184,7 @@ export function buildScaffoldAdminRegistrySource(moduleIds) {
     'import ThemeEditor from "./components/ThemeEditor";',
   ];
 
-  if (hasGallery || hasReviews) {
+  if (hasGallery || hasReviews || hasBlogCompose) {
     imports.unshift('import { SITE } from "@/constants";');
   }
 
@@ -171,11 +196,15 @@ export function buildScaffoldAdminRegistrySource(moduleIds) {
     imports.push('import { MessageSquare } from "lucide-react";');
     imports.push('import ReviewsList from "./components/ReviewsList";');
   }
+  if (hasBlogCompose) {
+    imports.push('import { BookOpen } from "lucide-react";');
+    imports.push('import BlogComposePanel from "./panels/BlogComposePanel";');
+  }
 
   const lines = [
     ...imports,
     "",
-    "/** Scaffold admin tabs — leads, theme, promo, logo; gallery/reviews when modules installed. */",
+    "/** Scaffold admin tabs — leads, theme, promo, logo; optional modules when installed. */",
     "export function getAdminTabs(): AdminTabDefinition[] {",
     "  const tabs: AdminTabDefinition[] = [",
     "    { id: \"leads\", label: \"Customer Leads\", icon: Users, Panel: LeadsPanel },",
@@ -210,6 +239,21 @@ export function buildScaffoldAdminRegistrySource(moduleIds) {
       "      icon: MessageSquare,",
       "      Panel: ReviewsList,",
       "      featureFlag: \"reviews\",",
+      "    });",
+      "  }"
+    );
+  }
+
+  if (hasBlogCompose) {
+    lines.push(
+      "",
+      "  if (SITE.features.blogCompose) {",
+      "    tabs.push({",
+      "      id: \"blog-compose\",",
+      "      label: \"Blog articles\",",
+      "      icon: BookOpen,",
+      "      Panel: BlogComposePanel,",
+      "      featureFlag: \"blogCompose\",",
       "    });",
       "  }"
     );
@@ -294,8 +338,9 @@ export function applyScaffoldAdminRegistry(templateRoot) {
 export function applyAdminTabRegistry(templateRoot, moduleIds) {
   const hasGallery = moduleIds.includes("gallery");
   const hasReviews = moduleIds.includes("reviews");
+  const hasBlogCompose = moduleIds.includes("blog-compose");
 
-  if (!hasGallery && !hasReviews) {
+  if (!hasGallery && !hasReviews && !hasBlogCompose) {
     return;
   }
 
@@ -304,7 +349,7 @@ export function applyAdminTabRegistry(templateRoot, moduleIds) {
 
   if (existing && isVerticalAdminRegistry(existing)) {
     mergeGalleryReviewsIntoRegistry(registryPath, moduleIds);
-    console.log("  ✓ merged gallery/reviews tabs into app/admin/registry.ts");
+    console.log("  ✓ merged optional module tabs into app/admin/registry.ts");
   } else {
     mkdirSync(dirname(registryPath), { recursive: true });
     writeFileSync(registryPath, buildScaffoldAdminRegistrySource(moduleIds), "utf8");

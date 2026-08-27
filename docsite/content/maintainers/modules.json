@@ -25,7 +25,8 @@
         ["seo", "sitemap.xml, robots.txt, JSON-LD, Open Graph helpers", "seo"],
         ["gallery", "GalleryImage CMS, /gallery, GallerySection, admin CRUD", "gallery"],
         ["reviews", "Review testimonials, ReviewsSection, admin CRUD", "reviews"],
-        ["legal-pages", "Privacy + terms pages from SITE config", "legalPages"]
+        ["legal-pages", "Privacy + terms pages from SITE config", "legalPages"],
+        ["blog-compose", "Compose Blog Engine, BlogPost CMS, /blog, admin compose editor", "blogCompose"]
       ]
     },
     {
@@ -92,8 +93,26 @@
       ]
     },
     {
+      "type": "heading",
+      "level": 2,
+      "text": "Monorepo: add core module to template"
+    },
+    {
+      "type": "command-builder",
+      "builderId": "maintainer-template-add-module"
+    },
+    {
       "type": "command-ref",
-      "id": "template-assemble"
+      "id": "template-add-module"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Assemble / extract vertical modules"
+    },
+    {
+      "type": "command-builder",
+      "builderId": "maintainer-template-assemble"
     },
     {
       "type": "command-ref",

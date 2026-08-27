@@ -27,6 +27,10 @@
       "text": "Install modules"
     },
     {
+      "type": "command-builder",
+      "builderId": "developer-add-module"
+    },
+    {
       "type": "command-ref",
       "id": "add-module"
     },
@@ -45,7 +49,8 @@
         ["seo", "lib/seo/*, SiteJsonLd, sitemap.ts, robots.ts"],
         ["gallery", "Gallery CMS API, GallerySection, /gallery pages, admin gallery UI"],
         ["reviews", "Reviews API, ReviewsSection, admin reviews UI"],
-        ["legal-pages", "Privacy policy and terms pages from SITE config"]
+        ["legal-pages", "Privacy policy and terms pages from SITE config"],
+        ["blog-compose", "Compose Blog Engine, /blog pages, BlogSection, admin compose editor"]
       ]
     },
     {

@@ -59,9 +59,8 @@ export function CommandWizard({
 
   function resolveOptions(field: CommandBuilderFieldDef) {
     if (!field.optionSet) return undefined;
-    if (field.optionSet === "themes") return optionSets.themes;
-    if (field.optionSet === "fonts") return optionSets.fonts;
-    return undefined;
+    const set = optionSets[field.optionSet as keyof CommandBuilderOptionsRegistry];
+    return set ?? undefined;
   }
 
   function handleChange(key: string, value: string) {
@@ -71,6 +70,10 @@ export function CommandWizard({
   function resetMode() {
     setStepIndex(0);
     setValues(defaultValuesForKeys(allFieldKeys(mode), fields));
+  }
+
+  if (mode.wizardSteps.length === 0) {
+    return <CommandOutput command={mode.baseCommand} />;
   }
 
   if (!step) return null;

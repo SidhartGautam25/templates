@@ -197,6 +197,18 @@ export const SITE = {
     emptyMessage: "Reviews will appear here once added in admin.",
   },
 
+  blog: {
+    sectionEyebrow: "Blog",
+    sectionTitle: "Articles & insights",
+    sectionSubtitle: "News, guides, and updates from our team.",
+    pageTitle: "Blog",
+    pageSubtitle: "Read our latest articles and guides.",
+    backToBlog: "Back to blog",
+    viewAllLabel: "View all articles",
+    emptyMessage: "Articles will appear here once published in admin.",
+    homepageLimit: 3,
+  },
+
   privacyPage: {
     title: "Privacy Policy",
     lastUpdated: "",
@@ -250,6 +262,7 @@ export const SITE = {
     gallery: false,
     reviews: false,
     legalPages: false,
+    blogCompose: false,
   },
 } as const;
 

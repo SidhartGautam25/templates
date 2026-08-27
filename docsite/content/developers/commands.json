@@ -9,7 +9,7 @@
     {
       "type": "callout",
       "variant": "info",
-      "text": "For copy-paste commands tailored to hotel or real-estate — including step-by-step flag picking — open the template guide in the sidebar and use the command generator."
+      "text": "For copy-paste commands tailored to hotel or real-estate — including step-by-step flag picking — open the template guide in the sidebar and use the command generator. Other topics (optional modules, customization, updates, maintainer tooling) also embed command builders on their pages."
     },
     {
       "type": "heading",

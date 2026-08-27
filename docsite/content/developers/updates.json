@@ -21,6 +21,10 @@
       "text": "Your .tempjs.json stores templateVersion and a hash baseline. When maintainers publish a new template version, use update commands inside the client project."
     },
     {
+      "type": "command-builder",
+      "builderId": "developer-update"
+    },
+    {
       "type": "command-ref",
       "id": "update-check"
     },

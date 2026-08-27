@@ -11,6 +11,10 @@
       "id": "new-template"
     },
     {
+      "type": "command-builder",
+      "builderId": "maintainer-new-template"
+    },
+    {
       "type": "heading",
       "level": 2,
       "text": "Optional core modules (--modules)"

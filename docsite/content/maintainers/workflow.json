@@ -38,6 +38,10 @@
       "text": "Only when you changed packages/core and want existing templates to pick up those files:"
     },
     {
+      "type": "command-builder",
+      "builderId": "maintainer-sync-templates"
+    },
+    {
       "type": "command-ref",
       "id": "sync-templates"
     },

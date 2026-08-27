@@ -32,6 +32,10 @@ function moduleStaticPaths(): SitemapPathConfig[] {
     paths.push({ path: "/gallery", changeFrequency: "weekly", priority: 0.75 });
   }
 
+  if (SITE.features.blogCompose) {
+    paths.push({ path: "/blog", changeFrequency: "weekly", priority: 0.8 });
+  }
+
   if (SITE.features.legalPages) {
     paths.push(
       { path: SITE.legal.privacyPolicyPath, changeFrequency: "yearly", priority: 0.3 },

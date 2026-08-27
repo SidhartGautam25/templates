@@ -12,5 +12,27 @@
     { "value": "lora-montserrat", "label": "Lora + Montserrat" },
     { "value": "merriweather-open-sans", "label": "Merriweather + Open Sans" },
     { "value": "cinzel-montserrat", "label": "Cinzel + Montserrat" }
+  ],
+  "coreModules": [
+    { "value": "enquiry-modal", "label": "enquiry-modal — Lead capture modal" },
+    { "value": "footer", "label": "footer — Site footer" },
+    { "value": "hero-simple", "label": "hero-simple — Carousel hero" },
+    { "value": "seo", "label": "seo — Sitemap, robots, JSON-LD" },
+    { "value": "gallery", "label": "gallery — Gallery CMS" },
+    { "value": "reviews", "label": "reviews — Testimonials" },
+    { "value": "legal-pages", "label": "legal-pages — Privacy + terms" },
+    { "value": "blog-compose", "label": "blog-compose — Compose blog engine" }
+  ],
+  "templates": [],
+  "versionBump": [
+    { "value": "patch", "label": "patch" },
+    { "value": "minor", "label": "minor" },
+    { "value": "major", "label": "major" }
+  ],
+  "versionTarget": [
+    { "value": "cli", "label": "cli — npm package only" },
+    { "value": "all", "label": "all — CLI + every template" },
+    { "value": "hotel", "label": "hotel" },
+    { "value": "real-estate", "label": "real-estate" }
   ]
 }

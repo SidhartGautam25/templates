@@ -28,6 +28,12 @@ export function DocLayout({
             <p className="text-sm text-[var(--color-doc-muted)]">{siteMeta.tagline}</p>
           </div>
           <div className="flex items-center gap-2">
+            <Link
+              href="/blog"
+              className="rounded-full px-4 py-1.5 text-sm font-medium bg-[var(--color-doc-tag-bg)] text-[var(--color-doc-tag-text)] hover:opacity-90"
+            >
+              Blog demo
+            </Link>
             <ThemeToggle />
             {nav.audiences.map((aud) => (
               <Link

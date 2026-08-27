@@ -21,6 +21,10 @@
       "text": "tempjs database setup"
     },
     {
+      "type": "command-builder",
+      "builderId": "developer-project-database"
+    },
+    {
       "type": "command-ref",
       "id": "init-db"
     },

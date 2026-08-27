@@ -4,6 +4,7 @@ import commandsRegistry from "@content/shared/commands.json";
 import initFieldsRegistry from "@content/shared/init-fields.json";
 import commandBuilderFields from "@content/shared/command-builder-fields.json";
 import commandBuilderOptions from "@content/shared/command-builder-options.json";
+import commandBuildersRegistryJson from "@content/shared/command-builders-registry.json";
 import templatesRegistry from "@content/templates-registry.json";
 
 import devIntro from "@content/developers/intro.json";
@@ -12,6 +13,7 @@ import devCustomization from "@content/developers/customization.json";
 import devUpdates from "@content/developers/updates.json";
 import devDocker from "@content/developers/docker.json";
 import devOptionalModules from "@content/developers/optional-modules.json";
+import devBlogCompose from "@content/developers/blog-compose.json";
 import templatesOverview from "@content/developers/templates/overview.json";
 
 import hotelTemplate from "@content/developers/templates/hotel.json";
@@ -26,6 +28,8 @@ import maintNewTemplate from "@content/maintainers/new-template.json";
 import maintVersioning from "@content/maintainers/versioning.json";
 import maintCommands from "@content/maintainers/commands.json";
 import maintModules from "@content/maintainers/modules.json";
+import maintBlogCompose from "@content/maintainers/blog-compose.json";
+import maintCommandBuilders from "@content/maintainers/command-builders.json";
 
 import type {
   CommandsRegistry,
@@ -37,6 +41,8 @@ import type {
   SiteMeta,
   CommandBuilderFieldsRegistry,
   CommandBuilderOptionsRegistry,
+  CommandBuilderConfig,
+  CommandBuildersRegistry,
   TemplateRegistry,
   TemplateRegistryEntry,
 } from "@/types/content";
@@ -45,9 +51,17 @@ export const siteMeta = site as SiteMeta;
 export const nav = navigation as Navigation;
 export const commands = commandsRegistry as CommandsRegistry;
 export const initFields = initFieldsRegistry as InitFieldsRegistry;
-export const commandBuilderFieldDefs = commandBuilderFields as CommandBuilderFieldsRegistry;
-export const commandBuilderOptionSets = commandBuilderOptions as CommandBuilderOptionsRegistry;
 export const templateRegistry = templatesRegistry as TemplateRegistry;
+export const commandBuilderFieldDefs = commandBuilderFields as CommandBuilderFieldsRegistry;
+const staticOptionSets = commandBuilderOptions as CommandBuilderOptionsRegistry;
+export const commandBuilderOptionSets: CommandBuilderOptionsRegistry = {
+  ...staticOptionSets,
+  templates: templateRegistry.templates.map((t) => ({
+    value: t.cliId,
+    label: t.label,
+  })),
+};
+export const commandBuildersRegistry = commandBuildersRegistryJson as CommandBuildersRegistry;
 
 export const developerPages: Record<string, PageContent> = {
   intro: devIntro as PageContent,
@@ -56,6 +70,7 @@ export const developerPages: Record<string, PageContent> = {
   updates: devUpdates as PageContent,
   docker: devDocker as PageContent,
   "optional-modules": devOptionalModules as PageContent,
+  "blog-compose": devBlogCompose as PageContent,
 };
 
 export const templatesOverviewPage = templatesOverview as PageContent;
@@ -75,6 +90,8 @@ export const maintainerPages: Record<string, PageContent> = {
   versioning: maintVersioning as PageContent,
   commands: maintCommands as PageContent,
   modules: maintModules as PageContent,
+  "blog-compose": maintBlogCompose as PageContent,
+  "command-builders": maintCommandBuilders as PageContent,
 };
 
 export function getTemplatePage(templateId: string): PageContent | null {
@@ -133,4 +150,52 @@ export function getTemplateFlagDefs(entry: TemplateRegistryEntry): FlagDef[] {
   });
 
   return [...sharedGroups, ...brandFlags];
+}
+
+/**
+ * Resolve command builder config from registry id or template entry.
+ */
+export function getCommandBuilderConfig(
+  builderId: string | undefined,
+  templateEntry?: TemplateRegistryEntry
+): CommandBuilderConfig | null {
+  if (!builderId || builderId === "template") {
+    return templateEntry?.commandBuilder ?? null;
+  }
+
+  const entry = commandBuildersRegistry.builders[builderId];
+  if (entry) {
+    return { presets: entry.presets, modes: entry.modes };
+  }
+
+  return null;
+}
+
+export function getCommandBuilderLabel(
+  builderId: string | undefined,
+  templateEntry?: TemplateRegistryEntry
+): string {
+  if (!builderId || builderId === "template") {
+    return templateEntry?.label ?? "Template";
+  }
+  const entry = commandBuildersRegistry.builders[builderId];
+  return entry?.label ?? builderId;
+}
+
+export function listCommandBuilders() {
+  const templateBuilders = templateRegistry.templates.map((t) => ({
+    id: `template-${t.id}`,
+    label: `${t.label} — generate project`,
+    segment: "templates" as const,
+    pagePath: `/developers/templates/${t.id}`,
+  }));
+
+  const segmentBuilders = Object.values(commandBuildersRegistry.builders).map((b) => ({
+    id: b.id,
+    label: b.label,
+    segment: b.segment,
+    pagePath: b.pagePath,
+  }));
+
+  return [...templateBuilders, ...segmentBuilders];
 }

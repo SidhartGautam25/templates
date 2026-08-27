@@ -35,6 +35,10 @@
       "text": "CLI brand setup"
     },
     {
+      "type": "command-builder",
+      "builderId": "developer-project-brand"
+    },
+    {
       "type": "command-ref",
       "id": "brand"
     },
@@ -44,8 +48,8 @@
       "text": "Theme & typography"
     },
     {
-      "type": "command-ref",
-      "id": "theme"
+      "type": "command-builder",
+      "builderId": "developer-project-theme"
     },
     {
       "type": "command-ref",

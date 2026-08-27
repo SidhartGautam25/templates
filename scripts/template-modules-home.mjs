@@ -8,8 +8,10 @@ export function buildModulesHomePageSource(moduleIds) {
   const hasEnquiry = moduleIds.includes("enquiry-modal");
   const hasGallery = moduleIds.includes("gallery");
   const hasReviews = moduleIds.includes("reviews");
+  const hasBlogCompose = moduleIds.includes("blog-compose");
+  const hasBlogCompose = moduleIds.includes("blog-compose");
 
-  const uiModules = ["enquiry-modal", "footer", "hero-simple", "gallery", "reviews"];
+  const uiModules = ["enquiry-modal", "footer", "hero-simple", "gallery", "reviews", "blog-compose"];
   const hasAnyUi = moduleIds.some((id) => uiModules.includes(id));
 
   const imports = [
@@ -25,6 +27,7 @@ export function buildModulesHomePageSource(moduleIds) {
   if (hasEnquiry) imports.push('import EnquiryModal from "./components/EnquiryModal";');
   if (hasGallery) imports.push('import GallerySection from "./components/GallerySection";');
   if (hasReviews) imports.push('import ReviewsSection from "./components/ReviewsSection";');
+  if (hasBlogCompose) imports.push('import BlogSection from "./components/BlogSection";');
 
   const lines = [
     ...imports,
@@ -53,7 +56,7 @@ export function buildModulesHomePageSource(moduleIds) {
     lines.push("      <Hero onOpenEnquiry={handleOpenEnquiry} />");
   }
 
-  if (!hasHero && !hasGallery && !hasReviews) {
+  if (!hasHero && !hasGallery && !hasReviews && !hasBlogCompose) {
     lines.push(
       "      <main className=\"mx-auto max-w-3xl px-6 py-16 flex-1\">",
       "        <h1 className=\"text-3xl font-bold text-primary\">{SITE.brand.name}</h1>",
@@ -71,6 +74,10 @@ export function buildModulesHomePageSource(moduleIds) {
 
   if (hasReviews) {
     lines.push("      <ReviewsSection />");
+  }
+
+  if (hasBlogCompose) {
+    lines.push("      <BlogSection />");
   }
 
   lines.push("", "      <PromoBanner onOpenEnquiry={handleOpenEnquiry} />");

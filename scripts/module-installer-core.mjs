@@ -151,6 +151,31 @@ function applySeoLayoutPatch(templateRoot, patchOptions = {}) {
 
 /**
  * @param {string} templateRoot
+ */
+function applyBlogComposeSitemapPatch(templateRoot) {
+  const sitemapPath = join(templateRoot, "app", "sitemap.ts");
+  if (!existsSync(sitemapPath)) return;
+
+  let content = readFileSync(sitemapPath, "utf8");
+  if (content.includes("lib/blog/register-sitemap")) return;
+  if (!content.includes("buildAppSitemap")) return;
+
+  const importLine = 'import "@/lib/blog/register-sitemap";';
+  if (content.includes('from "@/lib/seo/sitemap"')) {
+    content = content.replace(
+      /import\s*\{[^}]*buildAppSitemap[^}]*\}\s*from\s*"@\/lib\/seo\/sitemap";/,
+      (match) => `${match}\n${importLine}`
+    );
+  } else {
+    content = `${importLine}\n${content}`;
+  }
+
+  writeFileSync(sitemapPath, content, "utf8");
+  console.log("  ✓ wired blog post slugs into app/sitemap.ts");
+}
+
+/**
+ * @param {string} templateRoot
  * @param {string} featureFlag
  */
 function enableFeatureFlag(templateRoot, featureFlag) {
@@ -263,6 +288,7 @@ export function applyModulesHomePage(templateRoot, moduleIds) {
     "hero-simple",
     "gallery",
     "reviews",
+    "blog-compose",
   ];
   const installedUi = moduleIds.filter((id) => uiModules.includes(id));
 
@@ -342,6 +368,10 @@ export function copyModulesIntoProject(templateRoot, moduleIds, options) {
     console.log(`  ✓ module: ${id} (${mod.label})`);
   }
 
+  if (resolved.includes("blog-compose")) {
+    applyBlogComposeSitemapPatch(templateRoot);
+  }
+
   if (options.writePrismaSchema) {
     options.writePrismaSchema(templateRoot);
   }
@@ -363,7 +393,7 @@ export function copyModulesIntoProject(templateRoot, moduleIds, options) {
 
   if (
     !skipAdminTabRegistry &&
-    resolved.some((id) => id === "gallery" || id === "reviews")
+    resolved.some((id) => id === "gallery" || id === "reviews" || id === "blog-compose")
   ) {
     applyAdminTabRegistry(templateRoot, resolved);
   }
