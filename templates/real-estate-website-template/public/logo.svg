@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 48" fill="none">
-  <rect x="4" y="8" width="32" height="32" rx="6" fill="#1e40af"/>
-  <path d="M12 28 L20 16 L28 28 Z" fill="#38bdf8"/>
-  <text x="54" y="30" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#1e40af">Greenfield Properties</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <circle cx="24" cy="24" r="20" fill="#3d5a52"/>
+  <path d="M24 10 L32 28 L16 28 Z" fill="#c4a574"/>
+  <text x="54" y="30" font-family="Georgia, serif" font-size="18" font-weight="600" fill="#3d5a52">Your Brand</text>
 </svg>

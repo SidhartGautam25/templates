@@ -4,7 +4,7 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "A template in tempjs is a complete Next.js application — not a snippet or theme zip. Each template shares core infrastructure (admin auth, leads, health check, Docker database, FTP uploads) while the overlay layer adds vertical-specific pages and models: rooms for hotels, properties for real estate."
+      "text": "A template in tempjs is a complete Next.js application. Shared infrastructure (auth, leads, health, Docker) lives in packages/core and is synced into each template. Template-specific pages and models live directly in templates/<name>/."
     },
     {
       "type": "heading",
@@ -70,7 +70,7 @@
     },
     {
       "type": "paragraph",
-      "text": "Define the database model in your overlay's prisma/schema.prisma file. For example, add a Review model:"
+      "text": "Define the database model in prisma/domain.prisma inside your template folder (e.g. templates/hotel-website-template/). For example, add a Review model:"
     },
     {
       "type": "code",
@@ -79,7 +79,7 @@
     },
     {
       "type": "paragraph",
-      "text": "After defining, run `pnpm sync-templates` to combine the core schema with your new overlay model, followed by `npx prisma db push` to synchronize your local database schema."
+      "text": "Run `pnpm exec prisma generate` (or `npx prisma db push` for local dev) to apply schema changes. Core models live in prisma/schema.prisma; domain models are merged into the final schema automatically."
     },
     {
       "type": "heading",

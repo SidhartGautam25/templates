@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
-# Pre-commit: merged templates must match core + overlays.
-cd "$(dirname "$0")/.." || exit 1
-node scripts/sync-templates.mjs --check
+# Pre-commit hook placeholder — sync is optional (only when propagating packages/core fixes).
+# Enable with: pnpm setup-hooks
+exit 0

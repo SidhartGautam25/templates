@@ -1,7 +1,11 @@
 {
   "title": "New template",
-  "description": "Add a new template to the monorepo and CLI manifest.",
+  "description": "Create a standalone template from the core starter kit.",
   "blocks": [
+    {
+      "type": "paragraph",
+      "text": "new-template copies packages/core and scaffold into templates/<directory>/, merges Prisma, registers templates.json, and adds pnpm dev:<id>. This is the only time core is copied automatically."
+    },
     {
       "type": "command-ref",
       "id": "new-template"
@@ -9,28 +13,51 @@
     {
       "type": "heading",
       "level": 2,
-      "text": "After scaffold"
+      "text": "What you get"
     },
     {
       "type": "list",
       "items": [
-        "Add app/ pages and lib/features/ for your domain",
-        "Define Prisma models in overlay prisma/schema.prisma (not Lead/PromoBanner)",
-        "Add constants/site.ts brand defaults",
-        "Write README, GETTING_STARTED, ARCHITECTURE, CHANGELOG in overlay",
-        "pnpm sync-templates",
-        "Add pnpm dev:<id> script to root package.json if needed",
-        "Test with tempjs <id> in a temp folder"
+        "Full Next.js tree with auth, leads API, storage, health, Docker, admin login",
+        "constants/site.ts stub (replace with your brand)",
+        "prisma/domain.prisma stub + merged prisma/schema.prisma",
+        "Minimal app/layout.tsx and app/page.tsx placeholder",
+        "package.json, GETTING_STARTED.md, CHANGELOG.md",
+        "templates.json entry for tempjs list/info/generate"
       ]
     },
     {
       "type": "heading",
       "level": 2,
-      "text": "Register in sync"
+      "text": "After scaffold — build your vertical"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Customize constants/site.ts (brand, SEO, theme, hero copy)",
+        "Add models to prisma/domain.prisma — run pnpm prisma db push",
+        "Create lib/features/<domain>/ (controller, service, repository)",
+        "Add app/ pages, components, and app/api/<domain>/ routes",
+        "Write prisma/seed.ts for demo data",
+        "Add GETTING_STARTED.md, ARCHITECTURE.md for client developers",
+        "pnpm dev:<id> — iterate locally",
+        "Test: mkdir /tmp/test && cd /tmp/test && tempjs <id> --yes",
+        "Register docsite: templates-registry.json + developers/templates/<id>.json"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "text": "You do not need pnpm sync-templates after building a new template. Sync is only for propagating packages/core fixes into existing templates later."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "templates.json"
     },
     {
       "type": "paragraph",
-      "text": "sync-templates.mjs reads template directories from templates.json automatically — no manual TEMPLATE_TARGETS list."
+      "text": "new-template adds a manifest entry (directory, version, init.brandFields). sync-templates and tempjs list read directories from templates.json automatically."
     }
   ]
 }

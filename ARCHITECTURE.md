@@ -1,181 +1,89 @@
-# Monorepo architecture (Option 1 — pre-merge sync)
+# Monorepo architecture
 
-This repository uses a **shared core + template overlays** model. When a developer runs `tempjs hotel`, they receive a **single, flat, fully standalone** Next.js project with all source code on disk — nothing hidden in npm packages or git submodules.
-
-## Repository layout
+## Mental model
 
 ```
-templates/                          # Repo root
-├── packages/
-│   └── core/                       # Shared source (edit shared code here)
-├── templates/
-│   ├── overlays/
-│   │   ├── hotel-website-template/ # Hotel-only files
-│   │   └── real-estate-website-template/
-│   ├── hotel-website-template/     # OUTPUT: core + hotel overlay (for tempjs)
-│   └── real-estate-website-template/
-├── scripts/
-│   └── sync-templates.mjs
-├── webdoc/                         # JSON-driven documentation site
-└── cli/                            # tempjs CLI
+packages/core          →  starter kit (copy once)
+        │
+        │  pnpm new-template bakery
+        ▼
+templates/bakery-website-template/   →  full standalone app (you own this)
+        │
+        │  tempjs bakery
+        ▼
+client-project/        →  developer's machine
 ```
 
-## Data flow
+**After `new-template`, the template does not depend on `packages/core`.** All imports are local (`@/lib/...`, `@/auth`, etc.).
 
-```
-┌─────────────────┐     ┌──────────────────────┐
-│  packages/core  │     │  templates/overlays/ │
-│  (shared code)  │     │  (template-specific) │
-└────────┬────────┘     └──────────┬───────────┘
-         │                         │
-         └───────────┬─────────────┘
-                     │  pnpm sync-templates
-                     ▼
-         ┌───────────────────────────┐
-         │ templates/hotel-website-    │
-         │ template/  (merged, in git)│
-         └─────────────┬─────────────┘
-                       │  tempjs hotel
-                       ▼
-         ┌───────────────────────────┐
-         │  client-project/          │
-         │  (developer's machine)    │
-         └───────────────────────────┘
-```
+## What template developers do
 
-## Generated project structure (what developers get)
-
-```
-client-project/
-├── app/                    # Next.js App Router
-│   ├── api/                # API routes (shared + template-specific)
-│   ├── admin/              # Admin dashboard
-│   ├── components/         # UI components
-│   └── ...
-├── lib/                    # Business logic (organized by layer)
-│   ├── database/           # Prisma client
-│   ├── storage/            # FTP asset pipeline
-│   ├── utils/              # Shared utilities
-│   ├── features/           # Domain modules
-│   │   ├── leads/          # Lead capture (shared core)
-│   │   ├── room-types/     # Hotel overlay example
-│   │   └── projects/       # Real-estate overlay example
-│   ├── controllers/        # Template domain + legacy re-exports
-│   ├── services/
-│   └── repositories/
-├── constants/              # Site config, defaults
-├── prisma/                 # Merged schema (core Lead/PromoBanner + overlay models)
-├── public/
-├── auth.ts
-└── package.json
-```
-
-### Import style
-
-Developers can use clear paths:
-
-```typescript
-import { prisma } from "@/lib/database/prisma";
-import { leadController } from "@/lib/features/leads";
-import { storageService } from "@/lib/storage";
-```
-
-Legacy paths (`@/lib/db`, `@/lib/controllers/LeadController`) remain as thin re-exports.
-
-## Maintainer workflow
-
-### Daily loop
+### Create a new template
 
 ```bash
-# Edit packages/core OR templates/overlays/<template>/
-pnpm sync-templates
-pnpm dev:hotel          # or pnpm dev:real-estate
-# Bump versions (if check reported changes)
-tempjs version check
-tempjs version inc patch cli      # npm package
-tempjs version inc minor hotel    # templates.json + CHANGELOG
-
-git commit              # pre-commit runs sync-templates:check
+pnpm new-template bakery bakery-website-template --name "Bakery Website"
 ```
 
-Enable hooks once per clone:
+This copies `packages/core` + scaffold into `templates/bakery-website-template/`, merges Prisma, updates `templates.json`, adds `pnpm dev:bakery`.
+
+Then build the vertical:
+
+1. Edit `constants/site.ts` (brand, SEO, theme colors)
+2. Add models in `prisma/domain.prisma` (not Lead/PromoBanner — those come from core copy)
+3. Add `lib/features/<your-domain>/` (controller, service, repository)
+4. Add `app/` pages, components, API routes
+5. `pnpm dev:bakery`
+
+### Work on an existing template (e.g. hotel)
 
 ```bash
-pnpm setup-hooks
+edit templates/hotel-website-template/
+pnpm dev:hotel
 ```
 
-See **[VERSIONING.md](./VERSIONING.md)** for CLI vs template versions, semver rules, and client developer notes.
+No sync. No overlays. The hotel folder **is** the product.
 
-### Change shared code (auth, leads, FTP, Navbar, …)
+### Fix shared behavior (auth, leads, FTP) for all templates
 
-1. Edit `packages/core/` (shared Prisma: `Lead`, `PromoBanner` in `prisma/schema.prisma`)
-2. Run `pnpm sync-templates`
-3. Commit `packages/core/` **and** synced `templates/*-website-template/` folders
-4. Push
+1. Fix `packages/core/`
+2. Optionally `pnpm sync-templates` to push into existing templates
+3. Or patch each template manually if they've diverged
 
-### Change hotel-only code (rooms, gallery, facilities, …)
+## What is in packages/core?
 
-1. Edit `templates/overlays/hotel-website-template/` — domain code in `lib/features/room-types`, `facilities`, `reviews`, `hotel-config`
-2. Run `pnpm sync-templates`
-3. Commit overlay + synced `templates/hotel-website-template/`
+Generic only:
 
-### Change real-estate-only code
+| Area | Examples |
+|------|----------|
+| Auth | `auth.ts`, `/api/auth` |
+| Leads | `lib/features/leads`, `/api/leads` |
+| Storage | FTP `StorageService` |
+| Admin shell pieces | login page, promo banner form |
+| Infra | Docker, `.env.example`, health API |
+| Prisma base | `Lead`, `PromoBanner` |
 
-1. Edit `templates/overlays/real-estate-website-template/` — `lib/features/projects`
-2. Run `pnpm sync-templates`
-3. Commit overlay + synced output
+Not in core: home page, Hero, domain CRUD, `constants/site.ts` content (stub only), template Prisma models.
 
-### Verify sync before PR
+## Prisma in each template
+
+| File | Purpose |
+|------|---------|
+| `prisma/domain.prisma` | **You edit** — domain models only |
+| `prisma/schema.prisma` | **Generated** — core + domain (rebuilt on `new-template` or optional `sync-templates`) |
+
+## Why `sync-templates` still exists (optional)
+
+It is **not** part of normal development. Use it only when you changed `packages/core` and want to **propagate** that change into existing templates without manually copying files.
 
 ```bash
-pnpm sync-templates:check
+pnpm sync-templates:check    # see if templates differ from core
+pnpm sync-templates          # apply core files into all templates
+pnpm sync-templates --template hotel-website-template
 ```
 
-Fails if merged output does not match `core + overlay` (also runs on `git commit` when hooks are enabled).
+## Versioning
 
-## What goes where?
+- Bump CLI: `tempjs version inc patch cli`
+- Bump template: `tempjs version inc patch hotel` (tracks `templates/hotel-website-template/` only)
 
-| Location | Examples |
-|----------|----------|
-| **packages/core** | `auth.ts`, leads module, FTP storage, `/api/leads`, Navbar, PromoBanner, `prisma/schema.prisma` (Lead, PromoBanner), Docker |
-| **Hotel overlay** | `lib/features/room-types`, facilities, reviews, hotel-config; gallery; hotel Hero |
-| **Real-estate overlay** | `lib/features/projects`; property Hero |
-
-## Code Placement Rules: What Goes Where?
-
-To keep templates maintainable, adhere to these code separation guidelines:
-
-| Directory | Purpose | Edit Strategy | Examples |
-|---|---|---|---|
-| `packages/core/` | Shared core dependencies, business logic, base configs | **Edit directly.** Any changes here will propagate to all templates. | Base `package.json`, shared Prisma client, lead controllers/services, global CSS variables, common utilities, FTP upload scripts. |
-| `templates/overlays/<template-id>/` | Specific styling, unique pages, page-router components | **Edit directly.** Overrides identical files copied from `core`. | Template-specific Hero components, specialized Prisma DB seeds/schemas, domain constants (`site.ts`), page routes (`app/page.tsx`). |
-| `templates/<template-id>/` | Compiled final output that the CLI copies. | **DO NOT EDIT MANUALLY.** Any changes made here are overwritten and lost on compilation. | Merged layout directories, package config, static folders. |
-
----
-
-## Detailed Walkthrough: Adding a New Template
-
-Use the scaffold script (reads/writes `templates.json` automatically):
-
-```bash
-pnpm new-template bakery bakery-website-template
-pnpm sync-templates
-pnpm dev:bakery   # add matching script to root package.json
-```
-
-This creates `templates/overlays/bakery-website-template/` with `constants/site.ts`, `package.json`, `prisma/schema.prisma`, `CHANGELOG.md`, and a `templates.json` entry.
-
-### Manual steps (if you prefer)
-
-1. Create overlay under `templates/overlays/<name>/`
-2. Add entry to `templates.json` (or use `pnpm new-template`)
-3. `pnpm sync-templates` — targets are loaded from `templates.json`
-4. Commit overlay + synced `templates/<name>/`
-
----
-
-## Why not npm core package?
-
-Generated projects are meant to be **fully owned** by the client developer — fork, rename, customize every file. Copying merged source (Option 1) keeps all code in `lib/` and `app/` without depending on `@your-org/core` in `node_modules`.
-
-See README **Shared core package** section for comparison with other approaches.
+See [VERSIONING.md](./VERSIONING.md).

@@ -1,0 +1,7 @@
+// Template-specific Prisma models — Lead and PromoBanner are merged from packages/core on sync.
+
+// Example:
+// model Listing {
+//   id   String @id @default(uuid())
+//   name String
+// }

@@ -1,24 +1,59 @@
 {
   "title": "Daily workflow",
-  "description": "Commands and checks after editing templates.",
+  "description": "What to run when developing templates or the shared core starter kit.",
   "blocks": [
     {
       "type": "heading",
       "level": 2,
-      "text": "After editing core or overlay"
+      "text": "Template-only work (most days)"
     },
     {
-      "type": "command-ref",
-      "id": "sync-templates"
+      "type": "paragraph",
+      "text": "Edit the template folder directly. No sync."
+    },
+    {
+      "type": "code",
+      "code": "edit templates/hotel-website-template/\npnpm dev:hotel\n# or: cd templates/hotel-website-template && pnpm dev"
     },
     {
       "type": "command-ref",
       "id": "dev-hotel"
     },
     {
+      "type": "heading",
+      "level": 2,
+      "text": "New template"
+    },
+    {
+      "type": "command-ref",
+      "id": "new-template"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Shared core fix (optional propagate)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Only when you changed packages/core and want existing templates to pick up those files:"
+    },
+    {
+      "type": "command-ref",
+      "id": "sync-templates"
+    },
+    {
       "type": "callout",
-      "variant": "warning",
-      "text": "Never commit stale merged templates. pre-commit runs pnpm sync-templates:check when hooks are enabled (pnpm setup-hooks)."
+      "variant": "tip",
+      "text": "pnpm sync-templates:check shows whether templates still match core. Pre-commit no longer forces sync — propagate is intentional."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Release"
+    },
+    {
+      "type": "code",
+      "code": "tempjs version check\nedit templates/hotel-website-template/CHANGELOG.md\ntempjs version inc minor hotel\ntempjs version inc patch cli   # if CLI changed\ngit commit\nnpm publish                  # CLI only, when ready"
     },
     {
       "type": "heading",
@@ -29,13 +64,14 @@
       "type": "table",
       "headers": ["Script", "Purpose"],
       "rows": [
-        ["pnpm sync-templates", "Merge core + overlays into templates/*"],
-        ["pnpm sync-templates:check", "Verify merged output without writing"],
-        ["pnpm dev:hotel", "Sync + hotel dev server"],
-        ["pnpm dev:real-estate", "Sync + real-estate dev server"],
-        ["pnpm new-template", "Scaffold new overlay + templates.json entry"],
-        ["pnpm setup-hooks", "Enable git pre-commit sync check"],
-        ["pnpm version:check", "Alias for tempjs version check"]
+        ["pnpm new-template", "Copy core + scaffold → new templates/<dir>/"],
+        ["pnpm dev:hotel", "Run hotel template dev server (no sync)"],
+        ["pnpm dev:real-estate", "Run real-estate template dev server"],
+        ["pnpm sync-templates", "Optional: propagate packages/core into all templates"],
+        ["pnpm sync-templates --template hotel-website-template", "Propagate core into one template"],
+        ["pnpm sync-templates:check", "Diff templates vs core without writing"],
+        ["pnpm version:check", "Alias for tempjs version check"],
+        ["pnpm setup-hooks", "Install git hooks (optional)"]
       ]
     }
   ]

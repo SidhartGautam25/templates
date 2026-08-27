@@ -15,10 +15,24 @@
       "id": "version-inc"
     },
     {
+      "type": "heading",
+      "level": 2,
+      "text": "What is watched"
+    },
+    {
+      "type": "table",
+      "headers": ["Scope", "Paths"],
+      "rows": [
+        ["CLI", "cli/, package.json, templates.json"],
+        ["Template hotel", "templates/hotel-website-template/"],
+        ["Core change", "packages/core/ — bump templates if you shipped a shared fix"]
+      ]
+    },
+    {
       "type": "callout",
       "variant": "tip",
-      "title": "Template inc + sync",
-      "text": "When overlay or packages/core changed since last bump, tempjs version inc <template> automatically runs sync-templates:check. Bump is aborted if merged output is stale — run pnpm sync-templates first."
+      "title": "CHANGELOG location",
+      "text": "Edit templates/<directory>/CHANGELOG.md in the template folder (not overlays)."
     },
     {
       "type": "heading",
@@ -42,8 +56,8 @@
     {
       "type": "list",
       "items": [
-        "Edit CHANGELOG.md in overlay",
-        "pnpm sync-templates",
+        "Edit templates/<directory>/CHANGELOG.md",
+        "If you changed packages/core: pnpm sync-templates (optional propagate)",
         "tempjs version check",
         "tempjs version inc minor hotel (or patch cli)",
         "git commit; npm publish for CLI when needed"

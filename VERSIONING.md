@@ -19,7 +19,7 @@ On each `tempjs version inc`, we:
 
 1. Bump semver in `package.json` (CLI) or `templates.json` (template)
 2. Record **current `git HEAD`** as the baseline for that scope
-3. For templates: add a **CHANGELOG.md** stub under the overlay
+3. For templates: add a **CHANGELOG.md** stub under `templates/<directory>/`
 
 On `tempjs version check`, we:
 
@@ -34,9 +34,9 @@ If `.tempjs-version.json` is missing, the first `check` initializes it from curr
 | Scope | Paths |
 |-------|--------|
 | **CLI** | `cli/`, `package.json`, `templates.json` |
-| **Each template** | `packages/core/`, `scripts/sync-templates.mjs`, overlay, merged template folder |
+| **Each template** | `templates/<directory>/` (e.g. `templates/hotel-website-template/`) |
 
-Changes to **`packages/core/`** appear in every template’s check (shared code). Bump all affected templates when core changes materially.
+Changes to **`packages/core/`** do not auto-bump templates — after a core fix, run optional `pnpm sync-templates` if you want templates updated, then bump template versions if the propagated change is user-facing.
 
 ---
 
@@ -58,7 +58,6 @@ tempjs version inc minor cli
 tempjs version inc major cli
 
 # Bump one template (templates.json + CHANGELOG stub)
-# If overlay/core/sync script changed since last bump, runs sync-templates:check first
 tempjs version inc patch hotel
 tempjs version inc minor real-estate
 
@@ -69,27 +68,29 @@ tempjs version inc patch all
 ### Recommended release loop
 
 ```bash
-# 1. Develop
-edit packages/core or templates/overlays/...
-pnpm sync-templates
+# 1. Develop template
+edit templates/hotel-website-template/
 pnpm dev:hotel
 
-# 2. Document
-#    Edit templates/overlays/<template>/CHANGELOG.md
+# 2. Optional: if you also fixed packages/core
+edit packages/core/
+pnpm sync-templates
 
-# 3. Check unreleased changes
+# 3. Document
+#    Edit templates/hotel-website-template/CHANGELOG.md
+
+# 4. Check unreleased changes
 tempjs version check
 
-# 4. Bump versions (if check reported changes)
-# Template inc auto-runs sync-templates:check when overlay/core changed
+# 5. Bump versions (if check reported changes)
 tempjs version inc minor hotel      # template feature release
 tempjs version inc patch cli        # CLI-only fix
 
-# 5. Commit
+# 6. Commit
 git add package.json templates.json .tempjs-version.json CHANGELOG.md
 git commit -m "chore: hotel template v1.4.0, cli v2.1.1"
 
-# 6. Publish CLI (when ready)
+# 7. Publish CLI (when ready)
 npm publish
 ```
 
@@ -99,30 +100,18 @@ npm publish
 
 | Level | CLI (`tempjs`) | Template (`hotel`, etc.) |
 |-------|----------------|---------------------------|
-| **patch** | Bugfix, docs, no new flags | Copy/seed fix, small overlay tweak |
-| **minor** | New commands (`doctor`, `version`), new flags | New pages, features, non-breaking API |
-| **major** | Breaking CLI behavior or manifest shape | Breaking schema, removed files clients rely on |
-
-Template **major** bumps: clients on `tempjs update --check` see a version gap; document breaking changes clearly in `CHANGELOG.md`.
+| **patch** | Bugfix, docs, no flag changes | Seed fix, copy path fix, docs in template |
+| **minor** | New command, new optional flags | New pages, new API routes, non-breaking schema |
+| **major** | Breaking CLI or flag behavior | Breaking schema migration, removed routes |
 
 ---
 
-## Users & client developers
+## Client developers
 
-### Installing the CLI
-
-```bash
-npm install -g @navneet_25/tempjs
-tempjs --help
-```
-
-The npm version is the **CLI version** only. It does not change your generated project until you run `tempjs update`.
-
-### Generated project version
-
-After `tempjs hotel`, see `.tempjs.json`:
+Generated projects contain:
 
 ```json
+// .tempjs.json
 {
   "template": "hotel",
   "templateVersion": "1.3.0",
@@ -130,41 +119,25 @@ After `tempjs hotel`, see `.tempjs.json`:
 }
 ```
 
-- **`templateVersion`** — snapshot of the template when generated or last merged update
-- Compare with latest via `tempjs update --check`
-- Read **`CHANGELOG.md`** in your project for what changed between versions
-
-### `tempjs update` vs CLI version
-
-| Command | Compares |
-|---------|----------|
-| `tempjs update --check` | Your project files vs latest template on GitHub |
-| `tempjs version check` | Monorepo git state vs last maintainer bump (maintainers only) |
-
-You do **not** need to bump the CLI for every template change. Publish a new CLI when the **tool** changes; bump **template version** when **template content** changes.
+`tempjs update --check` compares the client project to the **template version** in `templates.json`, not the CLI version.
 
 ---
 
 ## Troubleshooting
 
-**“Version tracking requires a git repository”** — Run from the cloned templates repo, not a generated client project.
+**Edited `templates/hotel-website-template/` only** — Correct workflow. Bump with `tempjs version inc patch hotel`.
 
-**Check always shows changes after bump** — Uncommitted edits in watched paths. Commit or stash before checking, or bump again after committing.
+**Edited `packages/core/`** — Run `pnpm sync-templates` if you want existing templates updated, then bump affected template versions.
 
-**Baseline commit missing** — Re-run `tempjs version inc` for that scope to reset the baseline to current HEAD.
-
-**Edited merged `templates/hotel-website-template/` only** — Prefer editing overlay + `pnpm sync-templates`. Direct merged edits are tracked but violate maintainer workflow.
-
-**Version bump aborted: out of sync** — `tempjs version inc` for a template runs `sync-templates:check` when `packages/core/`, the overlay, or `scripts/sync-templates.mjs` changed since the last bump. Run `pnpm sync-templates` and retry.
+**Version bump aborted** — (Legacy) sync check was removed from version inc; if checks fail elsewhere, run `tempjs version check` for details.
 
 ---
 
-## Files reference
+## Related files
 
-| File | Purpose |
-|------|---------|
-| `package.json` | CLI semver (`@navneet_25/tempjs`) |
-| `templates.json` | Per-template semver |
-| `.tempjs-version.json` | Git baseline per scope |
-| `templates/overlays/*/CHANGELOG.md` | Human-readable template release notes |
-| Generated `.tempjs.json` | Client project template version stamp |
+| File | Role |
+|------|------|
+| `.tempjs-version.json` | Git baselines per scope |
+| `templates.json` | Template ids and semver |
+| `package.json` | CLI semver |
+| `templates/<dir>/CHANGELOG.md` | Human release notes |

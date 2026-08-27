@@ -1,61 +1,54 @@
 /**
- * Site configuration — edit for each real estate client.
+ * Default site configuration — copied into each template and customized per client.
+ * packages/core uses this stub so next.config.ts and shared modules typecheck.
  */
-
 export const SITE = {
-  id: "greenfield-properties",
+  id: "demo-site",
 
   brand: {
-    name: "Greenfield Properties",
-    shortName: "Greenfield",
-    tagline: "Homes & Investments You Can Trust",
-    developerName: "Greenfield Properties",
-    channelPartner: "Greenfield Realty Partners",
-    copyright: "Greenfield Properties. All Rights Reserved.",
-    managedBy: "Managed by Greenfield Realty.",
+    name: "Demo Client Site",
+    shortName: "Demo",
+    tagline: "Your tagline here",
+    developerName: "Demo Client Site",
+    channelPartner: "Demo Partner",
+    copyright: "Demo Client Site. All Rights Reserved.",
+    managedBy: "Managed by Demo Client Site.",
   },
 
   domain: {
-    baseUrl: "https://greenfieldproperties.example.com",
-    wwwHost: "www.greenfieldproperties.example.com",
+    baseUrl: "https://example.com",
+    wwwHost: "www.example.com",
   },
 
   contact: {
-    phone: "9123456780",
-    phoneDisplay: "+91 91234 56780",
+    phone: "9876543210",
+    phoneDisplay: "+91 98765 43210",
     countryCode: "91",
-    email: "hello@greenfieldproperties.example.com",
+    email: "hello@example.com",
     address: {
-      locality: "Baner",
-      region: "Maharashtra",
+      locality: "City",
+      region: "State",
       country: "IN",
-      full: "Baner Road, Pune, Maharashtra 411045, India",
+      full: "City, State, India",
     },
   },
 
   legal: {
-    agentRera: "A52100012345",
+    agentRera: "",
     privacyPolicyPath: "/privacy-policy",
     termsPath: "/terms-and-conditions",
-    consentText:
-      "I authorize Greenfield Realty Partners to contact me via call, SMS, email, or WhatsApp about properties and offers.",
-    shortConsentText:
-      "I authorize representatives to contact me about property listings and offers.",
-    disclaimer: [
-      "Listing details are indicative and subject to change without notice.",
-      "Prices, availability, and specifications must be confirmed with our sales team.",
-    ],
+    consentText: "I authorize representatives to contact me about offers and services.",
+    shortConsentText: "I authorize representatives to contact me about offers.",
+    disclaimer: ["Details are indicative and subject to change."],
   },
 
   seo: {
-    defaultTitle: "Greenfield Properties | Premium Homes in Pune",
-    defaultDescription:
-      "Explore curated apartments and plotted developments in Pune with Greenfield Properties. RERA-registered listings, site visits, and expert guidance.",
-    keywords:
-      "Pune real estate, apartments Baner, new projects Pune, RERA properties, Greenfield Properties",
-    priceRange: "₹45 Lakh - ₹2.5 Cr",
+    defaultTitle: "Demo Client Site",
+    defaultDescription: "Welcome to our website.",
+    keywords: "demo, website",
+    priceRange: "",
     locale: "en_IN",
-    schemaType: "RealEstateAgent" as const,
+    schemaType: "Organization" as const,
   },
 
   theme: {
@@ -91,95 +84,75 @@ export const SITE = {
   },
 
   hero: {
-    eyebrow: "CURATED LIVING. TRANSPARENT DEALS.",
-    headline: "Find Your Next Home in Pune",
-    subheadline:
-      "Browse RERA-registered apartments and plotted developments with virtual tours, site visit scheduling, and expert sales support.",
-    startingPrice: "₹45 Lakh*",
-    features: [
-      { icon: "map", label: "Prime Pune Locations" },
-      { icon: "sparkles", label: "RERA Verified" },
-      { icon: "shield", label: "Trusted Developer Partners" },
-      { icon: "tag", label: "Flexible Payment Plans" },
-    ],
-    ctaButtons: [
-      { label: "View Listings", enquiryLabel: "View Listings" },
-      { label: "Schedule Site Visit", enquiryLabel: "Schedule Site Visit" },
-      { label: "Download Brochure", enquiryLabel: "Download Brochure" },
-    ],
-    locationsTitle: "Popular Micro-Markets",
-    locations: [
-      { label: "Baner", enquiryLabel: "Baner Enquiry" },
-      { label: "Hinjewadi", enquiryLabel: "Hinjewadi Enquiry" },
-      { label: "Kharadi", enquiryLabel: "Kharadi Enquiry" },
-      { label: "Wakad", enquiryLabel: "Wakad Enquiry" },
-    ],
+    eyebrow: "WELCOME",
+    headline: "Your headline here",
+    subheadline: "Your subheadline here.",
+    startingPrice: "",
+    features: [] as { icon: string; label: string }[],
+    ctaButtons: [] as { label: string; enquiryLabel: string }[],
+    locationsTitle: "",
+    locations: [] as { label: string; enquiryLabel: string }[],
+    carouselImages: [] as string[],
+    slideDuration: 5000,
   },
 
   navigation: {
     home: "Home",
-    projects: "Properties",
+    projects: "Projects",
     contact: "Contact Us",
     backToHome: "Back to Home",
   },
 
   projectGrid: {
-    eyebrow: "Featured Listings",
-    title: "Properties by Greenfield",
-    tabs: {
-      all: "All Properties",
-      apartments: "Apartments",
-      plots: "Plots & Villas",
-    },
+    eyebrow: "Featured",
+    title: "Our Work",
+    tabs: { all: "All", apartments: "Category A", plots: "Category B" },
   },
 
   promoBanner: {
     imageUrl: "",
-    sec1Title: "Baner Skyline",
-    sec1Sub: "2 & 3 BHK from ₹85 Lakh*",
-    sec2Title: "RERA Registered",
-    sec2Sub: "Transparent documentation",
-    sec3Title: "Site Visits",
-    sec3Sub: "Book in 24 hours",
-    sec4Title: "Home Loan Assistance",
-    sec4Sub: "Partner banks available",
+    sec1Title: "",
+    sec1Sub: "",
+    sec2Title: "",
+    sec2Sub: "",
+    sec3Title: "",
+    sec3Sub: "",
+    sec4Title: "",
+    sec4Sub: "",
   },
 
   about: {
-    eyebrow: "Who We Are",
-    title: "About Greenfield Properties",
-    paragraphs: [
-      "Greenfield Properties helps families and investors discover residential projects across Pune with clarity and confidence. Every listing on this site is managed through our admin portal with up-to-date pricing, media, and lead capture.",
-      "From first enquiry to site visit, our team focuses on responsive communication and accurate project information.",
-    ],
-    callLabel: "Talk to Sales",
+    eyebrow: "About",
+    title: "About Us",
+    paragraphs: ["Add your story here."],
+    callLabel: "Contact Us",
   },
 
   enquiry: {
-    modalTitle: "Greenfield Properties",
-    modalSubtitle: "Share your requirements — we'll match you with the right project.",
+    modalTitle: "Demo Client Site",
+    modalSubtitle: "We will get back to you shortly.",
     formTitle: "Request a callback:",
-    successMessage: "Thank you! A property advisor will contact you shortly.",
-    aboutSuccessMessage: "We received your enquiry. Our team will respond within one business day.",
+    successMessage: "Thank you! We will contact you soon.",
+    aboutSuccessMessage: "We received your enquiry.",
   },
 
   admin: {
-    displayName: "Greenfield Admin",
-    portalTitle: "Greenfield Admin Portal",
-    portalSubtitle: "Manage property listings, leads, and promo content.",
-    defaultUserName: "Sales Admin",
-    defaultUserEmail: "admin@greenfieldproperties.example.com",
-    leadsExportPrefix: "greenfield_leads",
+    displayName: "Demo Admin",
+    portalTitle: "Admin Portal",
+    portalSubtitle: "Sign in to manage content and leads.",
+    defaultUserName: "Admin",
+    defaultUserEmail: "admin@example.com",
+    leadsExportPrefix: "demo_leads",
     projectForm: {
-      addTitle: "Add Property",
-      editTitle: "Edit Property",
-      namePlaceholder: "e.g. Baner Skyline Residences",
-      reraPlaceholder: "RERA registration number",
+      addTitle: "Add Item",
+      editTitle: "Edit Item",
+      namePlaceholder: "Name",
+      reraPlaceholder: "Reference ID",
     },
   },
 
   footer: {
-    reraLabel: "RERA",
+    reraLabel: "License",
     reraFallbacks: [] as { name: string; rera: string }[],
   },
 } as const;

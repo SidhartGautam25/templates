@@ -1,0 +1,25 @@
+model Project {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  location    String
+  typology    String
+  price       String
+  image       String
+  possession  String?
+  tag1        String?
+  tag2        String?
+  highlights  Json
+  rera        String
+  reraId      String?
+  reraLabel   String?
+  reraQrImage String?  @db.Text
+  category    String
+  description String?  @db.Text
+  amenities   Json?
+  gallery     Json?
+  floorPlans  Json?
+  isNewLaunch Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

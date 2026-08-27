@@ -473,7 +473,7 @@ npm install -g @navneet_25/tempjs
 npm install -g @navneet_25/tempjs@latest
 ```
 
-Current version: **2.1.0** (doctor, version tracking, core/overlays sync, update merge).
+Current version: **2.1.0** (doctor, version tracking, copy-once core starter kit, optional sync propagate, update merge).
 
 See also: [guide.md](./guide.md) for CLI architecture, [VERSIONING.md](./VERSIONING.md) for release workflow.
 
@@ -637,36 +637,40 @@ The archive contains the whole templates repo on the wire, but only the requeste
 
 ```
 templates/                          # this repository root
-├── ARCHITECTURE.md                 # core + overlay design
+├── ARCHITECTURE.md                 # copy-once core + standalone templates
+├── MAINTAINERS.md                  # maintainer handbook
+├── ROADMAP.md                      # planned improvements
 ├── packages/
-│   └── core/                       # shared source (synced into templates)
+│   └── core/                       # starter kit (copied once via new-template)
 ├── templates/
-│   ├── overlays/                   # template-specific source only
-│   │   ├── hotel-website-template/
-│   │   └── real-estate-website-template/
-│   ├── hotel-website-template/     # merged output (what tempjs copies)
+│   ├── hotel-website-template/     # full hotel project (what tempjs copies)
 │   └── real-estate-website-template/
 ├── scripts/
-│   └── sync-templates.mjs
-├── package.json                    # CLI package + sync scripts
+│   ├── new-template.mjs
+│   └── sync-templates.mjs          # optional: propagate core fixes
+├── package.json                    # CLI package + maintainer scripts
 ├── templates.json
 ├── cli/
 │   └── ...
 ```
 
-## Shared core package (Option 1 — implemented)
+## Shared core starter kit (copy-once)
 
-This repo uses **pre-merge sync**: shared code lives in `packages/core/`, template-specific code in `templates/overlays/`, and `pnpm sync-templates` produces the full template folders that `tempjs` copies to users.
+`packages/core/` is **generic boilerplate** copied once when you run `pnpm new-template`. After that, each template under `templates/<name>/` is a **standalone** Next.js project — edit it directly. Use `pnpm sync-templates` only when you intentionally propagate a fix from core into existing templates.
 
-**Full design doc:** [ARCHITECTURE.md](./ARCHITECTURE.md)
+**Full design doc:** [ARCHITECTURE.md](./ARCHITECTURE.md) · **Maintainer guide:** [MAINTAINERS.md](./MAINTAINERS.md)
 
 ### Quick maintainer commands
 
 ```bash
-# After editing packages/core or templates/overlays/*
-pnpm sync-templates
+# Create a new template (copies core + scaffold once)
+pnpm new-template bakery bakery-website-template --name "Bakery Website"
 
-# CI / pre-PR check
+# Daily dev (no sync)
+pnpm dev:hotel
+
+# Optional: after fixing packages/core, propagate to existing templates
+pnpm sync-templates
 pnpm sync-templates:check
 ```
 

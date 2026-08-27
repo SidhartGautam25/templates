@@ -9,7 +9,7 @@
     {
       "id": "maintainers",
       "label": "Maintainers",
-      "description": "Develop templates, sync core/overlays, and release versions",
+      "description": "Develop templates, sync core into template projects, and release versions",
       "home": "/maintainers"
     }
   ],
@@ -23,6 +23,7 @@
   "maintainers": [
     { "id": "intro", "label": "Overview", "path": "/maintainers" },
     { "id": "architecture", "label": "Architecture", "path": "/maintainers/architecture" },
+    { "id": "core", "label": "Core starter kit", "path": "/maintainers/core" },
     { "id": "workflow", "label": "Daily workflow", "path": "/maintainers/workflow" },
     { "id": "new-template", "label": "New template", "path": "/maintainers/new-template" },
     { "id": "versioning", "label": "Versioning", "path": "/maintainers/versioning" },

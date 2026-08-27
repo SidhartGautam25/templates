@@ -1,36 +1,52 @@
 #!/usr/bin/env node
 /**
- * Scaffold a new template overlay + templates.json entry.
+ * Create a new template: copy packages/core + scaffold into templates/<directory>.
  *
  * Usage:
- *   node scripts/new-template.mjs <template-id> [directory-name]
+ *   node scripts/new-template.mjs <template-id> [directory-name] [--name "Display Name"]
  *
  * Example:
- *   node scripts/new-template.mjs bakery bakery-website-template
+ *   node scripts/new-template.mjs bakery bakery-website-template --name "Bakery Website"
  */
 import {
+  cpSync,
   existsSync,
   mkdirSync,
   readFileSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const manifestPath = join(root, "templates.json");
-const overlaysDir = join(root, "templates", "overlays");
+import { writeMergedPrismaSchema } from "./template-core-utils.mjs";
 
-const [templateId, directoryArg] = process.argv.slice(2);
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const coreDir = join(root, "packages", "core");
+const scaffoldDir = join(coreDir, "scaffold");
+const templatesDir = join(root, "templates");
+const manifestPath = join(root, "templates.json");
+const rootPackagePath = join(root, "package.json");
+
+const args = process.argv.slice(2);
+let templateId = args[0];
+let directory = args[1];
+let displayNameArg = null;
+
+for (let i = 2; i < args.length; i++) {
+  if (args[i] === "--name" && args[i + 1]) {
+    displayNameArg = args[++i];
+  }
+}
 
 if (!templateId) {
-  console.error("Usage: node scripts/new-template.mjs <template-id> [directory-name]");
-  console.error("Example: node scripts/new-template.mjs bakery bakery-website-template");
+  console.error(
+    "Usage: node scripts/new-template.mjs <template-id> [directory-name] [--name \"Display Name\"]"
+  );
   process.exit(1);
 }
 
-const directory = directoryArg ?? `${templateId}-website-template`;
-const overlayPath = join(overlaysDir, directory);
+directory = directory ?? `${templateId}-website-template`;
+const templatePath = join(templatesDir, directory);
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
 
 if (manifest.templates[templateId]) {
@@ -38,192 +54,89 @@ if (manifest.templates[templateId]) {
   process.exit(1);
 }
 
-if (existsSync(overlayPath)) {
-  console.error(`Overlay directory already exists: ${overlayPath}`);
+if (existsSync(templatePath)) {
+  console.error(`Template directory already exists: templates/${directory}`);
   process.exit(1);
 }
 
-const displayName = directory
-  .replace(/-website-template$/, "")
-  .split("-")
-  .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-  .join(" ");
+const displayName =
+  displayNameArg ??
+  directory
+    .replace(/-website-template$/, "")
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 
-mkdirSync(join(overlayPath, "constants"), { recursive: true });
-mkdirSync(join(overlayPath, "prisma"), { recursive: true });
-mkdirSync(join(overlayPath, "lib/features"), { recursive: true });
-mkdirSync(join(overlayPath, "public"), { recursive: true });
+const CORE_EXCLUDE = new Set(["package.json", "README.md", "MAINTAINERS.md"]);
+const CORE_PATH_PREFIX_EXCLUDE = ["scripts/dev", "scaffold"];
 
-writeFileSync(
-  join(overlayPath, "package.json"),
-  JSON.stringify(
-    {
-      name: directory.replace(/-website-template$/, "") + "-website",
-      version: "0.1.0",
-      private: true,
-      scripts: {
-        dev: "next dev",
-        build: "next build",
-        start: "next start",
-        lint: "eslint",
-        postinstall: "prisma generate",
-      },
-      prisma: { seed: "tsx prisma/seed.ts" },
-      dependencies: {
-        "@prisma/adapter-mariadb": "^7.8.0",
-        "@prisma/client": "^7.8.0",
-        "@tanstack/react-query": "^5.101.0",
-        "basic-ftp": "^6.0.1",
-        "lucide-react": "^1.17.0",
-        "mariadb": "^3.5.3",
-        next: "16.2.7",
-        "next-auth": "5.0.0-beta.31",
-        react: "19.2.4",
-        "react-dom": "19.2.4",
-      },
-      devDependencies: {
-        "@tailwindcss/postcss": "^4",
-        "@types/node": "^20",
-        "@types/react": "^19",
-        "@types/react-dom": "^19",
-        dotenv: "^17.4.2",
-        eslint: "^9",
-        "eslint-config-next": "16.2.7",
-        prisma: "^7.8.0",
-        tailwindcss: "^4",
-        tsx: "^4.22.4",
-        typescript: "^5",
-      },
-    },
-    null,
-    2
-  ) + "\n"
-);
-
-writeFileSync(
-  join(overlayPath, "constants/site.ts"),
-  `/**
- * Site configuration — customize for each client.
- */
-export const SITE = {
-  id: "${templateId}",
-  brand: {
-    name: "${displayName}",
-    shortName: "${displayName.split(" ")[0]}",
-    tagline: "Your tagline here",
-    developerName: "${displayName}",
-    channelPartner: "${displayName}",
-    copyright: "${displayName}. All Rights Reserved.",
-    managedBy: "Managed by ${displayName}.",
-  },
-  domain: {
-    baseUrl: "https://example.com",
-    wwwHost: "www.example.com",
-  },
-  contact: {
-    phone: "9876543210",
-    phoneDisplay: "+91 98765 43210",
-    countryCode: "91",
-    email: "hello@example.com",
-    address: {
-      locality: "City",
-      region: "State",
-      country: "IN",
-      full: "City, State, India",
-    },
-  },
-  seo: {
-    defaultTitle: "${displayName}",
-    defaultDescription: "Welcome to ${displayName}.",
-    keywords: "${displayName}",
-    locale: "en_IN",
-    schemaType: "Organization" as const,
-  },
-  theme: {
-    colors: {
-      primary: "#1e40af",
-      primaryHover: "#1e3a8a",
-      accent: "#38bdf8",
-      textMain: "#0f172a",
-      textMuted: "#64748b",
-      bgMain: "#f8fafc",
-    },
-  },
-  assets: {
-    logo: "/logo.svg",
-    defaultProjectImage: "/assets/placeholder-project.svg",
-  },
-  admin: {
-    displayName: "${displayName} Admin",
-    portalTitle: "${displayName} Admin Portal",
-    defaultUserName: "Admin",
-    defaultUserEmail: "admin@example.com",
-    leadsExportPrefix: "${templateId}_leads",
-  },
-} as const;
-`
-);
-
-writeFileSync(
-  join(overlayPath, "prisma/schema.prisma"),
-  `// Template-specific models — Lead and PromoBanner are merged from packages/core on sync.
-
-// Add your Prisma models here, e.g.:
-// model Listing {
-//   id   String @id @default(uuid())
-//   name String
-// }
-`
-);
-
-writeFileSync(
-  join(overlayPath, "prisma/seed.ts"),
-  `import dotenv from "dotenv";
-
-dotenv.config();
-
-async function main() {
-  console.log("No seed data yet — add models and seed logic for ${displayName}.");
+function shouldCopyCorePath(rel) {
+  if (!rel) return true;
+  if (CORE_PATH_PREFIX_EXCLUDE.some((prefix) => rel === prefix || rel.startsWith(`${prefix}/`))) {
+    return false;
+  }
+  const base = rel.split("/").pop() ?? "";
+  return !CORE_EXCLUDE.has(base);
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
+function copyTreeFiltered(src, dest) {
+  cpSync(src, dest, {
+    recursive: true,
+    force: true,
+    filter: (path) => {
+      const rel = relative(src, path).replace(/\\/g, "/");
+      return shouldCopyCorePath(rel);
+    },
   });
-`
-);
+}
+
+mkdirSync(templatePath, { recursive: true });
+copyTreeFiltered(coreDir, templatePath);
+
+if (existsSync(scaffoldDir)) {
+  cpSync(scaffoldDir, templatePath, { recursive: true, force: true });
+}
 
 writeFileSync(
-  join(overlayPath, "CHANGELOG.md"),
-  `# Changelog — ${displayName} Template
-
-## [1.0.0] — ${new Date().toISOString().slice(0, 10)}
-
-- Initial scaffold via \`scripts/new-template.mjs\`
-`
+  join(templatePath, "constants/site.ts"),
+  readFileSync(join(coreDir, "constants/site.ts"), "utf8").replace(
+    'id: "demo-site"',
+    `id: "${templateId}"`
+  ).replace(
+    'name: "Demo Client Site"',
+    `name: "${displayName}"`
+  ).replace(
+    'shortName: "Demo"',
+    `shortName: "${displayName.split(" ")[0]}"`
+  ).replace(
+    'developerName: "Demo Client Site"',
+    `developerName: "${displayName}"`
+  ).replace(
+    'leadsExportPrefix: "demo_leads"',
+    `leadsExportPrefix: "${templateId}_leads"`
+  )
 );
 
+const pkg = JSON.parse(readFileSync(join(templatePath, "package.json"), "utf8"));
+pkg.name = directory.replace(/-website-template$/, "") + "-website";
+writeFileSync(join(templatePath, "package.json"), JSON.stringify(pkg, null, 2) + "\n");
+
 writeFileSync(
-  join(overlayPath, "README.md"),
-  `# ${displayName} Website Template
-
-Scaffolded overlay — customize \`constants/site.ts\`, add pages under \`app/\`, and define Prisma models in \`prisma/schema.prisma\`.
-
-Run from monorepo root:
-
-\`\`\`bash
-pnpm sync-templates
-pnpm dev:${templateId}
-\`\`\`
-`
+  join(templatePath, "README.md"),
+  `# ${displayName} Website Template\n\nStandalone Next.js project. Edit everything in this folder.\n\nCore was copied once from \`packages/core\` at creation — you do not need sync for day-to-day work.\n\nSee GETTING_STARTED.md.\n`
 );
 
+writeMergedPrismaSchema(templatePath);
+
 writeFileSync(
-  join(overlayPath, "lib/features/index.ts"),
-  `// Export template-specific features from subfolders, e.g.:
-// export * from "./listings";
-`
+  join(templatePath, "CHANGELOG.md"),
+  `# Changelog — ${displayName}\n\n## [1.0.0] — ${new Date().toISOString().slice(0, 10)}\n\n- Initial scaffold via \`pnpm new-template\`\n`
+);
+
+mkdirSync(join(templatePath, "lib/features"), { recursive: true });
+writeFileSync(
+  join(templatePath, "lib/features/index.ts"),
+  `// Export template-specific features, e.g.:\n// export * from "./listings";\n`
 );
 
 manifest.templates[templateId] = {
@@ -247,15 +160,38 @@ manifest.templates[templateId] = {
   tags: ["admin", "cms", "leads"],
   features: ["Admin dashboard", "Lead capture", "Docker Compose for MariaDB"],
   docs: "GETTING_STARTED.md",
+  init: {
+    flagGroups: ["generate", "theme", "brand", "database"],
+    brandFields: [
+      "name",
+      "shortName",
+      "baseUrl",
+      "phone",
+      "phoneDisplay",
+      "countryCode",
+      "email",
+      "address",
+      "tagline",
+      "developerName",
+      "channelPartner",
+    ],
+  },
 };
 
 writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + "\n", "utf8");
 
-console.log(`Created overlay: templates/overlays/${directory}/`);
-console.log(`Added templates.json entry: "${templateId}" → ${directory}`);
+const rootPkg = JSON.parse(readFileSync(rootPackagePath, "utf8"));
+const devScript = `dev:${templateId}`;
+if (!rootPkg.scripts[devScript]) {
+  rootPkg.scripts[devScript] = `cd templates/${directory} && pnpm dev`;
+  writeFileSync(rootPackagePath, JSON.stringify(rootPkg, null, 2) + "\n", "utf8");
+  console.log(`Added root script: ${devScript}`);
+}
+
+console.log(`Created template: templates/${directory}/`);
+console.log(`Added templates.json entry: "${templateId}"`);
 console.log("\nNext steps:");
-console.log("  1. Add app/ pages and lib/features/ for your domain");
-console.log("  2. Define models in prisma/schema.prisma (Lead/PromoBanner live in core)");
-console.log("  3. pnpm sync-templates");
-console.log(`  4. Add "dev:${templateId}" script to root package.json if needed`);
-console.log(`  5. pnpm dev:${templateId}`);
+console.log("  1. Edit templates/" + directory + "/ — add app pages, lib/features/, prisma/domain.prisma");
+console.log("  2. Customize constants/site.ts");
+console.log(`  3. pnpm dev:${templateId}`);
+console.log("\nNote: packages/core is only a starter kit. This template is independent after creation.");
