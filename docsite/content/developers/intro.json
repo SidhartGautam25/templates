@@ -36,6 +36,49 @@
     },
     {
       "type": "heading",
+      "level": 3,
+      "text": "Checking CLI Version & Updating"
+    },
+    {
+      "type": "paragraph",
+      "text": "To check which version of the @navneet_25/tempjs CLI is currently installed, and to update it to the latest version, run:"
+    },
+    {
+      "type": "code",
+      "code": "# Check installed CLI version\nnpm list -g @navneet_25/tempjs\n\n# Update global CLI package to latest\nnpm update -g @navneet_25/tempjs"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Checking Template Updates & Merging"
+    },
+    {
+      "type": "paragraph",
+      "text": "Once a template has been generated, it contains a .tempjs.json stamp file. You can check if the upstream template has updates (e.g., bug fixes, layout enhancements) and merge them directly in the project folder:"
+    },
+    {
+      "type": "code",
+      "code": "# Dry-run checking for template updates (compares local file hashes with latest upstream)\ntempjs update --check\n\n# Apply and merge non-conflicting updates (stamps the project to the new version)\ntempjs update --merge\n\n# Force-merge updates without prompts\ntempjs update --merge --yes"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Post-Install Steps for Optional Modules"
+    },
+    {
+      "type": "paragraph",
+      "text": "When you run tempjs add-module, the files are copied into your directory and feature flags are updated in constants/site.ts automatically. However, you must perform some manual wiring to display them in your layout:"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Light & Dark Theme Modes (theme-modes): You must import and mount the toggle button component (e.g. <ThemeModeToggle /> from '@/app/components/ThemeModeToggle') in your navbar, header, or footer layout to let visitors trigger it.",
+        "Blog Compose (blog-compose): The blog posts page is available at /blog, but you must add links pointing to /blog in your header, navigation menu, or footer components.",
+        "Gallery & Reviews CMS (gallery, reviews): You must run pnpm prisma db push to apply the new database tables, and toggle the feature flags to true under SITE.features in constants/site.ts to enable dashboard tabs on the /admin portal."
+      ]
+    },
+    {
+      "type": "heading",
       "level": 2,
       "text": "The usual workflow (explained)"
     },

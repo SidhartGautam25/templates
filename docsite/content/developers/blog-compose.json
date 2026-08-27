@@ -77,6 +77,63 @@
     {
       "type": "heading",
       "level": 2,
+      "text": "Post-Install Verification & Wiring"
+    },
+    {
+      "type": "paragraph",
+      "text": "Once the CLI copy finishes, you must complete the following steps to fully activate the blogging engine:"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "1. Push database models"
+    },
+    {
+      "type": "paragraph",
+      "text": "The blog-compose module appends the BlogPost model to your database schema. Run the following command to update your database table definitions:"
+    },
+    {
+      "type": "code",
+      "code": "pnpm prisma db push"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "2. Verify Feature Flags"
+    },
+    {
+      "type": "paragraph",
+      "text": "Open constants/site.ts and ensure that SITE.features.blogCompose is set to true. The installer tries to set this automatically, but if you're upgrading an older template, ensure it is configured:"
+    },
+    {
+      "type": "code",
+      "code": "export const SITE = {\n  // ... other configs\n  features: {\n    blogCompose: true,\n    blogSidebar: false, // Set to true if you installed blog-compose+sidebar\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "3. Mount Links in Navbar/Footer"
+    },
+    {
+      "type": "paragraph",
+      "text": "The public blog feed is located at /blog. To make this visible to visitors, open your layout components (e.g. app/components/Header.tsx or app/components/Footer.tsx) and add a Next.js Link tag targeting the blog index:"
+    },
+    {
+      "type": "code",
+      "code": "import Link from \"next/link\";\n\n// Add to your navbar links list\n<Link href=\"/blog\" className=\"hover:text-primary\">\n  Blog\n</Link>"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "4. Access the CMS Admin Panel"
+    },
+    {
+      "type": "paragraph",
+      "text": "Start your local development server (pnpm dev) and navigate to /admin. Log in with the credentials defined in your .env file. You will see a new 'Blog Articles' tab in the sidebar which lets you write, edit, and publish posts using the visual block editor."
+    },
+    {
+      "type": "heading",
+      "level": 2,
       "text": "Compose document shape"
     },
     {

@@ -75,15 +75,50 @@
     {
       "type": "heading",
       "level": 2,
-      "text": "After installing"
-    },
-    {
-      "type": "code",
-      "code": "pnpm prisma db push\npnpm dev"
+      "text": "Post-Installation Guidelines"
     },
     {
       "type": "paragraph",
-      "text": "Configure copy and behavior in constants/site.ts — e.g. SITE.gallery.*, SITE.reviews.*, SITE.seo.sitemap.staticRoutes. For enquiry-modal dropdown options from your listings API, set SITE.enquiry.listingsApiPath (e.g. /api/projects)."
+      "text": "Installing modules copies code and updates settings, but full feature activation requires database schema synchronization and configuration flag validation:"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "1. Database Schema Synchronization"
+    },
+    {
+      "type": "paragraph",
+      "text": "Modules like gallery, reviews, and blog-compose append model fragments to your local prisma/schema.prisma file. You must run the Prisma engine sync to compile and generate these tables in your SQL database:"
+    },
+    {
+      "type": "code",
+      "code": "# Synchronize database schema with the new module models\npnpm prisma db push"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "2. Verify Site Feature Flags"
+    },
+    {
+      "type": "paragraph",
+      "text": "Check constants/site.ts and ensure that the features array flags match your new module. This activates the public routes and exposes the module admin interfaces in the /admin portal:"
+    },
+    {
+      "type": "code",
+      "code": "export const SITE = {\n  // ... other configs\n  features: {\n    gallery: true,  // Enables Admin Gallery CMS tab & public gallery routes\n    reviews: true,  // Enables Admin Reviews CMS tab & public reviews list\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "3. Import & Render UI Sections"
+    },
+    {
+      "type": "paragraph",
+      "text": "Optional CMS components must be imported and placed on your landing page (e.g. app/page.tsx) or customized pages manually:"
+    },
+    {
+      "type": "code",
+      "code": "import { GallerySection } from \"@/app/components/GallerySection\";\nimport { ReviewsSection } from \"@/app/components/ReviewsSection\";\n\nexport default function Page() {\n  return (\n    <main>\n      <Hero />\n      <GallerySection />\n      <ReviewsSection />\n    </main>\n  );\n}"
     },
     {
       "type": "callout",
