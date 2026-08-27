@@ -35,6 +35,10 @@
       "text": "Merge never overwrites .env, constants/site.ts, .tempjsrc, or your brand customizations. Conflicts are listed for manual review."
     },
     {
+      "type": "paragraph",
+      "text": "tempjs update --merge does not install new optional core modules from upstream. To add SEO, gallery, or reviews after generation, use tempjs add-module — see Optional modules in the sidebar."
+    },
+    {
       "type": "heading",
       "level": 2,
       "text": "CHANGELOG in your project"

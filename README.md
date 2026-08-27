@@ -17,7 +17,7 @@ git add .
 git commit -m "Initial project"
 ```
 
-**Documentation site:** [`webdoc/`](webdoc/) — JSON-driven docs for developers and maintainers. Run `pnpm docs:dev` from repo root.
+**Documentation site:** [`docsite/`](docsite/) — JSON-driven docs for developers and maintainers. Run `pnpm docs:dev` from repo root.
 
 ## Available templates
 
@@ -497,12 +497,32 @@ tempjs brand --yes --name "Mi Plaza" --base-url "https://miplaza.com"
 tempjs init-db --yes --db-host localhost --db-name my_db --skip-db-push
 tempjs real-estate --force   # overwrite existing files
 tempjs doctor                # readiness check (generated projects)
+tempjs add-module list       # optional core modules available
+tempjs add-module seo,gallery,reviews  # add modules to existing project
 tempjs --help                # show help
 ```
+
+### Optional core modules (client projects)
+
+After `tempjs hotel`, add cross-vertical features without re-copying the template:
+
+```bash
+tempjs add-module list
+tempjs add-module seo,gallery,reviews
+pnpm prisma db push && pnpm dev
+```
+
+Modules: `enquiry-modal`, `footer`, `hero-simple`, `seo`, `gallery`, `reviews`, `legal-pages`. See `packages/core/modules.json` and docsite → Developers → Optional modules.
+
+Shipped **hotel** and **real-estate** templates already include vertical features and adopted core modules where they overlapped bespoke code.
 
 ### Maintainer commands (monorepo root)
 
 ```bash
+pnpm new-template bakery --name "Bakery" --modules enquiry-modal,footer,hero-simple,seo
+pnpm template:add-module hotel gallery,reviews
+pnpm template:assemble hotel          # vertical modules → template root
+pnpm template:extract-modules hotel   # template root → modules/
 pnpm sync-templates
 pnpm dev:hotel
 tempjs version check         # unreleased CLI/template changes?

@@ -11,7 +11,10 @@ import {
 import { dirname, join } from "node:path";
 
 import { buildModulesHomePageSource } from "./template-modules-home.mjs";
-import { applyAdminContentPage } from "./template-modules-admin.mjs";
+import {
+  applyAdminTabRegistry,
+  applyAdminDashboard,
+} from "./template-modules-admin.mjs";
 
 /**
  * @typedef {{
@@ -354,7 +357,10 @@ export function copyModulesIntoProject(templateRoot, moduleIds, options) {
   }
 
   if (!options.skipAdminContentPage) {
-    applyAdminContentPage(templateRoot, resolved);
+    const uiAdminModules = moduleIds.filter((id) => id === "gallery" || id === "reviews");
+    if (uiAdminModules.length > 0) {
+      applyAdminTabRegistry(templateRoot, resolved);
+    }
   }
 
   return resolved;

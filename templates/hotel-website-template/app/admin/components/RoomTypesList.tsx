@@ -29,20 +29,20 @@ interface RoomTypeData {
   sortOrder?: number;
 }
 
-interface ProjectsListProps {
-  projects: RoomTypeData[];
-  onEdit: (project: RoomTypeData) => void;
+interface RoomTypesListProps {
+  roomTypes: RoomTypeData[];
+  onEdit: (roomType: RoomTypeData) => void;
   onDelete: (id: string) => void;
   onAdd: () => void;
 }
 
-export default function ProjectsList({ projects, onEdit, onDelete, onAdd }: ProjectsListProps) {
+export default function RoomTypesList({ roomTypes, onEdit, onDelete, onAdd }: RoomTypesListProps) {
   return (
     <div className="space-y-6">
       {/* Header bar */}
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-bold font-serif text-primary">
-          Room Types Master List ({projects.length})
+          Room Types Master List ({roomTypes.length})
         </h3>
         <button
           onClick={onAdd}
@@ -55,8 +55,8 @@ export default function ProjectsList({ projects, onEdit, onDelete, onAdd }: Proj
 
       {/* Grid of rooms */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.length > 0 ? (
-          projects.map((room) => (
+        {roomTypes.length > 0 ? (
+          roomTypes.map((room) => (
             <div
               key={room.id}
               className="bg-white border border-black/[0.06] rounded-2xl overflow-hidden shadow-sm flex flex-col hover:shadow-md transition-shadow group"

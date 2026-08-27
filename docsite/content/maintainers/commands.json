@@ -6,6 +6,8 @@
     "template-diff-core",
     "template-validate",
     "template-add-module",
+    "template-assemble",
+    "template-extract-modules",
     "dev-hotel",
     "new-template",
     "version-check",
@@ -15,7 +17,11 @@
     {
       "type": "callout",
       "variant": "info",
-      "text": "Developer-facing commands (hotel, update, doctor) are documented in the Developers → Commands section."
+      "text": "Developer-facing commands (hotel, update, doctor, add-module) are documented in Developers → Commands and Optional modules."
+    },
+    {
+      "type": "paragraph",
+      "text": "Core and template module registries, install behavior, and shipped template adoption: see Optional modules page."
     },
     {
       "type": "paragraph",

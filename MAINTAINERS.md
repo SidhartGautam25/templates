@@ -59,8 +59,8 @@ Cross-vertical UI/features live in `packages/core/modules/` and are **not** copi
 | `footer` | Site footer (legal, RERA blocks from `SITE`) |
 | `hero-simple` | Carousel hero from `SITE.hero` + assets |
 | `seo` | sitemap.xml, robots.txt, JSON-LD, Open Graph metadata helpers |
-| `gallery` | Gallery CMS — model, `/gallery`, admin at `/admin/content` |
-| `reviews` | Testimonials — model, homepage section, admin at `/admin/content` |
+| `gallery` | Gallery CMS — model, `/gallery`, admin tab on unified dashboard |
+| `reviews` | Testimonials — model, homepage section, admin tab on unified dashboard |
 | `legal-pages` | Privacy policy + terms pages from `SITE` |
 
 ### Commands
@@ -367,6 +367,10 @@ Template bumps track `templates/<directory>/` changes. See [VERSIONING.md](./VER
 | `scripts/sync-templates.mjs` | Optional core propagation |
 | `scripts/template-validate.mjs` | Prisma + tsc + lint gate |
 | `scripts/template-diff-core.mjs` | Diff template vs core |
+| `scripts/module-installer-core.mjs` | Shared core module install logic (CLI + monorepo) |
+| `scripts/template-vertical-modules.mjs` | Template-level module assemble/extract |
+| `scripts/template-assemble.mjs` | Assemble `modules/` → template root |
+| `scripts/template-extract-modules.mjs` | Extract template paths → `modules/` |
 | `docsite/` | Documentation website |
 | `templates.json` | CLI manifest |
 
@@ -383,16 +387,19 @@ Template bumps track `templates/<directory>/` changes. See [VERSIONING.md](./VER
 
 ## Next tasks (roadmap)
 
-| Priority | Task | Benefit |
-|----------|------|---------|
-| Near | `pnpm new-template --with-docs` | Auto-add docsite registry stub |
-| Near | Hotel admin naming cleanup | `useProjects` → room-type naming |
-| Near | Dedupe Hero/Footer into core | Less duplication between templates |
-| Near | `tempjs doctor` + GETTING_STARTED audit | Accurate per-template checklist |
-| Medium | Optional core modules (`--modules`) | Gallery, CRM at copy or via `tempjs add-module` |
-| Medium | CI matrix on PR | `pnpm template:validate` for every template |
-| Medium | `tempjs init` wizard in CLI | Offline command builder |
-| Long | Template preview URLs | Demo deploy per release |
-| Long | Plugin registry | Third-party modules separate from core |
+| Priority | Task | Status |
+|----------|------|--------|
+| Near | Admin tab registry — single dashboard for module admin UIs | ✅ |
+| Near | `pnpm new-template --with-docs` | ✅ |
+| Near | Hotel naming cleanup (`useProjects` → room types) | ✅ |
+| Near | Dedupe Hero/Footer with `hero-simple` / `footer` modules | ✅ |
+| Near | `tempjs doctor` + GETTING_STARTED audit | Ongoing |
+| Done | Optional core modules + `tempjs add-module` | ✅ |
+| Done | Template vertical modules + assemble/extract | ✅ |
+| Done | Hotel/real-estate core module adoption | ✅ |
+| Medium | CI matrix — `pnpm template:validate` on PR | Planned |
+| Medium | `tempjs init` wizard in CLI | Planned |
+| Long | Template preview URLs | Planned |
+| Long | Plugin registry | Planned |
 
 See [ROADMAP.md](./ROADMAP.md) for full detail.

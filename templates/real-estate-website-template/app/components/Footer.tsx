@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { SITE } from "@/constants";
 
-interface ProjectReraInfo {
+interface ReraDisplay {
   name: string;
   rera: string;
   reraId?: string | null;
@@ -12,7 +12,10 @@ interface ProjectReraInfo {
 }
 
 interface FooterProps {
-  singleProject?: ProjectReraInfo | null;
+  /** Optional RERA blocks passed from a detail page (e.g. project slug). */
+  reraItems?: ReraDisplay[] | null;
+  /** @deprecated Use reraItems — single project on detail pages */
+  singleProject?: ReraDisplay | null;
 }
 
 function ReraQr({ name, qrImage }: { name: string; qrImage?: string | null }) {
@@ -20,10 +23,11 @@ function ReraQr({ name, qrImage }: { name: string; qrImage?: string | null }) {
     return (
       <div className="flex flex-col items-center justify-center p-2 rounded-xl bg-white border border-primary/10 shadow-sm w-36 h-36 overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={qrImage} alt={`QR Code for ${name}`} className="w-28 h-28 object-contain" />
+        <img src={qrImage} alt={`QR code for ${name}`} className="w-28 h-28 object-contain" />
       </div>
     );
   }
+
   return (
     <div className="flex flex-col items-center justify-center p-3.5 rounded-xl bg-white border border-primary/10 shadow-sm text-primary w-36 h-36">
       <svg className="w-20 h-20 text-primary/60" viewBox="0 0 100 100" fill="currentColor">
@@ -38,52 +42,48 @@ function ReraQr({ name, qrImage }: { name: string; qrImage?: string | null }) {
         <rect x="10" y="80" width="10" height="10" />
         <rect x="70" y="70" width="10" height="10" />
         <rect x="85" y="85" width="15" height="15" />
-        <rect x="40" y="0" width="10" height="20" />
-        <rect x="40" y="30" width="20" height="10" />
-        <rect x="10" y="40" width="20" height="10" />
-        <rect x="50" y="10" width="10" height="10" />
-        <rect x="0" y="55" width="15" height="10" />
-        <rect x="25" y="55" width="10" height="10" />
-        <rect x="70" y="40" width="10" height="15" />
-        <rect x="85" y="30" width="15" height="10" />
-        <rect x="85" y="50" width="10" height="15" />
-        <rect x="40" y="50" width="10" height="35" />
-        <rect x="55" y="50" width="15" height="10" />
-        <rect x="55" y="70" width="10" height="20" />
-        <rect x="30" y="85" width="10" height="15" />
-        <rect x="15" y="85" width="10" height="5" />
       </svg>
     </div>
   );
 }
 
-export default function Footer({ singleProject }: FooterProps) {
-  const [dbProjects, setDbProjects] = useState<ProjectReraInfo[]>([]);
-
-  const fallbackQrs = SITE.footer.reraFallbacks;
+export default function Footer({ reraItems, singleProject }: FooterProps) {
+  const [loadedItems, setLoadedItems] = useState<ReraDisplay[]>([]);
+  const listingsApiPath = SITE.footer.listingsApiPath?.trim();
+  const detailItems = reraItems ?? (singleProject ? [singleProject] : null);
 
   useEffect(() => {
-    if (!singleProject) {
-      async function loadProjects() {
-        try {
-          const res = await fetch("/api/projects");
-          const json = await res.json();
-          if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-            setDbProjects(json.data);
-          }
-        } catch (err) {
-          console.warn("Failed to load projects for footer listings:", err);
-        }
-      }
-      loadProjects();
-    }
-  }, [singleProject]);
+    if (detailItems || !listingsApiPath) return;
 
-  const displayQrs: ProjectReraInfo[] = singleProject
-    ? [singleProject]
-    : dbProjects.length > 0
-      ? dbProjects
-      : fallbackQrs;
+    async function loadListings() {
+      try {
+        const res = await fetch(listingsApiPath);
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setLoadedItems(
+            json.data.map((item: ReraDisplay) => ({
+              name: item.name,
+              rera: item.rera,
+              reraId: item.reraId,
+              reraLabel: item.reraLabel,
+              reraQrImage: item.reraQrImage,
+            }))
+          );
+        }
+      } catch (error) {
+        console.warn("Footer: failed to load listing RERA data", error);
+      }
+    }
+
+    loadListings();
+  }, [detailItems, listingsApiPath]);
+
+  const displayQrs: ReraDisplay[] =
+    detailItems && detailItems.length > 0
+      ? detailItems
+      : loadedItems.length > 0
+        ? loadedItems
+        : SITE.footer.reraFallbacks;
 
   return (
     <footer className="bg-footer-bg text-text-main py-16 px-4 md:px-8 border-t border-primary/10">
@@ -116,9 +116,7 @@ export default function Footer({ singleProject }: FooterProps) {
 
         <div className="text-[10px] text-text-muted leading-relaxed border-t border-primary/10 pt-8 space-y-3 font-light text-center">
           {SITE.legal.disclaimer.map((paragraph, idx) => (
-            <p key={idx} className="max-w-4xl mx-auto">
-              {paragraph}
-            </p>
+            <p key={idx} className="max-w-4xl mx-auto">{paragraph}</p>
           ))}
           <p className="text-center pt-4 text-text-main/70 text-[11px] font-medium max-w-4xl mx-auto">
             &copy; {new Date().getFullYear()} {SITE.brand.copyright} {SITE.brand.managedBy}

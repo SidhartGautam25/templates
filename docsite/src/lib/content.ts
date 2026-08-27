@@ -11,6 +11,7 @@ import devCommands from "@content/developers/commands.json";
 import devCustomization from "@content/developers/customization.json";
 import devUpdates from "@content/developers/updates.json";
 import devDocker from "@content/developers/docker.json";
+import devOptionalModules from "@content/developers/optional-modules.json";
 import templatesOverview from "@content/developers/templates/overview.json";
 
 import hotelTemplate from "@content/developers/templates/hotel.json";
@@ -24,6 +25,7 @@ import maintTemplateTools from "@content/maintainers/template-tools.json";
 import maintNewTemplate from "@content/maintainers/new-template.json";
 import maintVersioning from "@content/maintainers/versioning.json";
 import maintCommands from "@content/maintainers/commands.json";
+import maintModules from "@content/maintainers/modules.json";
 
 import type {
   CommandsRegistry,
@@ -53,6 +55,7 @@ export const developerPages: Record<string, PageContent> = {
   customization: devCustomization as PageContent,
   updates: devUpdates as PageContent,
   docker: devDocker as PageContent,
+  "optional-modules": devOptionalModules as PageContent,
 };
 
 export const templatesOverviewPage = templatesOverview as PageContent;
@@ -71,6 +74,7 @@ export const maintainerPages: Record<string, PageContent> = {
   "new-template": maintNewTemplate as PageContent,
   versioning: maintVersioning as PageContent,
   commands: maintCommands as PageContent,
+  modules: maintModules as PageContent,
 };
 
 export function getTemplatePage(templateId: string): PageContent | null {

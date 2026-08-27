@@ -82,6 +82,9 @@
       "headers": ["Script", "Purpose"],
       "rows": [
         ["pnpm new-template", "Copy core + scaffold → new templates/<dir>/"],
+        ["pnpm template:add-module", "Add core module(s) to existing template"],
+        ["pnpm template:assemble", "Copy templates/<dir>/modules/* → template root"],
+        ["pnpm template:extract-modules", "Copy template root paths → modules/<id>/"],
         ["pnpm dev:hotel", "Run hotel template dev server (no sync)"],
         ["pnpm dev:real-estate", "Run real-estate template dev server"],
         ["pnpm sync-templates", "Optional: propagate packages/core into all templates"],

@@ -1,0 +1,97 @@
+{
+  "title": "Optional modules",
+  "description": "Add SEO, gallery, reviews, and other core features to an existing client project after generation.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "When you run tempjs hotel, you get the template as maintainers shipped it — including whatever core modules they enabled (hotel includes seo, gallery, reviews). For lean scaffold templates or older projects, you can add optional features later with tempjs add-module without re-copying the whole template."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "Requires .tempjs.json",
+      "text": "Run add-module from the project root where tempjs created .tempjs.json. It is not a maintainer-only command."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "List available modules"
+    },
+    {
+      "type": "command-ref",
+      "id": "add-module-list"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Install modules"
+    },
+    {
+      "type": "command-ref",
+      "id": "add-module"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Available core modules"
+    },
+    {
+      "type": "table",
+      "headers": ["Module id", "What you get"],
+      "rows": [
+        ["enquiry-modal", "EnquiryModal component wired to /api/leads"],
+        ["footer", "Footer component from SITE.footer / SITE.legal"],
+        ["hero-simple", "Hero carousel from SITE.hero and hero image assets"],
+        ["seo", "lib/seo/*, SiteJsonLd, sitemap.ts, robots.ts"],
+        ["gallery", "Gallery CMS API, GallerySection, /gallery pages, admin gallery UI"],
+        ["reviews", "Reviews API, ReviewsSection, admin reviews UI"],
+        ["legal-pages", "Privacy policy and terms pages from SITE config"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What add-module does"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Copies files from packages/core/modules/<id>/ into your project",
+        "Appends Prisma models to prisma/domain.prisma when the module needs them",
+        "Rebuilds prisma/schema.prisma from the core base + your domain models",
+        "Sets SITE.features.<flag> to true in constants/site.ts",
+        "Records installed ids in .tempjs-modules.json",
+        "For seo: wires SiteJsonLd into app/layout.tsx (keeps your custom metadata if already set)",
+        "Does not replace app/page.tsx or app/admin/page.tsx — import new sections yourself or use module admin components"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "After installing"
+    },
+    {
+      "type": "code",
+      "code": "pnpm prisma db push\npnpm dev"
+    },
+    {
+      "type": "paragraph",
+      "text": "Configure copy and behavior in constants/site.ts — e.g. SITE.gallery.*, SITE.reviews.*, SITE.seo.sitemap.staticRoutes. For enquiry-modal dropdown options from your listings API, set SITE.enquiry.listingsApiPath (e.g. /api/projects)."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Hotel / real-estate templates",
+      "text": "Shipped vertical templates already include domain features (rooms, projects) and adopted core modules where they overlapped bespoke code. You typically only need add-module on custom scaffold projects created with pnpm new-template --modules."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Updates and modules"
+    },
+    {
+      "type": "paragraph",
+      "text": "tempjs update --merge does not automatically install new core modules from upstream. If a template release adds a new optional module, run tempjs add-module <id> in the client project or merge module files manually."
+    }
+  ]
+}

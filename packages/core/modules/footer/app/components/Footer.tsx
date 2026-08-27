@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SITE } from "@/constants";
 
 interface ReraDisplay {
@@ -12,8 +12,9 @@ interface ReraDisplay {
 }
 
 interface FooterProps {
-  /** Optional RERA blocks passed from a detail page (e.g. project slug). */
   reraItems?: ReraDisplay[] | null;
+  /** @deprecated Use reraItems — single listing on detail pages */
+  singleProject?: ReraDisplay | null;
 }
 
 function ReraQr({ name, qrImage }: { name: string; qrImage?: string | null }) {
@@ -45,9 +46,43 @@ function ReraQr({ name, qrImage }: { name: string; qrImage?: string | null }) {
   );
 }
 
-export default function Footer({ reraItems }: FooterProps) {
+export default function Footer({ reraItems, singleProject }: FooterProps) {
+  const [loadedItems, setLoadedItems] = useState<ReraDisplay[]>([]);
+  const listingsApiPath = SITE.footer.listingsApiPath?.trim();
+  const detailItems = reraItems ?? (singleProject ? [singleProject] : null);
+
+  useEffect(() => {
+    if (detailItems || !listingsApiPath) return;
+
+    async function loadListings() {
+      try {
+        const res = await fetch(listingsApiPath);
+        const json = await res.json();
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
+          setLoadedItems(
+            json.data.map((item: ReraDisplay) => ({
+              name: item.name,
+              rera: item.rera,
+              reraId: item.reraId,
+              reraLabel: item.reraLabel,
+              reraQrImage: item.reraQrImage,
+            }))
+          );
+        }
+      } catch (error) {
+        console.warn("Footer: failed to load listing RERA data", error);
+      }
+    }
+
+    loadListings();
+  }, [detailItems, listingsApiPath]);
+
   const displayQrs: ReraDisplay[] =
-    reraItems && reraItems.length > 0 ? reraItems : SITE.footer.reraFallbacks;
+    detailItems && detailItems.length > 0
+      ? detailItems
+      : loadedItems.length > 0
+        ? loadedItems
+        : SITE.footer.reraFallbacks;
 
   return (
     <footer className="bg-footer-bg text-text-main py-16 px-4 md:px-8 border-t border-primary/10">

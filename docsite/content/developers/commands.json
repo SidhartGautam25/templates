@@ -27,7 +27,7 @@
     },
     {
       "type": "paragraph",
-      "text": "Run these from the project root where .tempjs.json exists. They update constants/site.ts, globals.css theme tokens, or .env without touching unrelated files."
+      "text": "Run these from the project root where .tempjs.json exists. They update constants/site.ts, globals.css theme tokens, or .env without touching unrelated files. tempjs add-module adds optional core features (SEO, gallery, reviews, etc.) — see Optional modules page."
     },
     {
       "type": "heading",
@@ -44,6 +44,8 @@
     "brand",
     "init-db",
     "doctor",
+    "add-module",
+    "add-module-list",
     "update-check",
     "update-merge"
   ]

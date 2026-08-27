@@ -22,10 +22,11 @@ import { fileURLToPath } from "node:url";
 import { coreDir, CORE_EXCLUDE, shouldCopyCorePath, writeMergedPrismaSchema } from "./template-core-utils.mjs";
 import {
   copyModulesIntoTemplate,
-  applyModulesHomePage,
   parseModulesArg,
   listModuleIds,
 } from "./template-modules.mjs";
+import { applyDocsiteStub } from "./docsite-stub.mjs";
+import { applyAdminDashboard } from "./template-modules-admin.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const scaffoldDir = join(coreDir, "scaffold");
@@ -38,6 +39,7 @@ let templateId = args[0];
 let directory = args[1];
 let displayNameArg = null;
 let modulesArg = null;
+let withDocs = false;
 
 for (let i = 2; i < args.length; i++) {
   if (args[i] === "--name" && args[i + 1]) {
@@ -46,12 +48,14 @@ for (let i = 2; i < args.length; i++) {
     modulesArg = args[++i];
   } else if (args[i]?.startsWith("--modules=")) {
     modulesArg = args[i].slice("--modules=".length);
+  } else if (args[i] === "--with-docs") {
+    withDocs = true;
   }
 }
 
 if (!templateId) {
   console.error(
-    "Usage: node scripts/new-template.mjs <template-id> [directory-name] [--name \"Display Name\"] [--modules enquiry-modal,footer,hero-simple]"
+    "Usage: node scripts/new-template.mjs <template-id> [directory-name] [--name \"Display Name\"] [--modules enquiry-modal,footer,hero-simple] [--with-docs]"
   );
   console.error(`Available modules: ${listModuleIds().join(", ")}`);
   process.exit(1);
@@ -128,6 +132,7 @@ writeFileSync(
 );
 
 writeMergedPrismaSchema(templatePath);
+applyAdminDashboard(templatePath);
 
 writeFileSync(
   join(templatePath, "CHANGELOG.md"),
@@ -195,6 +200,10 @@ if (!rootPkg.scripts[devScript]) {
   rootPkg.scripts[devScript] = `cd templates/${directory} && pnpm dev`;
   writeFileSync(rootPackagePath, JSON.stringify(rootPkg, null, 2) + "\n", "utf8");
   console.log(`Added root script: ${devScript}`);
+}
+
+if (withDocs) {
+  applyDocsiteStub({ templateId, displayName, directory });
 }
 
 console.log(`Created template: templates/${directory}/`);

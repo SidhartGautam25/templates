@@ -1,6 +1,6 @@
 {
   "title": "Core starter kit",
-  "description": "What packages/core contains, what gets copied into a new template, and when to use optional sync.",
+  "description": "What packages/core contains, optional modules, and when to use optional sync.",
   "blocks": [
     {
       "type": "paragraph",
@@ -36,18 +36,44 @@
     {
       "type": "heading",
       "level": 2,
-      "text": "What is NOT copied / you add yourself"
+      "text": "What is NOT copied by default"
     },
     {
       "type": "list",
       "items": [
-        "Home page, Hero, Footer, domain listing grids",
-        "lib/features/<your-domain>/ (rooms, projects, etc.)",
-        "app/api/<domain>/ routes",
+        "Hero, Footer, enquiry modal — optional core modules (hero-simple, footer, enquiry-modal)",
+        "SEO pack, gallery CMS, reviews, legal pages — optional modules (seo, gallery, reviews, legal-pages)",
+        "Home page composition — scaffold placeholder or wired by --modules",
+        "Domain listing grids and vertical APIs — template modules or hand-built features",
         "Real brand content in constants/site.ts",
-        "Models in prisma/domain.prisma (hotel: RoomType; real-estate: Project)",
-        "Template-specific seeds, scripts, and public assets"
+        "Domain models in prisma/domain.prisma"
       ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Optional core modules"
+    },
+    {
+      "type": "paragraph",
+      "text": "Cross-vertical features live in packages/core/modules/ and are registered in packages/core/modules.json. Install at creation with --modules or later with pnpm template:add-module (monorepo) or tempjs add-module (client projects)."
+    },
+    {
+      "type": "table",
+      "headers": ["Module id", "Adds"],
+      "rows": [
+        ["enquiry-modal", "EnquiryModal → /api/leads"],
+        ["footer", "Footer from SITE"],
+        ["hero-simple", "Hero carousel"],
+        ["seo", "sitemap, robots, JSON-LD, metadata helpers"],
+        ["gallery", "GalleryImage CMS + /gallery + admin UI"],
+        ["reviews", "Review testimonials + admin UI"],
+        ["legal-pages", "Privacy + terms pages"]
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "Full install workflow, template vertical modules, and planned admin tab registry: see Optional modules page."
     },
     {
       "type": "heading",
@@ -56,7 +82,7 @@
     },
     {
       "type": "code",
-      "code": "pnpm new-template bakery bakery-website-template --name \"Bakery Website\"\n# Copies packages/core + scaffold → templates/bakery-website-template/\n# Updates templates.json, adds pnpm dev:bakery, merges prisma/schema.prisma"
+      "code": "pnpm new-template bakery bakery-website-template --name \"Bakery Website\"\npnpm new-template bakery --modules enquiry-modal,footer,hero-simple,seo,gallery,reviews"
     },
     {
       "type": "heading",
@@ -79,15 +105,6 @@
       "type": "callout",
       "variant": "tip",
       "text": "Normal template development does not use sync. Use pnpm template:diff-core before propagate to see what would change."
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "text": "Future: optional modules"
-    },
-    {
-      "type": "paragraph",
-      "text": "Implemented: enquiry-modal, footer, hero-simple, seo, gallery, reviews, legal-pages. Next: tempjs add-module for client projects and template-level modules (hotel room-types, etc.)."
     }
   ]
 }

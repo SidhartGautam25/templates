@@ -193,8 +193,8 @@ export const SITE = {
   /** Enabled core modules — see packages/core/modules.json */
   features: {
     enquiryModal: true,
-    footer: true,
-    heroSimple: true,
+    footer: false,
+    heroSimple: false,
     seo: true,
     gallery: true,
     reviews: true,

@@ -232,17 +232,21 @@
     },
     {
       "type": "table",
-      "headers": ["Priority", "Task", "Benefit"],
+      "headers": ["Priority", "Task", "Status"],
       "rows": [
-        ["Near", "pnpm new-template --with-docs", "Auto-add docsite registry stub for new templates"],
-        ["Near", "Hotel admin naming cleanup", "useProjects → room-type naming"],
-        ["Near", "Dedupe Hero/Footer into core", "Less copy-paste between hotel and real-estate"],
-        ["Near", "tempjs doctor + GETTING_STARTED audit", "Accurate checklist per template after architecture change"],
-        ["Medium", "Optional core modules (--modules)", "Gallery, CRM hooks at copy time or later via tempjs add-module"],
-        ["Medium", "CI matrix on PR", "pnpm template:validate for every template automatically"],
-        ["Medium", "tempjs init wizard in CLI", "Offline command builder parity with docsite"],
-        ["Long", "Template preview URLs", "Deploy demo instances per release"],
-        ["Long", "Plugin registry", "Third-party modules versioned separately from core"]
+        ["Near", "Admin tab registry — single dashboard registers module admin UIs", "✅"],
+        ["Near", "pnpm new-template --with-docs — docsite registry stub", "✅"],
+        ["Near", "Hotel naming cleanup — useProjects → room-type naming", "✅"],
+        ["Near", "Dedupe Hero/Footer — align shipped templates with hero-simple/footer modules", "✅"],
+        ["Near", "tempjs doctor + GETTING_STARTED audit", "Ongoing"],
+        ["Done", "Optional core modules (7 modules + --modules + template:add-module)", "✅"],
+        ["Done", "tempjs add-module for client projects", "✅"],
+        ["Done", "Template vertical modules (assemble/extract)", "✅"],
+        ["Done", "Hotel/real-estate core seo (+ gallery/reviews on hotel)", "✅"],
+        ["Medium", "CI matrix on PR — pnpm template:validate every template", "Planned"],
+        ["Medium", "tempjs init wizard in CLI", "Planned"],
+        ["Long", "Template preview URLs", "Planned"],
+        ["Long", "Plugin registry for third-party modules", "Planned"]
       ]
     }
   ]

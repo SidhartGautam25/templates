@@ -6,7 +6,7 @@ import { MapPin, Sparkles, ShieldCheck, Tag, Calendar, Download, Phone } from "l
 import { SITE } from "@/constants";
 
 interface HeroProps {
-  onOpenEnquiry: (projectName?: string) => void;
+  onOpenEnquiry: (label?: string) => void;
 }
 
 const featureIcons = {
@@ -29,7 +29,7 @@ export default function Hero({ onOpenEnquiry }: HeroProps) {
 
     const interval = setInterval(() => {
       setCurrentBgIndex((prev) => (prev + 1) % slideCount);
-    }, 5000);
+    }, SITE.hero.slideDuration || 5000);
 
     return () => clearInterval(interval);
   }, [hasImages, slideCount]);
@@ -42,9 +42,9 @@ export default function Hero({ onOpenEnquiry }: HeroProps) {
             <div className="hidden md:block absolute inset-0">
               {desktopImages.map((src, index) => (
                 <Image
-                  key={"desktop-" + src}
+                  key={`desktop-${src}`}
                   src={src}
-                  alt={`${SITE.brand.name} Desktop`}
+                  alt={`${SITE.brand.name} desktop`}
                   fill
                   priority={index === 0}
                   sizes="100vw"
@@ -58,9 +58,9 @@ export default function Hero({ onOpenEnquiry }: HeroProps) {
             <div className="block md:hidden absolute inset-0">
               {(phoneImages.length > 0 ? phoneImages : desktopImages).map((src, index) => (
                 <Image
-                  key={"phone-" + src}
+                  key={`phone-${src}`}
                   src={src}
-                  alt={`${SITE.brand.name} Mobile`}
+                  alt={`${SITE.brand.name} mobile`}
                   fill
                   priority={index === 0}
                   sizes="100vw"
@@ -91,63 +91,69 @@ export default function Hero({ onOpenEnquiry }: HeroProps) {
           {SITE.hero.subheadline}
         </p>
 
-        <div className="grid grid-cols-2 gap-y-3.5 gap-x-4 md:flex md:flex-wrap md:items-center md:gap-x-5 md:gap-y-2.5 pt-1 text-text-main w-full">
-          {SITE.hero.features.map((feature, idx) => {
-            const Icon = featureIcons[feature.icon as keyof typeof featureIcons] || Sparkles;
-            return (
-              <React.Fragment key={feature.label}>
-                {idx > 0 && <span className="text-primary/20 hidden md:inline">|</span>}
-                <div className="flex items-center space-x-2">
-                  <Icon className="w-4 h-4 text-accent-gold flex-shrink-0" />
-                  <span className="text-[10px] font-extrabold tracking-wider uppercase">{feature.label}</span>
-                </div>
-              </React.Fragment>
-            );
-          })}
-        </div>
+        {SITE.hero.features.length > 0 && (
+          <div className="grid grid-cols-2 gap-y-3.5 gap-x-4 md:flex md:flex-wrap md:items-center md:gap-x-5 md:gap-y-2.5 pt-1 text-text-main w-full">
+            {SITE.hero.features.map((feature, idx) => {
+              const Icon = featureIcons[feature.icon as keyof typeof featureIcons] || Sparkles;
+              return (
+                <React.Fragment key={feature.label}>
+                  {idx > 0 && <span className="text-primary/20 hidden md:inline">|</span>}
+                  <div className="flex items-center space-x-2">
+                    <Icon className="w-4 h-4 text-accent-gold flex-shrink-0" />
+                    <span className="text-[10px] font-extrabold tracking-wider uppercase">{feature.label}</span>
+                  </div>
+                </React.Fragment>
+              );
+            })}
+          </div>
+        )}
 
-        <div className="flex flex-col sm:flex-row gap-3.5 w-full sm:w-auto pt-2">
-          {SITE.hero.ctaButtons.map((cta) => (
-            <button
-              key={cta.label}
-              onClick={() => onOpenEnquiry(cta.enquiryLabel)}
-              className={
-                cta.label.includes("Book")
-                  ? "w-full sm:w-auto justify-center px-5 py-3.5 bg-primary hover:bg-primary-hover text-white font-extrabold text-[10px] uppercase tracking-widest rounded-lg transition-all duration-300 shadow-md flex items-center space-x-2 cursor-pointer hover:scale-105"
-                  : "w-full sm:w-auto justify-center px-5 py-3.5 bg-white/80 hover:bg-white text-primary border border-primary/20 hover:border-primary/40 font-extrabold text-[10px] uppercase tracking-widest rounded-lg transition-all duration-300 flex items-center space-x-2 cursor-pointer shadow-sm hover:scale-105"
-              }
-            >
-              {cta.label.includes("Book") ? (
-                <Calendar className="w-3.5 h-3.5" />
-              ) : cta.label.includes("Brochure") ? (
-                <Download className="w-3.5 h-3.5" />
-              ) : (
-                <Phone className="w-3.5 h-3.5 text-accent-gold" />
-              )}
-              <span>{cta.label}</span>
-            </button>
-          ))}
-        </div>
-
-        <div className="glass-card-light rounded-xl p-4 md:p-5 w-full max-w-3xl mt-6 shadow-sm mb-8 sm:mb-0">
-          <span className="block text-[9px] font-extrabold tracking-widest text-accent-gold-dark uppercase mb-2">
-            {SITE.hero.locationsTitle}
-          </span>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5 text-[11px] font-bold text-text-main">
-            {SITE.hero.locations.map((loc, idx) => (
-              <React.Fragment key={loc.label}>
-                {idx > 0 && <span className="text-primary/20 hidden sm:inline">|</span>}
-                <button
-                  className="flex items-center space-x-1 hover:text-primary transition-colors cursor-pointer"
-                  onClick={() => onOpenEnquiry(loc.enquiryLabel)}
-                >
-                  <MapPin className="w-3 h-3 text-accent-gold" />
-                  <span>{loc.label}</span>
-                </button>
-              </React.Fragment>
+        {SITE.hero.ctaButtons.length > 0 && (
+          <div className="flex flex-col sm:flex-row gap-3.5 w-full sm:w-auto pt-2">
+            {SITE.hero.ctaButtons.map((cta) => (
+              <button
+                key={cta.label}
+                onClick={() => onOpenEnquiry(cta.enquiryLabel)}
+                className={
+                  cta.label.toLowerCase().includes("book")
+                    ? "w-full sm:w-auto justify-center px-5 py-3.5 bg-primary hover:bg-primary-hover text-white font-extrabold text-[10px] uppercase tracking-widest rounded-lg transition-all duration-300 shadow-md flex items-center space-x-2 cursor-pointer hover:scale-105"
+                    : "w-full sm:w-auto justify-center px-5 py-3.5 bg-white/80 hover:bg-white text-primary border border-primary/20 hover:border-primary/40 font-extrabold text-[10px] uppercase tracking-widest rounded-lg transition-all duration-300 flex items-center space-x-2 cursor-pointer shadow-sm hover:scale-105"
+                }
+              >
+                {cta.label.toLowerCase().includes("book") ? (
+                  <Calendar className="w-3.5 h-3.5" />
+                ) : cta.label.toLowerCase().includes("brochure") ? (
+                  <Download className="w-3.5 h-3.5" />
+                ) : (
+                  <Phone className="w-3.5 h-3.5 text-accent-gold" />
+                )}
+                <span>{cta.label}</span>
+              </button>
             ))}
           </div>
-        </div>
+        )}
+
+        {SITE.hero.locations.length > 0 && (
+          <div className="glass-card-light rounded-xl p-4 md:p-5 w-full max-w-3xl mt-6 shadow-sm mb-8 sm:mb-0">
+            <span className="block text-[9px] font-extrabold tracking-widest text-accent-gold-dark uppercase mb-2">
+              {SITE.hero.locationsTitle}
+            </span>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5 text-[11px] font-bold text-text-main">
+              {SITE.hero.locations.map((loc, idx) => (
+                <React.Fragment key={loc.label}>
+                  {idx > 0 && <span className="text-primary/20 hidden sm:inline">|</span>}
+                  <button
+                    className="flex items-center space-x-1 hover:text-primary transition-colors cursor-pointer"
+                    onClick={() => onOpenEnquiry(loc.enquiryLabel)}
+                  >
+                    <MapPin className="w-3 h-3 text-accent-gold" />
+                    <span>{loc.label}</span>
+                  </button>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

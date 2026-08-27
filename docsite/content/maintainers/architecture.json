@@ -13,7 +13,7 @@
     },
     {
       "type": "code",
-      "code": "packages/core  ──new-template──►  templates/hotel-website-template/\n                                         │\n                                         │  tempjs hotel\n                                         ▼\n                                   client-project/"
+      "code": "packages/core  ──new-template──►  templates/hotel-website-template/\n         │                              │ modules/room-types, facilities, …\n         │                              │ core modules: seo, gallery, reviews\n                                         │\n                                         │  tempjs hotel\n                                         ▼\n                                   client-project/\n                                         │\n                                         │  tempjs add-module seo (optional)\n                                         ▼\n                                   extended client site"
     },
     {
       "type": "heading",
@@ -35,6 +35,24 @@
       "variant": "warning",
       "title": "Edit templates/ directly",
       "text": "Unlike the old overlay model, templates/hotel-website-template/ is the source of truth for the hotel product — not a generated folder you avoid touching."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Module layers"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Core optional modules — packages/core/modules/<id>/ (cross-vertical: seo, gallery, footer, …)",
+        "Template vertical modules — templates/<dir>/modules/<id>/ + template-modules.json (room-types, projects, slug-pages)",
+        "Client add-module — tempjs add-module installs core modules into generated projects",
+        ".tempjs-modules.json — records coreModules and templateModules installed on a template or client project"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "See Maintainers → Optional modules for the full registry, assemble/extract workflow, and planned admin tab registry."
     },
     {
       "type": "heading",

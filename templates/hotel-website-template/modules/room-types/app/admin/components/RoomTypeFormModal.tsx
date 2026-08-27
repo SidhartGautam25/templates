@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { RoomTypeDataInput } from "../hooks/useProjects";
+import { RoomTypeDataInput } from "../hooks/useRoomTypes";
 import { X, Plus, Trash, Upload, Image as ImageIcon } from "lucide-react";
 import { SITE } from "@/constants";
 
-interface ProjectFormModalProps {
+interface RoomTypeFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: RoomTypeDataInput) => void;
@@ -14,14 +14,14 @@ interface ProjectFormModalProps {
   error?: string | null;
 }
 
-export default function ProjectFormModal({
+export default function RoomTypeFormModal({
   isOpen,
   onClose,
   onSubmit,
   initialData = null,
   isSubmitting,
   error = null,
-}: ProjectFormModalProps) {
+}: RoomTypeFormModalProps) {
   const [name, setName] = useState("");
   const [startingPrice, setStartingPrice] = useState(2000);
   const [size, setSize] = useState("");

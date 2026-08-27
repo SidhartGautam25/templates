@@ -18,6 +18,7 @@
     { "id": "commands", "label": "Commands", "path": "/developers/commands" },
     { "id": "customization", "label": "Customization", "path": "/developers/customization" },
     { "id": "updates", "label": "Updates & doctor", "path": "/developers/updates" },
+    { "id": "optional-modules", "label": "Optional modules", "path": "/developers/optional-modules" },
     { "id": "docker", "label": "Docker & database", "path": "/developers/docker" }
   ],
   "maintainers": [
@@ -27,6 +28,7 @@
     { "id": "workflow", "label": "Daily workflow", "path": "/maintainers/workflow" },
     { "id": "template-tools", "label": "Validate & diff-core", "path": "/maintainers/template-tools" },
     { "id": "new-template", "label": "New template", "path": "/maintainers/new-template" },
+    { "id": "modules", "label": "Optional modules", "path": "/maintainers/modules" },
     { "id": "versioning", "label": "Versioning", "path": "/maintainers/versioning" },
     { "id": "commands", "label": "Maintainer commands", "path": "/maintainers/commands" }
   ]

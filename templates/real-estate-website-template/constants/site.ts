@@ -170,6 +170,7 @@ export const SITE = {
 
   footer: {
     reraLabel: "License",
+    listingsApiPath: "/api/projects",
     reraFallbacks: [] as { name: string; rera: string }[],
   },
 

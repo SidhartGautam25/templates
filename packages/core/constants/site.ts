@@ -176,6 +176,8 @@ export const SITE = {
   footer: {
     reraLabel: "License",
     reraFallbacks: [] as { name: string; rera: string }[],
+    /** Optional API returning { success, data: [{ name, rera, reraId, reraLabel, reraQrImage }] } */
+    listingsApiPath: "",
   },
 
   gallery: {

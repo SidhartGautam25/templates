@@ -29,7 +29,7 @@ export interface RoomTypeDataInput {
   sortOrder?: number;
 }
 
-export function useGetProjects() {
+export function useGetRoomTypes() {
   return useQuery({
     queryKey: ["room-types"],
     queryFn: async () => {
@@ -41,7 +41,7 @@ export function useGetProjects() {
   });
 }
 
-export function useCreateProject() {
+export function useCreateRoomType() {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -56,13 +56,9 @@ export function useCreateProject() {
       formData.append("amenities", JSON.stringify(data.amenities));
       formData.append("ratePlans", JSON.stringify(data.ratePlans));
       formData.append("sortOrder", String(data.sortOrder ?? 0));
-      if (data.image) {
-        formData.append("image", data.image);
-      }
-      if (data.gallery && data.gallery.length > 0) {
-        data.gallery.forEach((file) => {
-          formData.append("gallery", file);
-        });
+      if (data.image) formData.append("image", data.image);
+      if (data.gallery?.length) {
+        data.gallery.forEach((file) => formData.append("gallery", file));
       }
       if (data.existingGallery) {
         formData.append("existingGallery", JSON.stringify(data.existingGallery));
@@ -71,11 +67,7 @@ export function useCreateProject() {
         formData.append("description", data.description);
       }
 
-      const res = await fetch("/api/room-types", {
-        method: "POST",
-        body: formData,
-      });
-
+      const res = await fetch("/api/room-types", { method: "POST", body: formData });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed to create room type");
       return json;
@@ -86,12 +78,12 @@ export function useCreateProject() {
   });
 }
 
-export function useUpdateProject() {
+export function useUpdateRoomType() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: RoomTypeDataInput) => {
-      if (!data.id) throw new Error("Room Type ID is required for update.");
+      if (!data.id) throw new Error("Room type ID is required for update.");
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("startingPrice", String(data.startingPrice));
@@ -102,13 +94,9 @@ export function useUpdateProject() {
       formData.append("amenities", JSON.stringify(data.amenities));
       formData.append("ratePlans", JSON.stringify(data.ratePlans));
       formData.append("sortOrder", String(data.sortOrder ?? 0));
-      if (data.image) {
-        formData.append("image", data.image);
-      }
-      if (data.gallery && data.gallery.length > 0) {
-        data.gallery.forEach((file) => {
-          formData.append("gallery", file);
-        });
+      if (data.image) formData.append("image", data.image);
+      if (data.gallery?.length) {
+        data.gallery.forEach((file) => formData.append("gallery", file));
       }
       if (data.existingGallery) {
         formData.append("existingGallery", JSON.stringify(data.existingGallery));
@@ -117,11 +105,7 @@ export function useUpdateProject() {
         formData.append("description", data.description);
       }
 
-      const res = await fetch(`/api/room-types/${data.id}`, {
-        method: "PUT",
-        body: formData,
-      });
-
+      const res = await fetch(`/api/room-types/${data.id}`, { method: "PUT", body: formData });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed to update room type");
       return json;
@@ -132,15 +116,12 @@ export function useUpdateProject() {
   });
 }
 
-export function useDeleteProject() {
+export function useDeleteRoomType() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const res = await fetch(`/api/room-types/${id}`, {
-        method: "DELETE",
-      });
-
+      const res = await fetch(`/api/room-types/${id}`, { method: "DELETE" });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Failed to delete room type");
       return json.data;

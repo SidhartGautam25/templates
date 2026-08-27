@@ -4,5 +4,10 @@
     "gallery",
     "reviews"
   ],
-  "updatedAt": "2026-08-27T05:07:45.624Z"
+  "updatedAt": "2026-08-27T05:30:10.424Z",
+  "templateModules": [
+    "room-types",
+    "facilities",
+    "slug-pages"
+  ]
 }
