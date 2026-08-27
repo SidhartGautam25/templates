@@ -6,7 +6,7 @@
       "type": "callout",
       "variant": "info",
       "title": "Monorepo layout",
-      "text": "packages/core (shared) + templates/overlays/* (per template) → pnpm sync-templates → templates/*-website-template (what tempjs copies)."
+      "text": "packages/core is a starter kit copied once when you run pnpm new-template. After that, edit templates/<name>/ directly — no sync required for normal work."
     },
     {
       "type": "heading",
@@ -15,12 +15,21 @@
     },
     {
       "type": "code",
-      "code": "edit packages/core OR templates/overlays/hotel/\npnpm sync-templates\npnpm dev:hotel\ntempjs version check\ntempjs version inc patch hotel\ngit commit"
+      "code": "pnpm new-template bakery bakery-website-template --name \"Bakery\"\nedit templates/bakery-website-template/\npnpm dev:bakery\ntempjs version inc patch bakery"
     },
     {
       "type": "heading",
       "level": 2,
-      "text": "Two version numbers"
+      "text": "Documentation map"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Maintainers → Core starter kit — what is copied from packages/core",
+        "Maintainers → New template — pnpm new-template walkthrough",
+        "Maintainers → Daily workflow — dev, optional sync, release",
+        "Repo MAINTAINERS.md and ROADMAP.md — full handbook + future plans"
+      ]
     },
     {
       "type": "table",
@@ -29,6 +38,11 @@
         ["CLI", "package.json", "npm package @navneet_25/tempjs"],
         ["Template", "templates.json per id", "Stamped into client .tempjs.json"]
       ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Two version numbers"
     },
     {
       "type": "paragraph",

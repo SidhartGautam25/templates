@@ -127,7 +127,7 @@ function gitDirtyFiles(repoRoot, paths) {
  * @param {import('./config.js').TemplateEntry} entry
  */
 export function getTemplateSourcePaths(entry) {
-  return [CORE_PATH, SYNC_SCRIPT, `templates/overlays/${entry.directory}`];
+  return [CORE_PATH, SYNC_SCRIPT];
 }
 
 /**
@@ -135,7 +135,7 @@ export function getTemplateSourcePaths(entry) {
  * @param {import('./config.js').TemplateEntry} entry
  */
 export function getTemplateWatchPaths(templateId, entry) {
-  return [...getTemplateSourcePaths(entry), `templates/${entry.directory}`];
+  return [`templates/${entry.directory}`];
 }
 
 /**
@@ -163,7 +163,7 @@ export function runSyncTemplatesCheck(repoRoot) {
 }
 
 /**
- * Verify merged templates match core + overlays when source paths changed.
+ * Verify templates match packages/core when core or sync script changed.
  * @param {string} repoRoot
  * @param {import('./config.js').TemplateEntry} entry
  * @param {string | undefined} sinceCommit
@@ -184,11 +184,11 @@ export function ensureTemplateSyncIfNeeded(repoRoot, entry, sinceCommit) {
   const result = runSyncTemplatesCheck(repoRoot);
 
   if (result.ok) {
-    console.log("✓ Merged templates match core + overlays\n");
+    console.log("✓ Templates are in sync with packages/core\n");
     return true;
   }
 
-  console.error("✗ Merged templates are out of sync with core + overlays.");
+  console.error("✗ Templates are out of sync with packages/core.");
   if (result.output) {
     console.error(result.output);
   }
@@ -251,12 +251,7 @@ export function writeTemplateManifestVersion(repoRoot, templateId, version) {
  * @param {"patch"|"minor"|"major"} level
  */
 export function appendChangelogStub(repoRoot, directory, version, level) {
-  const changelogPath = join(
-    repoRoot,
-    "templates/overlays",
-    directory,
-    "CHANGELOG.md"
-  );
+  const changelogPath = join(repoRoot, "templates", directory, "CHANGELOG.md");
   if (!existsSync(changelogPath)) return;
 
   const date = new Date().toISOString().slice(0, 10);
@@ -490,9 +485,6 @@ export function runVersionInc(repoRoot, level, target) {
   }
 
   const baselineCommit = state.templates?.[normalized]?.gitCommit;
-  if (!ensureTemplateSyncIfNeeded(repoRoot, entry, baselineCommit)) {
-    return;
-  }
 
   const current = entry.version ?? "0.0.0";
   const next = bumpSemver(current, level);

@@ -146,19 +146,20 @@
       ]
     },
     "sync-templates": {
-      "syntax": "pnpm sync-templates",
-      "title": "Sync merged templates",
-      "description": "Merges packages/core + overlays into templates/*-website-template. Maintainer-only.",
+      "syntax": "pnpm sync-templates [--template <directory>]",
+      "title": "Propagate core (optional)",
+      "description": "Copies packages/core shared files into existing template folders. Use only after fixing shared auth/leads/storage in core — not part of normal template development.",
       "audience": ["maintainers"],
       "examples": [
-        { "label": "After editing core or overlay", "command": "pnpm sync-templates" },
-        { "label": "Verify without writing", "command": "pnpm sync-templates:check" }
+        { "label": "Propagate to all templates", "command": "pnpm sync-templates" },
+        { "label": "One template only", "command": "pnpm sync-templates --template hotel-website-template" },
+        { "label": "Check without writing", "command": "pnpm sync-templates:check" }
       ]
     },
     "dev-hotel": {
       "syntax": "pnpm dev:hotel",
       "title": "Dev server (hotel)",
-      "description": "Runs sync-templates then pnpm dev in the merged hotel template.",
+      "description": "Runs pnpm dev in templates/hotel-website-template/. Does not run sync.",
       "audience": ["maintainers"],
       "examples": [
         { "label": "Preview hotel template", "command": "pnpm dev:hotel" }
@@ -177,7 +178,7 @@
     "version-inc": {
       "syntax": "tempjs version inc <patch|minor|major> [cli|all|<template-id>]",
       "title": "Bump version",
-      "description": "Increments CLI package.json or templates.json. Template bumps run sync-templates:check when overlay/core changed.",
+      "description": "Increments CLI package.json or templates.json. Template bumps track changes in templates/<directory>/.",
       "audience": ["maintainers"],
       "examples": [
         { "label": "CLI patch", "command": "tempjs version inc patch cli" },
@@ -186,16 +187,16 @@
       ]
     },
     "new-template": {
-      "syntax": "pnpm new-template <id> [directory]",
-      "title": "Scaffold new template",
-      "description": "Creates overlay folder, package.json stub, prisma schema, CHANGELOG, and templates.json entry.",
+      "syntax": "pnpm new-template <id> [directory] [--name \"Display Name\"]",
+      "title": "Create new template",
+      "description": "Copies packages/core + scaffold into templates/<directory>/, merges Prisma, updates templates.json, adds pnpm dev:<id>. One-time core copy — no sync needed afterward.",
       "audience": ["maintainers"],
       "arguments": [
         { "name": "id", "required": true, "description": "CLI id (e.g. bakery)" },
         { "name": "directory", "required": false, "description": "Defaults to <id>-website-template" }
       ],
       "examples": [
-        { "label": "New bakery template", "command": "pnpm new-template bakery bakery-website-template" }
+        { "label": "New bakery template", "command": "pnpm new-template bakery bakery-website-template --name \"Bakery Website\"" }
       ]
     }
   }

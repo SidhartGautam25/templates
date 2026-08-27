@@ -359,7 +359,7 @@ HOW IT WORKS
   "check" diffs tracked paths since that commit (+ uncommitted changes).
 
 CLI tracks: cli/, package.json, templates.json
-Templates track: packages/core/, overlay, merged output, sync script
+Templates track: packages/core/, template directory, sync script
 
 EXAMPLES
   tempjs version check

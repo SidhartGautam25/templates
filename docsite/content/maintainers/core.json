@@ -1,0 +1,89 @@
+{
+  "title": "Core starter kit",
+  "description": "What packages/core contains, what gets copied into a new template, and when to use optional sync.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "packages/core is not a runtime dependency. It is a generic boilerplate copied once when you run pnpm new-template. After that, the template folder is a complete Next.js app — all imports resolve locally with @/."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "No template names in core",
+      "text": "Core must stay vertical-agnostic: no hotel pages, no real-estate models, no client brand copy. Only reusable auth, leads, storage, health, and shared UI pieces."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What is copied on new-template"
+    },
+    {
+      "type": "table",
+      "headers": ["Category", "Included paths / behavior"],
+      "rows": [
+        ["Authentication", "auth.ts, auth.config.ts, app/api/auth/[...nextauth]"],
+        ["Leads", "lib/features/leads/, app/api/leads/"],
+        ["FTP storage", "lib/storage/StorageService.ts"],
+        ["Shared UI", "Navbar, StickyWidgets, PromoBanner, QueryProvider"],
+        ["Admin shell", "app/admin/login/, PromoBannerForm, LaunchLogoForm"],
+        ["API", "/api/health, /api/promo-banner, /api/test-db"],
+        ["Infra", "docker-compose.yml, Dockerfile, .env.example, next.config.ts"],
+        ["Prisma base", "Lead + PromoBanner → merged into prisma/schema.prisma"],
+        ["Site stub", "constants/site.ts (customize immediately after copy)"],
+        ["Scaffold", "Minimal app/layout.tsx, app/page.tsx, GETTING_STARTED.md from packages/core/scaffold/"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What is NOT copied / you add yourself"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Home page, Hero, Footer, domain listing grids",
+        "lib/features/<your-domain>/ (rooms, projects, etc.)",
+        "app/api/<domain>/ routes",
+        "Real brand content in constants/site.ts",
+        "Models in prisma/domain.prisma (hotel: RoomType; real-estate: Project)",
+        "Template-specific seeds, scripts, and public assets"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Copy command"
+    },
+    {
+      "type": "code",
+      "code": "pnpm new-template bakery bakery-website-template --name \"Bakery Website\"\n# Copies packages/core + scaffold → templates/bakery-website-template/\n# Updates templates.json, adds pnpm dev:bakery, merges prisma/schema.prisma"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Optional: propagate core updates later"
+    },
+    {
+      "type": "paragraph",
+      "text": "If you fix a bug in packages/core and want existing templates to receive it without hand-copying files:"
+    },
+    {
+      "type": "command-ref",
+      "id": "sync-templates"
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Normal template development does not use sync. Only run propagate when you changed packages/core on purpose."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Future: optional modules"
+    },
+    {
+      "type": "paragraph",
+      "text": "Planned: optional core modules (gallery CMS, CRM hooks) selected at new-template time or added later via tempjs add-module. Always-on core stays small; vertical-specific code stays in the template folder. See ROADMAP.md in the repo."
+    }
+  ]
+}

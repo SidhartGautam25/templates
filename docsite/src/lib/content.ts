@@ -18,6 +18,7 @@ import realEstateTemplate from "@content/developers/templates/real-estate.json";
 
 import maintIntro from "@content/maintainers/intro.json";
 import maintArchitecture from "@content/maintainers/architecture.json";
+import maintCore from "@content/maintainers/core.json";
 import maintWorkflow from "@content/maintainers/workflow.json";
 import maintNewTemplate from "@content/maintainers/new-template.json";
 import maintVersioning from "@content/maintainers/versioning.json";
@@ -63,6 +64,7 @@ export const templatePages: Record<string, PageContent> = {
 export const maintainerPages: Record<string, PageContent> = {
   intro: maintIntro as PageContent,
   architecture: maintArchitecture as PageContent,
+  core: maintCore as PageContent,
   workflow: maintWorkflow as PageContent,
   "new-template": maintNewTemplate as PageContent,
   versioning: maintVersioning as PageContent,
