@@ -151,7 +151,7 @@ Quality and drift checks for `templates/<name>/`. Run from **monorepo root**.
 
 Both commands accept template **id** (`hotel`) or **directory** (`hotel-website-template`).
 
-**Exit codes:** `template:diff-core` exits `1` if propagate would change files (differs or missing core paths) — same idea as `sync-templates:check`, but with a richer per-file report.
+**Exit codes:** `template:diff-core` exits `1` if propagate would change core paths **or** optional module files drift from module source.
 
 ### `pnpm template:diff-core`
 
@@ -161,6 +161,7 @@ Both commands accept template **id** (`hotel`) or **directory** (`hotel-website-
 2. SHA-256 compares each core file to the same path in `templates/<directory>/`.
 3. Rebuilds expected `prisma/schema.prisma` from core schema + template `prisma/domain.prisma` and compares to the template’s merged schema.
 4. Lists **template-only** files (Hero, domain features, seeds, assets) that sync never touches.
+5. Compares installed **core modules** (`packages/core/modules/<id>/`) and **template modules** (`modules/<id>/`) against assembled template paths; flags drift vs `.tempjs-modules.json` and `templates.json` `coreModules` / `templateModules`.
 
 | Symbol | Category | Meaning |
 |--------|----------|---------|

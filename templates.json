@@ -60,7 +60,18 @@
           "channelPartner",
           "templeDistance"
         ]
-      }
+      },
+      "coreModules": [
+        "enquiry-modal",
+        "seo",
+        "gallery",
+        "reviews"
+      ],
+      "templateModules": [
+        "room-types",
+        "facilities",
+        "slug-pages"
+      ]
     },
     "real-estate": {
       "directory": "real-estate-website-template",
@@ -115,7 +126,17 @@
           "channelPartner",
           "agentRera"
         ]
-      }
+      },
+      "coreModules": [
+        "enquiry-modal",
+        "footer",
+        "hero-simple",
+        "seo"
+      ],
+      "templateModules": [
+        "projects",
+        "slug-pages"
+      ]
     }
   }
 }

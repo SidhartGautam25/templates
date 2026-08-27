@@ -57,6 +57,15 @@ export function printTemplateInfo(templateId, entry, repo) {
     }
   }
 
+  if (entry.coreModules?.length) {
+    lines.push("");
+    lines.push(`Core modules:     ${entry.coreModules.join(", ")}`);
+  }
+
+  if (entry.templateModules?.length) {
+    lines.push(`Template modules: ${entry.templateModules.join(", ")}`);
+  }
+
   lines.push("");
   lines.push("Quick start:");
   lines.push(`  mkdir my-project && cd my-project`);

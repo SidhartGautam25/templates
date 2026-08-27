@@ -39,6 +39,12 @@ Priorities after the **copy-once core starter kit** architecture. Ordered by imp
 - Hotel admin naming — `useRoomTypes`, `RoomTypesList`, `RoomTypeFormModal`, `RoomTypesPanel`
 - Real-estate Hero/Footer aligned with `hero-simple` / `footer` core modules (`listingsApiPath`, `singleProject` alias)
 
+### Manifest & tooling
+
+- `templates.json` declares `coreModules` and `templateModules` for hotel and real-estate (`tempjs info`)
+- `pnpm template:diff-core` reports optional core/template module drift
+- Visual theme editor — admin **Theme & Colors** tab → `constants/site.ts` + `app/globals.css`
+
 ---
 
 ## Near term (high value, low risk)
@@ -77,7 +83,6 @@ Ensure each template’s checklist reflects copy-once core, optional modules, an
 ## Long term
 
 - **Plugin registry** — third-party modules versioned separately from core
-- **Visual theme editor** — export to `constants/site.ts` + CSS variables
 - **Template preview URLs** — deploy demo instances per release
 
 ---

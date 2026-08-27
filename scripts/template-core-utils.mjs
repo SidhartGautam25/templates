@@ -39,17 +39,22 @@ export const CORE_PATH_PREFIX_EXCLUDE = ["scripts/dev", "scaffold", "modules", "
  * @param {string} dir
  * @returns {string[]}
  */
-export function listFilesRecursive(dir) {
+export function listFilesRecursive(dir, skipDirNames = new Set(["node_modules", ".next", ".git", "dist", "coverage"])) {
   const results = [];
   if (!existsSync(dir)) return results;
 
   for (const entry of readdirSync(dir)) {
+    if (skipDirNames.has(entry)) continue;
     const full = join(dir, entry);
-    const stat = statSync(full);
-    if (stat.isDirectory()) {
-      results.push(...listFilesRecursive(full));
-    } else {
-      results.push(full);
+    try {
+      const stat = statSync(full);
+      if (stat.isDirectory()) {
+        results.push(...listFilesRecursive(full, skipDirNames));
+      } else {
+        results.push(full);
+      }
+    } catch {
+      // Skip broken symlinks or unreadable paths (e.g. partial node_modules)
     }
   }
   return results;

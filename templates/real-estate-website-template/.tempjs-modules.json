@@ -1,6 +1,13 @@
 {
   "coreModules": [
+    "enquiry-modal",
+    "footer",
+    "hero-simple",
     "seo"
   ],
-  "updatedAt": "2026-08-27T05:07:45.631Z"
+  "templateModules": [
+    "projects",
+    "slug-pages"
+  ],
+  "updatedAt": "2026-08-27T11:15:00.000Z"
 }

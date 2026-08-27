@@ -25,6 +25,12 @@ import {
   templateRootPath,
   ensureTemplateExists,
 } from "./template-cli-utils.mjs";
+import {
+  diffCoreModules,
+  diffTemplateModules,
+  readTempjsModulesManifest,
+  manifestListDiff,
+} from "./template-modules-diff.mjs";
 
 const templateArg = process.argv.slice(2).find((a) => !a.startsWith("-"));
 
@@ -130,6 +136,19 @@ function diffTemplate(template) {
 
   const templateOnly = listTemplateOnlyFiles(templateRoot);
 
+  const installed = readTempjsModulesManifest(templateRoot);
+  const declaredCore = template.entry.coreModules ?? [];
+  const declaredTemplate = template.entry.templateModules ?? [];
+
+  const coreManifestDiff = manifestListDiff(declaredCore, installed.coreModules);
+  const templateManifestDiff = manifestListDiff(declaredTemplate, installed.templateModules);
+
+  const coreModuleDiffs = diffCoreModules(templateRoot, installed.coreModules);
+  const templateModuleDiffs =
+    installed.templateModules.length > 0 || declaredTemplate.length > 0
+      ? diffTemplateModules(templateRoot, installed.templateModules)
+      : [];
+
   return {
     template,
     matches,
@@ -137,7 +156,113 @@ function diffTemplate(template) {
     missing,
     prismaStatus,
     templateOnly,
+    installed,
+    declaredCore,
+    declaredTemplate,
+    coreManifestDiff,
+    templateManifestDiff,
+    coreModuleDiffs,
+    templateModuleDiffs,
   };
+}
+
+function printModuleReport(result) {
+  const {
+    installed,
+    declaredCore,
+    declaredTemplate,
+    coreManifestDiff,
+    templateManifestDiff,
+    coreModuleDiffs,
+    templateModuleDiffs,
+  } = result;
+
+  console.log("\nOptional modules (.tempjs-modules.json):");
+  console.log(
+    `  core:     ${installed.coreModules.length ? installed.coreModules.join(", ") : "(none)"}`
+  );
+  if (installed.templateModules?.length) {
+    console.log(`  template: ${installed.templateModules.join(", ")}`);
+  }
+
+  if (declaredCore.length || declaredTemplate.length) {
+    console.log("\nDeclared in templates.json:");
+    if (declaredCore.length) console.log(`  coreModules: ${declaredCore.join(", ")}`);
+    if (declaredTemplate.length) console.log(`  templateModules: ${declaredTemplate.join(", ")}`);
+  }
+
+  if (coreManifestDiff.onlyDeclared.length || coreManifestDiff.onlyInstalled.length) {
+    console.log("\n⚠ coreModules manifest mismatch:");
+    if (coreManifestDiff.onlyDeclared.length) {
+      console.log(`  in templates.json only: ${coreManifestDiff.onlyDeclared.join(", ")}`);
+    }
+    if (coreManifestDiff.onlyInstalled.length) {
+      console.log(`  in .tempjs-modules.json only: ${coreManifestDiff.onlyInstalled.join(", ")}`);
+    }
+  }
+
+  if (templateManifestDiff.onlyDeclared.length || templateManifestDiff.onlyInstalled.length) {
+    console.log("\n⚠ templateModules manifest mismatch:");
+    if (templateManifestDiff.onlyDeclared.length) {
+      console.log(`  in templates.json only: ${templateManifestDiff.onlyDeclared.join(", ")}`);
+    }
+    if (templateManifestDiff.onlyInstalled.length) {
+      console.log(`  in .tempjs-modules.json only: ${templateManifestDiff.onlyInstalled.join(", ")}`);
+    }
+  }
+
+  let moduleDrift = false;
+
+  for (const mod of coreModuleDiffs) {
+    if (mod.error) {
+      console.log(`\nCore module ${mod.id}: ${mod.error}`);
+      moduleDrift = true;
+      continue;
+    }
+    const drift = mod.differs.length + mod.missingInTemplate.length;
+    if (drift === 0) {
+      console.log(`\n✓ core module ${mod.id} (${mod.label}): ${mod.matches.length} paths match source`);
+    } else {
+      moduleDrift = true;
+      console.log(
+        `\n≠ core module ${mod.id} (${mod.label}): ${mod.differs.length} differ, ${mod.missingInTemplate.length} missing in template`
+      );
+      mod.differs.slice(0, 15).forEach((rel) => console.log(`  ≠ ${rel}`));
+      if (mod.differs.length > 15) console.log(`  ... and ${mod.differs.length - 15} more`);
+      mod.missingInTemplate.slice(0, 10).forEach((rel) => console.log(`  − ${rel}`));
+    }
+  }
+
+  for (const mod of templateModuleDiffs) {
+    if (mod.error) {
+      console.log(`\nTemplate module ${mod.id}: ${mod.error}`);
+      moduleDrift = true;
+      continue;
+    }
+    const drift = mod.differs.length + mod.missingInTemplate.length;
+    if (drift === 0) {
+      console.log(
+        `\n✓ template module ${mod.id} (${mod.label}): ${mod.matches.length} paths match modules/${mod.id}/`
+      );
+    } else {
+      moduleDrift = true;
+      console.log(
+        `\n≠ template module ${mod.id} (${mod.label}): ${mod.differs.length} differ, ${mod.missingInTemplate.length} missing at template root`
+      );
+      mod.differs.slice(0, 15).forEach((rel) => console.log(`  ≠ ${rel}`));
+      if (mod.differs.length > 15) console.log(`  ... and ${mod.differs.length - 15} more`);
+      mod.missingInTemplate.slice(0, 10).forEach((rel) => console.log(`  − ${rel}`));
+      if (mod.differs.length + mod.missingInTemplate.length > 0) {
+        console.log(`  → pnpm template:assemble ${result.template.id} ${mod.id}`);
+      }
+    }
+  }
+
+  if (moduleDrift) {
+    console.log("\nModule drift detected — optional module files differ from packages/core/modules/ or modules/<id>/ source.");
+  }
+
+  return moduleDrift;
 }
 
 function printReport(result) {
@@ -180,6 +305,8 @@ function printReport(result) {
   } else {
     console.log("\nTo apply core to this template: pnpm sync-templates --template " + template.directory);
   }
+
+  return printModuleReport(result);
 }
 
 let hasDiff = false;
@@ -189,8 +316,8 @@ try {
 
   for (const template of templates) {
     const result = diffTemplate(template);
-    printReport(result);
-    if (result.differs.length > 0 || result.missing.length > 0) {
+    const coreDiff = printReport(result);
+    if (result.differs.length > 0 || result.missing.length > 0 || coreDiff) {
       hasDiff = true;
     }
   }
