@@ -45,6 +45,7 @@
     "docsite:dev": "cd docsite && pnpm dev",
     "docsite:build": "cd docsite && pnpm build",
     "version:check": "node cli/index.js version check",
-    "version:inc": "node cli/index.js version inc"
+    "version:inc": "node cli/index.js version inc",
+    "dev:dev-agency": "cd templates/dev-agency-website-template && pnpm dev"
   }
 }

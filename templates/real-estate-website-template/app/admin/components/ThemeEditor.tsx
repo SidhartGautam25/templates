@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { AlertCircle, Check, Copy, Loader2, Palette, Save } from "lucide-react";
+import { AlertCircle, Check, Copy, Loader2, Moon, Palette, Save, Sun } from "lucide-react";
 
+import { deriveDarkColorsFromLight } from "@/lib/theme/dark-colors";
+import type { ThemeAppearance } from "@/lib/theme/mode-toggle";
 import { THEME_PRESETS } from "@/lib/theme/presets";
 import { THEME_COLOR_FIELDS, type ThemeColors } from "@/lib/theme/types";
 
@@ -56,8 +58,14 @@ function PreviewCard({ colors }: { colors: ThemeColors }) {
   );
 }
 
+type PaletteTab = "light" | "dark";
+
 export default function ThemeEditor() {
   const [colors, setColors] = useState<ThemeColors | null>(null);
+  const [colorsDark, setColorsDark] = useState<ThemeColors | null>(null);
+  const [appearance, setAppearance] = useState<ThemeAppearance>("system");
+  const [themeModes, setThemeModes] = useState(false);
+  const [paletteTab, setPaletteTab] = useState<PaletteTab>("light");
   const [exportSiteTs, setExportSiteTs] = useState("");
   const [exportCss, setExportCss] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -74,6 +82,9 @@ export default function ThemeEditor() {
       const json = await res.json();
       if (!json.success) throw new Error(json.error || "Failed to load theme");
       setColors(json.data.colors);
+      setColorsDark(json.data.colorsDark ?? null);
+      setAppearance(json.data.appearance ?? "system");
+      setThemeModes(Boolean(json.data.themeModes));
       setExportSiteTs(json.data.export?.siteTs ?? "");
       setExportCss(json.data.export?.globalsCss ?? "");
     } catch (err: unknown) {
@@ -87,16 +98,38 @@ export default function ThemeEditor() {
     loadTheme();
   }, [loadTheme]);
 
-  const previewColors = useMemo(() => colors ?? THEME_PRESETS[0].colors, [colors]);
+  const activeColors = useMemo(() => {
+    if (paletteTab === "dark" && colorsDark) return colorsDark;
+    return colors ?? THEME_PRESETS[0].colors;
+  }, [colors, colorsDark, paletteTab]);
+
+  const previewColors = useMemo(() => activeColors, [activeColors]);
 
   const applyPreset = (presetId: string) => {
     const preset = THEME_PRESETS.find((p) => p.id === presetId);
-    if (preset) setColors({ ...preset.colors });
+    if (!preset) return;
+    if (paletteTab === "dark") {
+      setColorsDark(deriveDarkColorsFromLight(preset.colors));
+    } else {
+      setColors({ ...preset.colors });
+    }
   };
 
   const updateColor = (key: keyof ThemeColors, value: string) => {
+    if (paletteTab === "dark") {
+      if (!colorsDark) return;
+      setColorsDark({ ...colorsDark, [key]: value });
+      return;
+    }
     if (!colors) return;
     setColors({ ...colors, [key]: value });
+  };
+
+  const applyLiveCssVars = (palette: ThemeColors) => {
+    const root = document.documentElement;
+    for (const field of THEME_COLOR_FIELDS) {
+      root.style.setProperty(field.cssVar, palette[field.key]);
+    }
   };
 
   const handleSave = async () => {
@@ -105,10 +138,16 @@ export default function ThemeEditor() {
     setErrorMsg("");
     setSuccess(false);
     try {
+      const payload: Record<string, unknown> = { colors };
+      if (themeModes && colorsDark) {
+        payload.colorsDark = colorsDark;
+        payload.appearance = appearance;
+      }
+
       const res = await fetch("/api/theme", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ colors }),
+        body: JSON.stringify(payload),
       });
       const json = await res.json();
       if (!json.success) throw new Error(json.error || "Failed to save theme");
@@ -116,10 +155,7 @@ export default function ThemeEditor() {
       setExportCss(json.data.export?.globalsCss ?? "");
       setSuccess(true);
 
-      const root = document.documentElement;
-      for (const field of THEME_COLOR_FIELDS) {
-        root.style.setProperty(field.cssVar, colors[field.key]);
-      }
+      applyLiveCssVars(paletteTab === "dark" && colorsDark ? colorsDark : colors);
     } catch (err: unknown) {
       setErrorMsg(err instanceof Error ? err.message : "Failed to save theme");
     } finally {
@@ -164,6 +200,7 @@ export default function ThemeEditor() {
           </h3>
           <p className="text-xs text-text-muted mt-1">
             Pick colors or presets. Save writes constants/site.ts and app/globals.css CSS variables.
+            {themeModes ? " Light and dark palettes are both editable." : ""}
           </p>
         </div>
         <button
@@ -176,6 +213,45 @@ export default function ThemeEditor() {
           Save theme
         </button>
       </div>
+
+      {themeModes && (
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex rounded-xl border border-primary/10 p-1 bg-bg-light">
+            <button
+              type="button"
+              onClick={() => setPaletteTab("light")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold cursor-pointer ${
+                paletteTab === "light" ? "bg-primary text-white" : "text-text-muted"
+              }`}
+            >
+              <Sun className="w-3.5 h-3.5" />
+              Light palette
+            </button>
+            <button
+              type="button"
+              onClick={() => setPaletteTab("dark")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold cursor-pointer ${
+                paletteTab === "dark" ? "bg-primary text-white" : "text-text-muted"
+              }`}
+            >
+              <Moon className="w-3.5 h-3.5" />
+              Dark palette
+            </button>
+          </div>
+          <label className="flex items-center gap-2 text-xs font-bold text-text-muted">
+            Default
+            <select
+              value={appearance}
+              onChange={(e) => setAppearance(e.target.value as ThemeAppearance)}
+              className="px-2 py-1.5 rounded-lg border border-primary/10 bg-white text-xs font-bold text-primary"
+            >
+              <option value="system">System preference</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </label>
+        </div>
+      )}
 
       {errorMsg && (
         <div className="flex items-center gap-2 text-red-600 text-xs font-medium bg-red-50 border border-red-100 rounded-xl px-4 py-3">
@@ -222,13 +298,13 @@ export default function ThemeEditor() {
                 <div className="flex items-center gap-2">
                   <input
                     type="color"
-                    value={colors[field.key]}
+                    value={activeColors[field.key]}
                     onChange={(e) => updateColor(field.key, e.target.value)}
                     className="w-10 h-10 rounded-lg border border-primary/10 cursor-pointer p-0.5"
                   />
                   <input
                     type="text"
-                    value={colors[field.key]}
+                    value={activeColors[field.key]}
                     onChange={(e) => updateColor(field.key, e.target.value)}
                     className="flex-1 px-3 py-2 rounded-xl border border-primary/10 text-xs font-mono bg-white"
                   />

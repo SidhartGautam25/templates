@@ -125,6 +125,16 @@
       "featureFlag": "blogCompose",
       "prismaFragment": "prisma/blog-compose.prisma",
       "default": false
+    },
+    "theme-modes": {
+      "label": "Light & dark theme modes",
+      "description": "Optional visitor light/dark toggle, dual palettes in admin Theme editor, and [data-theme] CSS variables.",
+      "paths": [
+        "app/components/ThemeModeToggle.tsx",
+        "app/components/ThemeModeInit.tsx"
+      ],
+      "featureFlag": "themeModes",
+      "default": false
     }
   }
 }

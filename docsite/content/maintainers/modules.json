@@ -26,7 +26,8 @@
         ["gallery", "GalleryImage CMS, /gallery, GallerySection, admin CRUD", "gallery"],
         ["reviews", "Review testimonials, ReviewsSection, admin CRUD", "reviews"],
         ["legal-pages", "Privacy + terms pages from SITE config", "legalPages"],
-        ["blog-compose", "Compose Blog Engine, BlogPost CMS, /blog, admin compose editor", "blogCompose"]
+        ["blog-compose", "Compose Blog Engine, BlogPost CMS, /blog, admin compose editor", "blogCompose"],
+        ["theme-modes", "Light/dark toggle, theme.colorsDark, dual admin palette editor", "themeModes"]
       ]
     },
     {

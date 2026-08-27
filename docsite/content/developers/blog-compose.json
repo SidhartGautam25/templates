@@ -22,6 +22,12 @@
       "text": "By default, /blog pages are full-width without a docs-style left sidebar. To add an article list and on-page H2 table of contents (like this docsite blog section), install with the +sidebar suffix. This sets SITE.features.blogSidebar to true."
     },
     {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Dev Agency template example",
+      "text": "The dev-agency vertical ships without blog-compose. See Developers → Templates → Dev Agency Website for a full walkthrough: tempjs add-module blog-compose+sidebar after generation, prisma db push, and optional BlogSection on the homepage."
+    },
+    {
       "type": "code",
       "code": "tempjs add-module blog-compose+sidebar\npnpm new-template bakery --modules blog-compose+sidebar,seo"
     },

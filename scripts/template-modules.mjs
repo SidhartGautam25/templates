@@ -47,10 +47,8 @@ export function resolveModuleIdsFromCore(moduleIds) {
  *   excludePaths?: string[];
  *   skipHomePage?: boolean;
  *   skipAdminTabRegistry?: boolean;
- *   /** @deprecated Use skipAdminTabRegistry */
- *   skipAdminContentPage?: boolean;
+ *   skipAdminContentPage?: boolean; @deprecated Use skipAdminTabRegistry
  *   skipSeoMetadataReplace?: boolean;
- *   excludePaths?: string[];
  * }} [options]
  * @returns {string[]} Installed module ids
  */

@@ -43,6 +43,12 @@
       "text": "Blog sidebar is not enabled by default. Install with blog-compose+sidebar (or pnpm template:add-module bakery blog-compose+sidebar) to set SITE.features.blogSidebar. parseModuleSpecs in module-installer-core.mjs splits +extras; moduleInstallOptionsFromSpecs enables the flag."
     },
     {
+      "type": "callout",
+      "variant": "info",
+      "title": "Dev Agency walkthrough",
+      "text": "Developers → Templates → Dev Agency Website documents blog-compose+sidebar as the optional add-on example for a lean agency landing (expertise, team, work carousel) plus a later technical blog."
+    },
+    {
       "type": "code",
       "code": "pnpm template:add-module scaffold blog-compose+sidebar\n# Docsite demo: /blog has sidebar always; /blog/playground for JSON experiments"
     },

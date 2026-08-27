@@ -1,0 +1,48 @@
+{
+  "title": "theme-modes module",
+  "description": "Maintaining the optional light/dark theme modes core module and dual-palette theme editor.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "theme-modes lives under packages/core/modules/theme-modes/ and is registered in packages/core/modules.json with feature flag themeModes. Core theme infrastructure (lib/theme/patch-files.ts, ThemeEditor, /api/theme) supports dual palettes when SITE.features.themeModes is true."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Module files"
+    },
+    {
+      "type": "table",
+      "headers": ["Path", "Role"],
+      "rows": [
+        ["modules/theme-modes/app/components/ThemeModeToggle.tsx", "Public sun/moon toggle"],
+        ["modules/theme-modes/app/components/ThemeModeInit.tsx", "beforeInteractive data-theme script"],
+        ["lib/theme/mode-toggle.ts", "Storage key, init script builder (core)"],
+        ["lib/theme/dark-colors.ts", "DEFAULT_DARK_THEME_COLORS + deriveDarkColorsFromLight"],
+        ["lib/theme/patch-files.ts", "Reads/writes light + dark CSS blocks and site.ts colorsDark"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Installer hooks"
+    },
+    {
+      "type": "paragraph",
+      "text": "scripts/module-installer-core.mjs applyThemeModesInstall() runs on theme-modes install: site.ts patch, globals.css dark block, layout ThemeModeInit wiring."
+    },
+    {
+      "type": "code",
+      "code": "pnpm template:add-module hotel theme-modes\npnpm template:add-module dev-agency theme-modes"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Template opt-in"
+    },
+    {
+      "type": "paragraph",
+      "text": "Shipped vertical templates do not enable theme-modes by default. Document optional add-ons on each template docs page. templates.json may list optionalModuleExamples for CLI info output."
+    }
+  ]
+}

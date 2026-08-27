@@ -266,6 +266,7 @@ export const SITE = {
     legalPages: false,
     blogCompose: false,
     blogSidebar: false,
+    themeModes: false,
   },
 } as const;
 

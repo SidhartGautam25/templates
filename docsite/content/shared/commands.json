@@ -132,6 +132,7 @@
       "audience": ["developers"],
       "examples": [
         { "label": "Blog with sidebar", "command": "tempjs add-module blog-compose+sidebar" },
+        { "label": "Light & dark themes", "command": "tempjs add-module theme-modes" },
         { "label": "SEO + gallery + reviews", "command": "tempjs add-module seo,gallery,reviews" },
         { "label": "Footer and hero only", "command": "tempjs add-module footer,hero-simple" }
       ]
@@ -251,7 +252,8 @@
       "audience": ["maintainers"],
       "examples": [
         { "label": "Add footer to bakery template", "command": "pnpm template:add-module bakery footer" },
-        { "label": "Adopt SEO stack on hotel", "command": "pnpm template:add-module hotel seo,gallery,reviews" }
+        { "label": "Adopt SEO stack on hotel", "command": "pnpm template:add-module hotel seo,gallery,reviews" },
+        { "label": "Blog + sidebar on dev-agency", "command": "pnpm template:add-module dev-agency blog-compose+sidebar" }
       ]
     },
     "template-assemble": {

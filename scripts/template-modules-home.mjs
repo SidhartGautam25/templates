@@ -9,7 +9,6 @@ export function buildModulesHomePageSource(moduleIds) {
   const hasGallery = moduleIds.includes("gallery");
   const hasReviews = moduleIds.includes("reviews");
   const hasBlogCompose = moduleIds.includes("blog-compose");
-  const hasBlogCompose = moduleIds.includes("blog-compose");
 
   const uiModules = ["enquiry-modal", "footer", "hero-simple", "gallery", "reviews", "blog-compose"];
   const hasAnyUi = moduleIds.some((id) => uiModules.includes(id));

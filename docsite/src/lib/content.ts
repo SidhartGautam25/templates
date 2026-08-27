@@ -14,10 +14,12 @@ import devUpdates from "@content/developers/updates.json";
 import devDocker from "@content/developers/docker.json";
 import devOptionalModules from "@content/developers/optional-modules.json";
 import devBlogCompose from "@content/developers/blog-compose.json";
+import devThemeModes from "@content/developers/theme-modes.json";
 import templatesOverview from "@content/developers/templates/overview.json";
 
 import hotelTemplate from "@content/developers/templates/hotel.json";
 import realEstateTemplate from "@content/developers/templates/real-estate.json";
+import dev_agencyTemplate from "@content/developers/templates/dev-agency.json";
 
 import maintIntro from "@content/maintainers/intro.json";
 import maintArchitecture from "@content/maintainers/architecture.json";
@@ -29,6 +31,7 @@ import maintVersioning from "@content/maintainers/versioning.json";
 import maintCommands from "@content/maintainers/commands.json";
 import maintModules from "@content/maintainers/modules.json";
 import maintBlogCompose from "@content/maintainers/blog-compose.json";
+import maintThemeModes from "@content/maintainers/theme-modes.json";
 import maintCommandBuilders from "@content/maintainers/command-builders.json";
 
 import type {
@@ -71,6 +74,7 @@ export const developerPages: Record<string, PageContent> = {
   docker: devDocker as PageContent,
   "optional-modules": devOptionalModules as PageContent,
   "blog-compose": devBlogCompose as PageContent,
+  "theme-modes": devThemeModes as PageContent,
 };
 
 export const templatesOverviewPage = templatesOverview as PageContent;
@@ -78,6 +82,7 @@ export const templatesOverviewPage = templatesOverview as PageContent;
 export const templatePages: Record<string, PageContent> = {
   hotel: hotelTemplate as PageContent,
   "real-estate": realEstateTemplate as PageContent,
+  "dev-agency": dev_agencyTemplate as PageContent,
 };
 
 export const maintainerPages: Record<string, PageContent> = {
@@ -91,6 +96,7 @@ export const maintainerPages: Record<string, PageContent> = {
   commands: maintCommands as PageContent,
   modules: maintModules as PageContent,
   "blog-compose": maintBlogCompose as PageContent,
+  "theme-modes": maintThemeModes as PageContent,
   "command-builders": maintCommandBuilders as PageContent,
 };
 

@@ -153,6 +153,9 @@ export function copyCoreFilesIntoTemplate(templateRoot) {
   for (const coreFile of listCoreFiles()) {
     const rel = relative(coreDir, coreFile).replace(/\\/g, "/");
     const dest = join(templateRoot, rel);
+    if (rel === "constants/site.ts" && existsSync(dest)) {
+      continue;
+    }
     mkdirSync(dirname(dest), { recursive: true });
     cpSync(coreFile, dest, { force: true });
   }

@@ -50,6 +50,7 @@ export const SITE = {
     locale: "en_IN",
     schemaType: "Organization" as const,
     sameAs: [] as string[],
+    /** Optional site search path for WebSite SearchAction JSON-LD (e.g. "/search") */
     searchPath: "",
     openGraph: {
       type: "website" as const,
@@ -64,7 +65,7 @@ export const SITE = {
     },
     robots: {
       allow: ["/"] as string[],
-      disallow: ["/admin", "/api"] as string[],
+      disallow: [] as string[],
     },
   },
 
@@ -151,6 +152,10 @@ export const SITE = {
     formTitle: "Request a callback:",
     successMessage: "Thank you! We will contact you soon.",
     aboutSuccessMessage: "We received your enquiry.",
+    selectionLabel: "Interest",
+    selectionOptions: [] as { value: string; label: string }[],
+    /** Optional API path returning { success, data: [{ name }] } for enquiry dropdown */
+    listingsApiPath: "",
   },
 
   admin: {
@@ -171,6 +176,8 @@ export const SITE = {
   footer: {
     reraLabel: "License",
     reraFallbacks: [] as { name: string; rera: string }[],
+    /** Optional API returning { success, data: [{ name, rera, reraId, reraLabel, reraQrImage }] } */
+    listingsApiPath: "",
   },
 
   gallery: {
@@ -190,15 +197,76 @@ export const SITE = {
     emptyMessage: "Reviews will appear here once added in admin.",
   },
 
-  /** Enabled core modules — see packages/core/modules.json */
+  blog: {
+    sectionEyebrow: "Blog",
+    sectionTitle: "Articles & insights",
+    sectionSubtitle: "News, guides, and updates from our team.",
+    pageTitle: "Blog",
+    pageSubtitle: "Read our latest articles and guides.",
+    backToBlog: "Back to blog",
+    viewAllLabel: "View all articles",
+    emptyMessage: "Articles will appear here once published in admin.",
+    homepageLimit: 3,
+    sidebarTitle: "Articles",
+    playgroundLabel: "JSON playground",
+  },
+
+  privacyPage: {
+    title: "Privacy Policy",
+    lastUpdated: "",
+    sections: [
+      {
+        heading: "Introduction",
+        paragraphs: [
+          "This privacy policy explains how we collect, use, and protect your personal information when you use our website.",
+        ],
+      },
+      {
+        heading: "Information we collect",
+        paragraphs: [
+          "We may collect your name, phone number, email address, and any message you submit through enquiry forms.",
+        ],
+      },
+      {
+        heading: "Contact",
+        paragraphs: [
+          "For privacy-related questions, contact us using the details on this website.",
+        ],
+      },
+    ],
+  },
+
+  termsPage: {
+    title: "Terms and Conditions",
+    lastUpdated: "",
+    sections: [
+      {
+        heading: "Use of website",
+        paragraphs: [
+          "By using this website you agree to these terms. Content is provided for general information and may change without notice.",
+        ],
+      },
+      {
+        heading: "Limitation of liability",
+        paragraphs: [
+          "We are not liable for indirect or consequential damages arising from use of this website.",
+        ],
+      },
+    ],
+  },
+
+  /** Enabled by optional core modules (pnpm new-template --modules). */
   features: {
-    enquiryModal: true,
+    enquiryModal: false,
     footer: false,
     heroSimple: false,
-    seo: true,
-    gallery: true,
-    reviews: true,
+    seo: false,
+    gallery: false,
+    reviews: false,
     legalPages: false,
+    blogCompose: false,
+    blogSidebar: false,
+    themeModes: false,
   },
 } as const;
 

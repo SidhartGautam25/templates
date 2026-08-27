@@ -20,6 +20,18 @@
           "command": "tempjs add-module footer,hero-simple"
         },
         {
+          "id": "blog-sidebar",
+          "label": "Compose blog + sidebar",
+          "description": "Blog engine with docs-style article sidebar (dev-agency add-on example).",
+          "command": "tempjs add-module blog-compose+sidebar"
+        },
+        {
+          "id": "theme-modes",
+          "label": "Light & dark themes",
+          "description": "Visitor toggle + dual palettes in admin Theme editor.",
+          "command": "tempjs add-module theme-modes"
+        },
+        {
           "id": "list-modules",
           "label": "List available modules",
           "description": "Show all module ids from packages/core/modules.json.",
@@ -263,6 +275,18 @@
           "label": "Footer on bakery",
           "description": "Add footer module to a scaffold template.",
           "command": "pnpm template:add-module bakery footer"
+        },
+        {
+          "id": "dev-agency-blog",
+          "label": "Blog + sidebar on dev-agency",
+          "description": "Optional compose blog with article sidebar on the agency template.",
+          "command": "pnpm template:add-module dev-agency blog-compose+sidebar"
+        },
+        {
+          "id": "dev-agency-theme-modes",
+          "label": "Theme modes on dev-agency",
+          "description": "Light/dark toggle and dual palette admin on agency template.",
+          "command": "pnpm template:add-module dev-agency theme-modes"
         }
       ],
       "modes": [

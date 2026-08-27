@@ -50,7 +50,9 @@
         ["gallery", "Gallery CMS API, GallerySection, /gallery pages, admin gallery UI"],
         ["reviews", "Reviews API, ReviewsSection, admin reviews UI"],
         ["legal-pages", "Privacy policy and terms pages from SITE config"],
-        ["blog-compose", "Compose Blog Engine, /blog pages, BlogSection, admin compose editor"]
+        ["blog-compose", "Compose Blog Engine, /blog pages, BlogSection, admin compose editor"],
+        ["blog-compose+sidebar", "Same as blog-compose plus SITE.features.blogSidebar (docs-style /blog layout) — see Dev Agency template doc"],
+        ["theme-modes", "Light/dark visitor toggle, theme.colorsDark, admin dual-palette editor — see Light & dark themes page"]
       ]
     },
     {
@@ -82,6 +84,12 @@
     {
       "type": "paragraph",
       "text": "Configure copy and behavior in constants/site.ts — e.g. SITE.gallery.*, SITE.reviews.*, SITE.seo.sitemap.staticRoutes. For enquiry-modal dropdown options from your listings API, set SITE.enquiry.listingsApiPath (e.g. /api/projects)."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Dev Agency + blog sidebar",
+      "text": "For a lean agency site that adds blogging later, generate with tempjs dev-agency then run tempjs add-module blog-compose+sidebar. Step-by-step and homepage wiring notes are on Developers → Templates → Dev Agency Website."
     },
     {
       "type": "callout",

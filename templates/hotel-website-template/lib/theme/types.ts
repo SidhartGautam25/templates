@@ -1,3 +1,5 @@
+import type { ThemeAppearance } from "./mode-toggle";
+
 /** Theme color keys stored in constants/site.ts and mirrored as CSS variables in app/globals.css */
 export interface ThemeColors {
   primary: string;
@@ -30,3 +32,9 @@ export const THEME_COLOR_FIELDS: { key: keyof ThemeColors; label: string; cssVar
   { key: "ctaPrimary", label: "CTA primary", cssVar: "--cta-primary" },
   { key: "ctaPrimaryHover", label: "CTA hover", cssVar: "--cta-primary-hover" },
 ];
+
+export interface ThemeSiteConfig {
+  appearance?: ThemeAppearance;
+  colors: ThemeColors;
+  colorsDark?: ThemeColors;
+}

@@ -62,6 +62,10 @@ export function printTemplateInfo(templateId, entry, repo) {
     lines.push(`Core modules:     ${entry.coreModules.join(", ")}`);
   }
 
+  if (entry.optionalModuleExamples?.length) {
+    lines.push(`Optional examples: ${entry.optionalModuleExamples.join(", ")}`);
+  }
+
   if (entry.templateModules?.length) {
     lines.push(`Template modules: ${entry.templateModules.join(", ")}`);
   }
