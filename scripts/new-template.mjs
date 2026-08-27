@@ -116,7 +116,6 @@ writeFileSync(join(templatePath, "package.json"), JSON.stringify(pkg, null, 2) +
 if (moduleIds.length > 0) {
   console.log("Installing core modules:");
   const installed = copyModulesIntoTemplate(templatePath, moduleIds, { displayName });
-  applyModulesHomePage(templatePath, installed);
 }
 
 writeFileSync(

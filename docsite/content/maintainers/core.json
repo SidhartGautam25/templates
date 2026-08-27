@@ -87,7 +87,7 @@
     },
     {
       "type": "paragraph",
-      "text": "First slice implemented: enquiry-modal, footer, hero-simple via pnpm new-template --modules and pnpm template:add-module. Next: gallery, reviews, leadrat, seo, and tempjs add-module for client projects."
+      "text": "Implemented: enquiry-modal, footer, hero-simple, seo, gallery, reviews, legal-pages. Next: tempjs add-module for client projects and template-level modules (hotel room-types, etc.)."
     }
   ]
 }

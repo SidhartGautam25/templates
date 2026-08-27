@@ -48,7 +48,7 @@ Rename hotel admin `useProjects` / `ProjectsList` to room-type naming for mainta
 ### Implemented (first slice)
 
 - `packages/core/modules.json` registry
-- Modules: `enquiry-modal`, `footer`, `hero-simple`
+- Modules: `enquiry-modal`, `footer`, `hero-simple`, `seo`, `gallery`, `reviews`, `legal-pages`
 - `pnpm new-template --modules …`
 - `pnpm template:add-module <id> <modules>`
 - `.tempjs-modules.json` in template folder
@@ -62,11 +62,6 @@ Rename hotel admin `useProjects` / `ProjectsList` to room-type naming for mainta
     "label": "Gallery CMS",
     "paths": ["app/gallery/", "lib/features/gallery/"],
     "prisma": "modules/gallery.prisma",
-    "default": false
-  },
-  "leadrat": {
-    "label": "LeadRat CRM hook",
-    "paths": ["lib/integrations/leadrat/"],
     "default": false
   }
 }

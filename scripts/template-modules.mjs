@@ -10,8 +10,9 @@ import {
 } from "node:fs";
 import { dirname, join } from "node:path";
 
-import { coreDir } from "./template-core-utils.mjs";
+import { coreDir, writeMergedPrismaSchema } from "./template-core-utils.mjs";
 import { buildModulesHomePageSource } from "./template-modules-home.mjs";
+import { applyAdminContentPage } from "./template-modules-admin.mjs";
 
 const modulesRegistryPath = join(coreDir, "modules.json");
 const modulesRoot = join(coreDir, "modules");
@@ -32,9 +33,80 @@ export function loadModulesRegistry() {
  *   description?: string;
  *   paths: string[];
  *   featureFlag?: string;
+ *   prismaFragment?: string;
  *   default?: boolean;
  * }} CoreModuleDef
  */
+
+/**
+ * @param {string} templateRoot
+ * @param {string} moduleId
+ * @param {string} fragmentRelPath
+ */
+function appendPrismaFragment(templateRoot, moduleId, fragmentRelPath) {
+  const fragmentPath = join(modulesRoot, moduleId, fragmentRelPath);
+  if (!existsSync(fragmentPath)) {
+    throw new Error(`Prisma fragment missing: packages/core/modules/${moduleId}/${fragmentRelPath}`);
+  }
+
+  const fragment = readFileSync(fragmentPath, "utf8").trim();
+  const modelMatch = fragment.match(/model\s+(\w+)\s*\{/);
+  const modelName = modelMatch?.[1];
+
+  const domainPath = join(templateRoot, "prisma", "domain.prisma");
+  let domain = existsSync(domainPath) ? readFileSync(domainPath, "utf8") : "";
+
+  if (modelName && domain.includes(`model ${modelName}`)) {
+    console.log(`  · prisma model ${modelName} already in domain.prisma`);
+    return;
+  }
+
+  domain = domain.trim();
+  domain = domain ? `${domain}\n\n${fragment}\n` : `${fragment}\n`;
+  mkdirSync(dirname(domainPath), { recursive: true });
+  writeFileSync(domainPath, domain, "utf8");
+  console.log(`  ✓ appended prisma fragment: ${modelName ?? fragmentRelPath}`);
+}
+
+/**
+ * @param {string} templateRoot
+ */
+function applySeoLayoutPatch(templateRoot) {
+  const layoutPath = join(templateRoot, "app", "layout.tsx");
+  if (!existsSync(layoutPath)) return;
+
+  let content = readFileSync(layoutPath, "utf8");
+
+  if (!content.includes("SiteJsonLd")) {
+    content = content.replace(
+      'import "./globals.css";',
+      'import "./globals.css";\nimport SiteJsonLd from "@/app/components/SiteJsonLd";'
+    );
+
+    if (content.includes("<QueryProvider>")) {
+      content = content.replace("<QueryProvider>", "<SiteJsonLd />\n        <QueryProvider>");
+    } else if (content.includes("<body>")) {
+      content = content.replace("<body>", "<body>\n        <SiteJsonLd />");
+    }
+
+    writeFileSync(layoutPath, content, "utf8");
+    console.log("  ✓ wired SiteJsonLd into app/layout.tsx");
+    content = readFileSync(layoutPath, "utf8");
+  }
+
+  if (!content.includes("buildPageMetadata")) {
+    content = content.replace(
+      'import type { Metadata } from "next";',
+      'import type { Metadata } from "next";\nimport { buildPageMetadata } from "@/lib/seo/metadata";'
+    );
+    content = content.replace(
+      /export const metadata: Metadata = \{[\s\S]*?\};/,
+      "export const metadata: Metadata = buildPageMetadata();"
+    );
+    writeFileSync(layoutPath, content, "utf8");
+    console.log("  ✓ upgraded app/layout.tsx metadata via buildPageMetadata()");
+  }
+}
 
 /**
  * @param {string[]} moduleIds
@@ -184,6 +256,10 @@ export function copyModulesIntoTemplate(templateRoot, moduleIds, options = {}) {
       enableFeatureFlag(templateRoot, mod.featureFlag);
     }
 
+    if (mod.prismaFragment) {
+      appendPrismaFragment(templateRoot, id, mod.prismaFragment);
+    }
+
     if (id === "hero-simple") {
       applyHeroSimpleDefaults(templateRoot, displayName);
     }
@@ -194,7 +270,15 @@ export function copyModulesIntoTemplate(templateRoot, moduleIds, options = {}) {
     console.log(`  ✓ module: ${id} (${mod.label})`);
   }
 
+  writeMergedPrismaSchema(templateRoot);
   writeInstalledModulesManifest(templateRoot, resolved);
+
+  if (resolved.includes("seo")) {
+    applySeoLayoutPatch(templateRoot);
+  }
+
+  applyModulesHomePage(templateRoot, resolved);
+  applyAdminContentPage(templateRoot, resolved);
 
   return resolved;
 }
@@ -228,7 +312,13 @@ export function writeInstalledModulesManifest(templateRoot, moduleIds) {
  * @param {string[]} moduleIds
  */
 export function applyModulesHomePage(templateRoot, moduleIds) {
-  const uiModules = ["enquiry-modal", "footer", "hero-simple"];
+  const uiModules = [
+    "enquiry-modal",
+    "footer",
+    "hero-simple",
+    "gallery",
+    "reviews",
+  ];
   const installedUi = moduleIds.filter((id) => uiModules.includes(id));
 
   if (installedUi.length === 0) return;

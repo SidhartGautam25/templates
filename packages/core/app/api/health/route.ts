@@ -17,7 +17,6 @@ export async function GET() {
 
   const optional = {
     FTP_HOST: Boolean(process.env.FTP_HOST?.trim()),
-    LEADRAT_API_KEY: Boolean(process.env.LEADRAT_API_KEY?.trim()),
   };
 
   const requiredEnvOk =

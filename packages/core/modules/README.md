@@ -1,27 +1,47 @@
 # Optional core modules
 
-Files in `packages/core/modules/<id>/` are **not** copied during a plain `new-template`. Install explicitly:
-
-```bash
-pnpm new-template bakery --modules enquiry-modal,footer,hero-simple
-pnpm template:add-module bakery footer
-```
+Copy on demand via `pnpm new-template --modules` or `pnpm template:add-module`.
 
 ## Available modules
 
-| Id | Component path | Feature flag |
-|----|----------------|--------------|
-| `enquiry-modal` | `app/components/EnquiryModal.tsx` | `SITE.features.enquiryModal` |
-| `footer` | `app/components/Footer.tsx` | `SITE.features.footer` |
-| `hero-simple` | `app/components/Hero.tsx` | `SITE.features.heroSimple` |
+| Id | Feature flag | Prisma | Admin route |
+|----|--------------|--------|-------------|
+| `enquiry-modal` | `enquiryModal` | — | — |
+| `footer` | `footer` | — | — |
+| `hero-simple` | `heroSimple` | — | — |
+| `seo` | `seo` | — | — (sitemap, robots, JSON-LD) |
+| `gallery` | `gallery` | `GalleryImage` | `/admin/content` |
+| `reviews` | `reviews` | `Review` | `/admin/content` |
+| `legal-pages` | `legalPages` | — | — |
 
 Registry: `packages/core/modules.json`
 
-## Adding a new module
+## Example
 
-1. Create `packages/core/modules/<id>/` with files mirroring template paths
-2. Register in `modules.json` (`paths`, `featureFlag`, `label`)
-3. Add `SITE.features.<flag>` to `constants/site.ts` if needed
-4. Document in MAINTAINERS.md
+```bash
+pnpm new-template bakery bakery-website-template --name "Bakery" \
+  --modules seo,hero-simple,footer,enquiry-modal,gallery,reviews,legal-pages
 
-Modules are excluded from `sync-templates` / `template:diff-core` core file lists (under `modules/` prefix).
+pnpm template:add-module bakery gallery,reviews
+```
+
+## SEO module
+
+Production-grade:
+
+- `app/sitemap.ts` — dynamic sitemap with module routes + `registerDynamicSitemapProvider()` for template listings
+- `app/robots.ts` — host, sitemap URL, configurable disallow rules
+- `lib/seo/json-ld.ts` — Organization/WebSite graph with safe serialization
+- `lib/seo/metadata.ts` — canonical, Open Graph, Twitter cards
+- `SiteJsonLd` wired into `app/layout.tsx` on install
+
+## Gallery / reviews
+
+- Appends Prisma models to `prisma/domain.prisma` and regenerates `schema.prisma`
+- Public API + admin CRUD at `/admin/content`
+- Homepage sections when wired via `app/page.tsx` generator
+
+## Legal pages
+
+- `/privacy-policy` and `/terms-and-conditions` from `SITE.privacyPage` / `SITE.termsPage`
+- Works without SEO module (basic metadata); pair with `seo` for full Open Graph

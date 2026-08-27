@@ -6,6 +6,11 @@ export function buildModulesHomePageSource(moduleIds) {
   const hasHero = moduleIds.includes("hero-simple");
   const hasFooter = moduleIds.includes("footer");
   const hasEnquiry = moduleIds.includes("enquiry-modal");
+  const hasGallery = moduleIds.includes("gallery");
+  const hasReviews = moduleIds.includes("reviews");
+
+  const uiModules = ["enquiry-modal", "footer", "hero-simple", "gallery", "reviews"];
+  const hasAnyUi = moduleIds.some((id) => uiModules.includes(id));
 
   const imports = [
     'import React, { useState } from "react";',
@@ -18,6 +23,8 @@ export function buildModulesHomePageSource(moduleIds) {
   if (hasHero) imports.push('import Hero from "./components/Hero";');
   if (hasFooter) imports.push('import Footer from "./components/Footer";');
   if (hasEnquiry) imports.push('import EnquiryModal from "./components/EnquiryModal";');
+  if (hasGallery) imports.push('import GallerySection from "./components/GallerySection";');
+  if (hasReviews) imports.push('import ReviewsSection from "./components/ReviewsSection";');
 
   const lines = [
     ...imports,
@@ -46,21 +53,27 @@ export function buildModulesHomePageSource(moduleIds) {
     lines.push("      <Hero onOpenEnquiry={handleOpenEnquiry} />");
   }
 
-  lines.push(
-    "      <main className=\"mx-auto max-w-3xl px-6 py-16 flex-1\">",
-    "        {!SITE.features.heroSimple && (",
-    "          <>",
-    "            <h1 className=\"text-3xl font-bold text-primary\">{SITE.brand.name}</h1>",
-    "            <p className=\"mt-4 text-text-muted\">{SITE.brand.tagline}</p>",
-    "          </>",
-    "        )}",
-    "        <p className=\"mt-6 text-sm text-text-muted\">",
-    "          Add domain sections (listings, gallery, etc.) in this template folder.",
-    "        </p>",
-    "      </main>",
-    "",
-    "      <PromoBanner onOpenEnquiry={handleOpenEnquiry} />"
-  );
+  if (!hasHero && !hasGallery && !hasReviews) {
+    lines.push(
+      "      <main className=\"mx-auto max-w-3xl px-6 py-16 flex-1\">",
+      "        <h1 className=\"text-3xl font-bold text-primary\">{SITE.brand.name}</h1>",
+      "        <p className=\"mt-4 text-text-muted\">{SITE.brand.tagline}</p>",
+      "        <p className=\"mt-6 text-sm text-text-muted\">",
+      "          Add domain sections in this template folder.",
+      "        </p>",
+      "      </main>"
+    );
+  }
+
+  if (hasGallery) {
+    lines.push("      <GallerySection />");
+  }
+
+  if (hasReviews) {
+    lines.push("      <ReviewsSection />");
+  }
+
+  lines.push("", "      <PromoBanner onOpenEnquiry={handleOpenEnquiry} />");
 
   if (hasFooter) {
     lines.push("", "      <Footer />");
@@ -80,6 +93,22 @@ export function buildModulesHomePageSource(moduleIds) {
   }
 
   lines.push("    </div>", "  );", "}", "");
+
+  if (!hasAnyUi) {
+    return [
+      'import { SITE } from "@/constants";',
+      "",
+      "export default function HomePage() {",
+      "  return (",
+      "    <main className=\"mx-auto max-w-3xl px-6 py-16\">",
+      "      <h1 className=\"text-3xl font-bold\">{SITE.brand.name}</h1>",
+      "      <p className=\"mt-4 text-text-muted\">{SITE.brand.tagline}</p>",
+      "    </main>",
+      "  );",
+      "}",
+      "",
+    ].join("\n");
+  }
 
   return lines.join("\n");
 }

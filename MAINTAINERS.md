@@ -56,6 +56,10 @@ Cross-vertical UI/features live in `packages/core/modules/` and are **not** copi
 | `enquiry-modal` | Lead capture modal → `/api/leads` |
 | `footer` | Site footer (legal, RERA blocks from `SITE`) |
 | `hero-simple` | Carousel hero from `SITE.hero` + assets |
+| `seo` | sitemap.xml, robots.txt, JSON-LD, Open Graph metadata helpers |
+| `gallery` | Gallery CMS — model, `/gallery`, admin at `/admin/content` |
+| `reviews` | Testimonials — model, homepage section, admin at `/admin/content` |
+| `legal-pages` | Privacy policy + terms pages from `SITE` |
 
 ### Commands
 

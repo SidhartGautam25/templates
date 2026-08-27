@@ -20,6 +20,77 @@
       "paths": ["app/components/Hero.tsx"],
       "featureFlag": "heroSimple",
       "default": false
+    },
+    "seo": {
+      "label": "SEO pack",
+      "description": "Production sitemap.xml, robots.txt, JSON-LD (Organization + WebSite), canonical URLs, and Open Graph metadata helpers.",
+      "paths": [
+        "lib/seo/types.ts",
+        "lib/seo/urls.ts",
+        "lib/seo/json-ld.ts",
+        "lib/seo/metadata.ts",
+        "lib/seo/sitemap.ts",
+        "lib/seo/index.ts",
+        "app/components/SiteJsonLd.tsx",
+        "app/sitemap.ts",
+        "app/robots.ts"
+      ],
+      "featureFlag": "seo",
+      "default": false
+    },
+    "gallery": {
+      "label": "Gallery CMS",
+      "description": "Gallery images with admin CRUD, public /gallery page, and homepage GallerySection.",
+      "paths": [
+        "lib/features/gallery/gallery.types.ts",
+        "lib/features/gallery/gallery.repository.ts",
+        "lib/features/gallery/gallery.service.ts",
+        "lib/features/gallery/gallery.controller.ts",
+        "lib/features/gallery/index.ts",
+        "lib/controllers/GalleryController.ts",
+        "app/api/gallery/route.ts",
+        "app/api/gallery/[id]/route.ts",
+        "app/components/GallerySection.tsx",
+        "app/gallery/page.tsx",
+        "app/gallery/layout.tsx",
+        "app/admin/hooks/useGallery.ts",
+        "app/admin/components/GalleryList.tsx",
+        "app/admin/components/GalleryFormModal.tsx"
+      ],
+      "featureFlag": "gallery",
+      "prismaFragment": "prisma/gallery.prisma",
+      "default": false
+    },
+    "reviews": {
+      "label": "Reviews & testimonials",
+      "description": "Guest reviews with admin CRUD and homepage ReviewsSection carousel.",
+      "paths": [
+        "lib/features/reviews/review.repository.ts",
+        "lib/features/reviews/review.service.ts",
+        "lib/features/reviews/review.controller.ts",
+        "lib/features/reviews/index.ts",
+        "lib/controllers/ReviewController.ts",
+        "app/api/reviews/route.ts",
+        "app/api/reviews/[id]/route.ts",
+        "app/components/ReviewsSection.tsx",
+        "app/admin/hooks/useReviews.ts",
+        "app/admin/components/ReviewsList.tsx",
+        "app/admin/components/ReviewFormModal.tsx"
+      ],
+      "featureFlag": "reviews",
+      "prismaFragment": "prisma/reviews.prisma",
+      "default": false
+    },
+    "legal-pages": {
+      "label": "Legal pages",
+      "description": "Privacy policy and terms pages driven by SITE.privacyPage and SITE.termsPage.",
+      "paths": [
+        "app/components/LegalDocumentPage.tsx",
+        "app/privacy-policy/page.tsx",
+        "app/terms-and-conditions/page.tsx"
+      ],
+      "featureFlag": "legalPages",
+      "default": false
     }
   }
 }

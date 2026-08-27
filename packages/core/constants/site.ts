@@ -49,6 +49,24 @@ export const SITE = {
     priceRange: "",
     locale: "en_IN",
     schemaType: "Organization" as const,
+    sameAs: [] as string[],
+    /** Optional site search path for WebSite SearchAction JSON-LD (e.g. "/search") */
+    searchPath: "",
+    openGraph: {
+      type: "website" as const,
+      image: "",
+    },
+    sitemap: {
+      staticRoutes: [] as {
+        path: string;
+        changeFrequency?: "daily" | "weekly" | "monthly" | "yearly";
+        priority?: number;
+      }[],
+    },
+    robots: {
+      allow: ["/"] as string[],
+      disallow: [] as string[],
+    },
   },
 
   theme: {
@@ -140,13 +158,6 @@ export const SITE = {
     listingsApiPath: "",
   },
 
-  /** Enabled by optional core modules (pnpm new-template --modules). */
-  features: {
-    enquiryModal: false,
-    footer: false,
-    heroSimple: false,
-  },
-
   admin: {
     displayName: "Demo Admin",
     portalTitle: "Admin Portal",
@@ -165,6 +176,78 @@ export const SITE = {
   footer: {
     reraLabel: "License",
     reraFallbacks: [] as { name: string; rera: string }[],
+  },
+
+  gallery: {
+    sectionEyebrow: "Gallery",
+    sectionTitle: "Photo Gallery",
+    sectionSubtitle: "Explore our space.",
+    pageTitle: "Gallery",
+    pageSubtitle: "Browse our collection of images.",
+    viewAllLabel: "View full gallery",
+    emptyMessage: "Gallery images will appear here once added in admin.",
+  },
+
+  reviews: {
+    sectionEyebrow: "Testimonials",
+    sectionTitle: "What people say",
+    sectionSubtitle: "Reviews from our guests and clients.",
+    emptyMessage: "Reviews will appear here once added in admin.",
+  },
+
+  privacyPage: {
+    title: "Privacy Policy",
+    lastUpdated: "",
+    sections: [
+      {
+        heading: "Introduction",
+        paragraphs: [
+          "This privacy policy explains how we collect, use, and protect your personal information when you use our website.",
+        ],
+      },
+      {
+        heading: "Information we collect",
+        paragraphs: [
+          "We may collect your name, phone number, email address, and any message you submit through enquiry forms.",
+        ],
+      },
+      {
+        heading: "Contact",
+        paragraphs: [
+          "For privacy-related questions, contact us using the details on this website.",
+        ],
+      },
+    ],
+  },
+
+  termsPage: {
+    title: "Terms and Conditions",
+    lastUpdated: "",
+    sections: [
+      {
+        heading: "Use of website",
+        paragraphs: [
+          "By using this website you agree to these terms. Content is provided for general information and may change without notice.",
+        ],
+      },
+      {
+        heading: "Limitation of liability",
+        paragraphs: [
+          "We are not liable for indirect or consequential damages arising from use of this website.",
+        ],
+      },
+    ],
+  },
+
+  /** Enabled by optional core modules (pnpm new-template --modules). */
+  features: {
+    enquiryModal: false,
+    footer: false,
+    heroSimple: false,
+    seo: false,
+    gallery: false,
+    reviews: false,
+    legalPages: false,
   },
 } as const;
 
