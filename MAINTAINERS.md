@@ -35,6 +35,8 @@ After `new-template`, the template **does not depend** on `packages/core`. All i
 | **Diff one template vs core** | `pnpm template:diff-core hotel` |
 | **Validate template (prisma, tsc, lint)** | `pnpm template:validate hotel` |
 | **Add core module to template** | `pnpm template:add-module bakery footer` |
+| **Assemble template vertical modules** | `pnpm template:assemble hotel` |
+| **Extract paths into modules/** | `pnpm template:extract-modules hotel` |
 | **Version check** | `tempjs version check` / `tempjs version check hotel` |
 | **Version bump** | `tempjs version inc patch hotel` / `tempjs version inc patch cli` |
 | **CLI help** | `tempjs --help` |
@@ -89,11 +91,45 @@ pnpm template:add-module bakery footer,hero-simple
 
 Templates with domain listings can set `SITE.enquiry.listingsApiPath` to e.g. `/api/projects` so the modal dropdown loads from your API.
 
+### Client projects (`tempjs add-module`)
+
+After `tempjs hotel` (or any template), add optional core modules from the same `packages/core/modules.json` registry:
+
+```bash
+tempjs add-module list
+tempjs add-module seo,gallery,reviews
+```
+
+Uses local `packages/core` when running from the monorepo; published CLI fetches core modules from GitHub. Updates `constants/site.ts` feature flags, merges Prisma fragments, and records ids in `.tempjs-modules.json`.
+
+---
+
+## Template-level vertical modules
+
+Vertical features live under `templates/<directory>/modules/<module-id>/` with a `template-modules.json` registry (same shape as core modules).
+
+| Template | Module ids |
+|----------|------------|
+| hotel | `room-types`, `facilities`, `slug-pages` |
+| real-estate | `projects`, `slug-pages` |
+
+```bash
+# Maintainer: copy template root paths into modules/ (bootstrap)
+pnpm template:extract-modules hotel
+
+# Maintainer: copy modules/ back into template root (after editing module source)
+pnpm template:assemble hotel
+pnpm template:assemble hotel room-types,facilities
+```
+
+Shipped templates are **assembled** (files at template root for `tempjs`); `modules/` is maintainer source-of-truth for vertical slices.
+
+Hotel and real-estate adopt core `seo`, `gallery`, and `reviews` (hotel) where they overlapped bespoke code; dynamic sitemap routes register via `lib/hotel/register-sitemap.ts` and `lib/real-estate/register-sitemap.ts`.
+
 ### Future
 
-- `tempjs add-module` for client projects
-- More modules: `gallery`, `reviews`, `leadrat`, `seo`
-- Template-level modules (hotel `facilities`, real-estate `projects`)
+- More core modules as needed
+- `tempjs add-template-module` for vertical modules in client projects (optional)
 
 See [ROADMAP.md](./ROADMAP.md).
 

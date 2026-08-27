@@ -1,3 +1,3 @@
-export { ReviewController, reviewController } from "./review.controller";
-export { ReviewService, reviewService } from "./review.service";
-export { ReviewRepository, reviewRepository } from "./review.repository";
+export * from "./review.repository";
+export * from "./review.service";
+export * from "./review.controller";

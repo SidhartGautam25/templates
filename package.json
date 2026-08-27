@@ -8,7 +8,13 @@
   },
   "files": [
     "cli",
-    "templates.json"
+    "templates.json",
+    "packages/core/modules.json",
+    "packages/core/modules/**",
+    "packages/core/prisma/schema.prisma",
+    "scripts/module-installer-core.mjs",
+    "scripts/template-modules-home.mjs",
+    "scripts/template-modules-admin.mjs"
   ],
   "engines": {
     "node": ">=18"
@@ -27,6 +33,8 @@
     "propagate-core": "node scripts/sync-templates.mjs",
     "new-template": "node scripts/new-template.mjs",
     "template:add-module": "node scripts/template-add-module.mjs",
+    "template:assemble": "node scripts/template-assemble.mjs",
+    "template:extract-modules": "node scripts/template-extract-modules.mjs",
     "template:validate": "node scripts/template-validate.mjs",
     "template:diff-core": "node scripts/template-diff-core.mjs",
     "setup-hooks": "git config core.hooksPath .githooks && chmod +x .githooks/pre-commit",

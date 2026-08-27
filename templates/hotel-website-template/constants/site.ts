@@ -49,6 +49,23 @@ export const SITE = {
     priceRange: "",
     locale: "en_IN",
     schemaType: "Organization" as const,
+    sameAs: [] as string[],
+    searchPath: "",
+    openGraph: {
+      type: "website" as const,
+      image: "",
+    },
+    sitemap: {
+      staticRoutes: [] as {
+        path: string;
+        changeFrequency?: "daily" | "weekly" | "monthly" | "yearly";
+        priority?: number;
+      }[],
+    },
+    robots: {
+      allow: ["/"] as string[],
+      disallow: ["/admin", "/api"] as string[],
+    },
   },
 
   theme: {
@@ -154,6 +171,34 @@ export const SITE = {
   footer: {
     reraLabel: "License",
     reraFallbacks: [] as { name: string; rera: string }[],
+  },
+
+  gallery: {
+    sectionEyebrow: "Gallery",
+    sectionTitle: "Photo Gallery",
+    sectionSubtitle: "Explore our space.",
+    pageTitle: "Gallery",
+    pageSubtitle: "Browse our collection of images.",
+    viewAllLabel: "View full gallery",
+    emptyMessage: "Gallery images will appear here once added in admin.",
+  },
+
+  reviews: {
+    sectionEyebrow: "Testimonials",
+    sectionTitle: "What people say",
+    sectionSubtitle: "Reviews from our guests and clients.",
+    emptyMessage: "Reviews will appear here once added in admin.",
+  },
+
+  /** Enabled core modules — see packages/core/modules.json */
+  features: {
+    enquiryModal: true,
+    footer: true,
+    heroSimple: true,
+    seo: true,
+    gallery: true,
+    reviews: true,
+    legalPages: false,
   },
 } as const;
 

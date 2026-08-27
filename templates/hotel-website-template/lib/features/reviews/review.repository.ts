@@ -1,28 +1,25 @@
 import { prisma } from "@/lib/database/prisma";
-import { Review } from "@prisma/client";
+import type { Review } from "@prisma/client";
+
+export interface ReviewInput {
+  name: string;
+  otherInfo?: string | null;
+  description: string;
+  sortOrder?: number;
+}
 
 export class ReviewRepository {
   async getAll(): Promise<Review[]> {
     return prisma.review.findMany({
-      orderBy: [
-        { sortOrder: "desc" },
-        { createdAt: "desc" }
-      ],
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
     });
   }
 
   async getById(id: string): Promise<Review | null> {
-    return prisma.review.findUnique({
-      where: { id },
-    });
+    return prisma.review.findUnique({ where: { id } });
   }
 
-  async create(data: {
-    name: string;
-    otherInfo?: string | null;
-    description: string;
-    sortOrder?: number;
-  }): Promise<Review> {
+  async create(data: ReviewInput): Promise<Review> {
     return prisma.review.create({
       data: {
         name: data.name,
@@ -33,31 +30,20 @@ export class ReviewRepository {
     });
   }
 
-  async update(
-    id: string,
-    data: {
-      name?: string;
-      otherInfo?: string | null;
-      description?: string;
-      sortOrder?: number;
-    }
-  ): Promise<Review> {
-    const updateData: any = {};
-    if (data.name !== undefined) updateData.name = data.name;
-    if (data.otherInfo !== undefined) updateData.otherInfo = data.otherInfo;
-    if (data.description !== undefined) updateData.description = data.description;
-    if (data.sortOrder !== undefined) updateData.sortOrder = data.sortOrder;
-
+  async update(id: string, data: Partial<ReviewInput>): Promise<Review> {
     return prisma.review.update({
       where: { id },
-      data: updateData,
+      data: {
+        ...(data.name !== undefined && { name: data.name }),
+        ...(data.otherInfo !== undefined && { otherInfo: data.otherInfo }),
+        ...(data.description !== undefined && { description: data.description }),
+        ...(data.sortOrder !== undefined && { sortOrder: data.sortOrder }),
+      },
     });
   }
 
   async delete(id: string): Promise<Review> {
-    return prisma.review.delete({
-      where: { id },
-    });
+    return prisma.review.delete({ where: { id } });
   }
 }
 

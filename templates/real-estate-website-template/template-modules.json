@@ -1,0 +1,31 @@
+{
+  "modules": {
+    "projects": {
+      "label": "Projects",
+      "description": "Real-estate project inventory, homepage grid, and admin CRUD.",
+      "paths": [
+        "lib/features/projects/",
+        "app/api/projects/",
+        "app/data/projects.ts",
+        "app/components/ProjectGrid.tsx",
+        "app/components/ProjectCard.tsx",
+        "app/admin/hooks/useProjects.ts",
+        "app/admin/components/ProjectsList.tsx",
+        "app/admin/components/ProjectFormModal.tsx",
+        "lib/controllers/ProjectController.ts",
+        "lib/services/ProjectService.ts",
+        "lib/repositories/ProjectRepository.ts"
+      ],
+      "prismaFragment": "prisma/projects.prisma"
+    },
+    "slug-pages": {
+      "label": "Project detail pages",
+      "description": "Dynamic /[slug] project detail pages and SEO sitemap registration.",
+      "paths": [
+        "app/[slug]/page.tsx",
+        "app/[slug]/ProjectDetailsClient.tsx",
+        "lib/real-estate/register-sitemap.ts"
+      ]
+    }
+  }
+}

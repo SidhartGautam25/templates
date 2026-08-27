@@ -67,15 +67,23 @@ Rename hotel admin `useProjects` / `ProjectsList` to room-type naming for mainta
 }
 ```
 
-### CLI (future)
+### CLI ✅
 
 ```bash
 # At template creation (monorepo)
 pnpm new-template hotel --modules gallery,leadrat
 
-# In generated project (future tempjs)
+# In generated project
 tempjs add-module gallery
+tempjs add-module list
 ```
+
+### Template-level vertical modules ✅
+
+- `templates/<name>/modules/` + `template-modules.json`
+- Hotel: `room-types`, `facilities`, `slug-pages`
+- Real-estate: `projects`, `slug-pages`
+- `pnpm template:assemble` / `pnpm template:extract-modules`
 
 ### Design rules
 
@@ -93,7 +101,7 @@ Modules copy files from `packages/core/modules/<name>/` into the template and ap
 
 | Feature | Benefit |
 |---------|---------|
-| `tempjs add-module <name>` | Add optional features to existing client site |
+| `tempjs add-module <name>` ✅ | Add optional features to existing client site |
 | `tempjs init` wizard in CLI | Same as docsite command builder, offline |
 | `tempjs update --merge` UX | Clearer conflict report + dry-run summary |
 | Per-template `tempjs info` | Show template-specific flags from manifest |

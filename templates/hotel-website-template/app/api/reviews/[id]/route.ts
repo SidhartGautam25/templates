@@ -1,32 +1,29 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { reviewController } from "@/lib/controllers/ReviewController";
 import { auth } from "@/auth";
 
 export const dynamic = "force-dynamic";
 
-interface RouteParams {
-  params: Promise<{ id: string }>;
-}
-
-export async function GET(req: NextRequest, props: RouteParams) {
-  const params = await props.params;
-  return reviewController.getReview(req, { params });
-}
-
-export async function PUT(req: NextRequest, props: RouteParams) {
+export async function PUT(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   const session = await auth();
   if (!session) {
-    return NextResponse.json({ success: false, error: "Unauthorized access" }, { status: 401 });
+    return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
   }
-  const params = await props.params;
-  return reviewController.updateReview(req, { params });
+  const { id } = await context.params;
+  return reviewController.updateReview(req, { id });
 }
 
-export async function DELETE(req: NextRequest, props: RouteParams) {
+export async function DELETE(
+  _req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   const session = await auth();
   if (!session) {
-    return NextResponse.json({ success: false, error: "Unauthorized access" }, { status: 401 });
+    return Response.json({ success: false, error: "Unauthorized" }, { status: 401 });
   }
-  const params = await props.params;
-  return reviewController.deleteReview(req, { params });
+  const { id } = await context.params;
+  return reviewController.deleteReview({ id });
 }

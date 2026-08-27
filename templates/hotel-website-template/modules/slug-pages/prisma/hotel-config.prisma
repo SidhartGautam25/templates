@@ -1,0 +1,8 @@
+model HotelConfig {
+  id             String   @id @default("global")
+  address        String   @db.Text
+  templeDistance String   @db.Text
+  phone          String?
+  email          String?
+  updatedAt      DateTime @updatedAt
+}

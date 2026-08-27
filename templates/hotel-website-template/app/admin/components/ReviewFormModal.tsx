@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { X } from "lucide-react";
-import { ReviewDataInput } from "../hooks/useReviews";
+import React, { useEffect, useState } from "react";
+import type { ReviewDataInput } from "../hooks/useReviews";
 
 interface ReviewFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: ReviewDataInput) => void;
-  initialData?: any;
+  initialData: ReviewDataInput | null;
   error?: string;
+  isSubmitting?: boolean;
 }
 
 export default function ReviewFormModal({
@@ -18,140 +18,89 @@ export default function ReviewFormModal({
   onSubmit,
   initialData,
   error,
+  isSubmitting,
 }: ReviewFormModalProps) {
-  const [name, setName] = useState("");
-  const [otherInfo, setOtherInfo] = useState("");
-  const [description, setDescription] = useState("");
-  const [sortOrder, setSortOrder] = useState(0);
-  const [validationError, setValidationError] = useState("");
+  const [form, setForm] = useState<ReviewDataInput>({
+    name: "",
+    otherInfo: "",
+    description: "",
+    sortOrder: 0,
+  });
 
   useEffect(() => {
-    if (initialData) {
-      setName(initialData.name || "");
-      setOtherInfo(initialData.otherInfo || "");
-      setDescription(initialData.description || "");
-      setSortOrder(initialData.sortOrder || 0);
-    } else {
-      setName("");
-      setOtherInfo("");
-      setDescription("");
-      setSortOrder(0);
+    if (isOpen) {
+      setForm(
+        initialData ?? {
+          name: "",
+          otherInfo: "",
+          description: "",
+          sortOrder: 0,
+        }
+      );
     }
-  }, [initialData, isOpen]);
+  }, [isOpen, initialData]);
 
   if (!isOpen) return null;
 
-  const handleSubmitForm = (e: React.FormEvent) => {
-    e.preventDefault();
-    setValidationError("");
-
-    if (!name.trim()) return setValidationError("Reviewer Name is required.");
-    if (!description.trim()) return setValidationError("Review Description is required.");
-
-    onSubmit({
-      id: initialData?.id,
-      name,
-      otherInfo: otherInfo.trim() || null,
-      description,
-      sortOrder,
-    });
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-scale-up">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-black/[0.05] flex items-center justify-between bg-bg-tan/20">
-          <h3 className="text-base font-bold font-serif text-primary">
-            {initialData ? "Edit Review" : "Add Guest Review"}
-          </h3>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-full hover:bg-black/5 text-text-muted hover:text-primary transition-colors cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40" onClick={onClose}>
+      <div
+        className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl border border-primary/10"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 className="text-lg font-bold text-primary mb-4">
+          {initialData?.id ? "Edit review" : "Add review"}
+        </h3>
 
-        {/* Scrollable Form Body */}
-        <form onSubmit={handleSubmitForm} className="p-6 space-y-4">
-          {(validationError || error) && (
-            <div className="p-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded-xl space-y-1">
-              {validationError && <div>{validationError}</div>}
-              {error && <div>{error}</div>}
-            </div>
-          )}
+        {error && (
+          <div className="mb-4 p-3 text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg">{error}</div>
+        )}
 
-          {/* Name */}
-          <div>
-            <label className="block text-[10px] uppercase tracking-wider text-text-muted font-bold mb-1.5">
-              Guest Name *
-            </label>
-            <input
-              type="text"
-              placeholder="e.g. Aman Sharma"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full bg-bg-tan/30 border border-black/[0.08] rounded-xl px-4 py-2.5 text-xs text-primary focus:outline-none focus:border-accent-gold"
-            />
-          </div>
-
-          {/* Other Info */}
-          <div>
-            <label className="block text-[10px] uppercase tracking-wider text-text-muted font-bold mb-1.5">
-              Other Info (e.g. Address/City, or leave empty)
-            </label>
-            <input
-              type="text"
-              placeholder="e.g. Patna, Bihar"
-              value={otherInfo}
-              onChange={(e) => setOtherInfo(e.target.value)}
-              className="w-full bg-bg-tan/30 border border-black/[0.08] rounded-xl px-4 py-2.5 text-xs text-primary focus:outline-none focus:border-accent-gold"
-            />
-          </div>
-
-          {/* Sort Order */}
-          <div>
-            <label className="block text-[10px] uppercase tracking-wider text-text-muted font-bold mb-1.5">
-              Sort Order Priority (Higher comes first)
-            </label>
-            <input
-              type="number"
-              placeholder="e.g. 10"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(parseInt(e.target.value, 10) || 0)}
-              className="w-full bg-bg-tan/30 border border-black/[0.08] rounded-xl px-4 py-2.5 text-xs text-primary focus:outline-none focus:border-accent-gold"
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-[10px] uppercase tracking-wider text-text-muted font-bold mb-1.5">
-              Review description *
-            </label>
-            <textarea
-              placeholder="Write the review copy here..."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-              className="w-full bg-bg-tan/30 border border-black/[0.08] rounded-xl px-4 py-2.5 text-xs text-primary focus:outline-none focus:border-accent-gold resize-none"
-            />
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center justify-end space-x-3 pt-4 border-t border-black/[0.05] mt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2.5 text-xs font-bold text-text-muted hover:text-primary transition-colors border border-black/[0.08] rounded-xl cursor-pointer"
-            >
+        <form
+          className="space-y-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit(form);
+          }}
+        >
+          <input
+            className="w-full border border-primary/20 rounded-lg px-3 py-2 text-sm"
+            placeholder="Name*"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
+          <input
+            className="w-full border border-primary/20 rounded-lg px-3 py-2 text-sm"
+            placeholder="Role / location (optional)"
+            value={form.otherInfo ?? ""}
+            onChange={(e) => setForm({ ...form, otherInfo: e.target.value })}
+          />
+          <textarea
+            className="w-full border border-primary/20 rounded-lg px-3 py-2 text-sm resize-none"
+            placeholder="Review text*"
+            rows={4}
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+            required
+          />
+          <input
+            type="number"
+            className="w-full border border-primary/20 rounded-lg px-3 py-2 text-sm"
+            placeholder="Sort order"
+            value={form.sortOrder}
+            onChange={(e) => setForm({ ...form, sortOrder: Number(e.target.value) || 0 })}
+          />
+          <div className="flex gap-3 pt-2">
+            <button type="button" onClick={onClose} className="flex-1 py-2.5 rounded-lg border text-sm font-bold cursor-pointer">
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2.5 text-xs font-bold text-white bg-primary hover:bg-primary-hover rounded-xl shadow-md transition-all cursor-pointer hover:scale-[1.02]"
+              disabled={isSubmitting}
+              className="flex-1 py-2.5 rounded-lg bg-primary text-white text-sm font-bold disabled:opacity-50 cursor-pointer"
             >
-              {initialData ? "Save Changes" : "Add Review"}
+              {isSubmitting ? "Saving..." : "Save"}
             </button>
           </div>
         </form>

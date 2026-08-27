@@ -49,6 +49,23 @@ export const SITE = {
     priceRange: "",
     locale: "en_IN",
     schemaType: "Organization" as const,
+    sameAs: [] as string[],
+    searchPath: "",
+    openGraph: {
+      type: "website" as const,
+      image: "",
+    },
+    sitemap: {
+      staticRoutes: [] as {
+        path: string;
+        changeFrequency?: "daily" | "weekly" | "monthly" | "yearly";
+        priority?: number;
+      }[],
+    },
+    robots: {
+      allow: ["/"] as string[],
+      disallow: ["/admin", "/api"] as string[],
+    },
   },
 
   theme: {
@@ -154,6 +171,17 @@ export const SITE = {
   footer: {
     reraLabel: "License",
     reraFallbacks: [] as { name: string; rera: string }[],
+  },
+
+  /** Enabled core modules — see packages/core/modules.json */
+  features: {
+    enquiryModal: true,
+    footer: true,
+    heroSimple: true,
+    seo: true,
+    gallery: false,
+    reviews: false,
+    legalPages: false,
   },
 } as const;
 
