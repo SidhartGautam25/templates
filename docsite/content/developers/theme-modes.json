@@ -49,10 +49,17 @@
         "Adds theme.appearance (default system) and theme.colorsDark to constants/site.ts",
         "Appends [data-theme=\"dark\"] { … } CSS variables to app/globals.css",
         "Copies ThemeModeInit and ThemeModeToggle components",
-        "Wires ThemeModeInit in app/layout.tsx (FOUC-safe script + suppressHydrationWarning on <html>)",
+        "Wires ThemeModeInit in app/layout.tsx (FOUC-safe beforeInteractive script)",
+        "Adds suppressHydrationWarning on <html> and <body> (docsite hydration pattern)",
         "Removes inline SITE.theme.colors styles on <html> when present (hotel template) so CSS vars can switch",
         "Extends admin Theme & Colors tab with Light / Dark palette editors and default appearance selector"
       ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "title": "Avoid hydration errors",
+      "text": "Match the docsite pattern: (1) ThemeModeInit with strategy=\"beforeInteractive\" sets data-theme and color-scheme on <html> before React hydrates. (2) suppressHydrationWarning on both <html> and <body> in app/layout.tsx — the installer adds these automatically. (3) ThemeModeToggle renders a placeholder until mount, then reads data-theme from the DOM (never localStorage during SSR). Do not set data-theme from React state on the root layout without these guards."
     },
     {
       "type": "heading",

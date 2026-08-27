@@ -3,28 +3,36 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
-import { THEME_MODE_STORAGE_KEY, type ThemeMode } from "@/lib/theme/mode-toggle";
+import { SITE } from "@/constants";
+import {
+  applyThemeModeToDocument,
+  readThemeModeFromDocument,
+  type ThemeAppearance,
+  type ThemeMode,
+} from "@/lib/theme/mode-toggle";
 
-function readDomTheme(): ThemeMode {
-  const fromDom = document.documentElement.getAttribute("data-theme");
-  if (fromDom === "light" || fromDom === "dark") return fromDom;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+function getSiteAppearance(): ThemeAppearance {
+  const siteTheme = SITE.theme as { appearance?: ThemeAppearance };
+  return siteTheme.appearance ?? "system";
 }
 
+/**
+ * Hydration-safe toggle — matches docsite ThemeToggle:
+ * placeholder until mount, then read data-theme from DOM (set by ThemeModeInit script).
+ */
 export default function ThemeModeToggle({ className = "" }: { className?: string }) {
   const [mode, setMode] = useState<ThemeMode>("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMode(readDomTheme());
+    setMode(readThemeModeFromDocument(getSiteAppearance()));
     setMounted(true);
   }, []);
 
   const toggle = () => {
     const next: ThemeMode = mode === "light" ? "dark" : "light";
     setMode(next);
-    document.documentElement.setAttribute("data-theme", next);
-    localStorage.setItem(THEME_MODE_STORAGE_KEY, next);
+    applyThemeModeToDocument(next);
   };
 
   if (!mounted) {

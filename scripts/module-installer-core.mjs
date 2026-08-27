@@ -295,16 +295,30 @@ function applyThemeModesCssPatch(templateRoot, dark) {
   let css = readFileSync(globalsPath, "utf8");
   if (css.includes("[data-theme=\"dark\"]")) {
     console.log("  · [data-theme=\"dark\"] already in globals.css");
-    return;
+  } else {
+    const lines = THEME_CSS_VARS.map((cssVar, index) => {
+      const key = THEME_COLOR_KEYS[index];
+      return `  ${cssVar}: ${dark[key]};`;
+    });
+    css = `${css.trim()}\n\n[data-theme="dark"] {\n${lines.join("\n")}\n}\n`;
+    console.log("  ✓ appended [data-theme=\"dark\"] CSS variables to app/globals.css");
   }
 
-  const lines = THEME_CSS_VARS.map((cssVar, index) => {
-    const key = THEME_COLOR_KEYS[index];
-    return `  ${cssVar}: ${dark[key]};`;
-  });
-  css = `${css.trim()}\n\n[data-theme="dark"] {\n${lines.join("\n")}\n}\n`;
+  if (!css.includes("color-scheme:")) {
+    css = css.replace(
+      /:root\s*\{/,
+      ":root {\n  color-scheme: light;"
+    );
+    if (css.includes("[data-theme=\"dark\"]")) {
+      css = css.replace(
+        /\[data-theme="dark"\]\s*\{/,
+        "[data-theme=\"dark\"] {\n  color-scheme: dark;"
+      );
+    }
+    console.log("  ✓ set color-scheme on :root and [data-theme=\"dark\"] for native UI");
+  }
+
   writeFileSync(globalsPath, css, "utf8");
-  console.log("  ✓ appended [data-theme=\"dark\"] CSS variables to app/globals.css");
 }
 
 /**
@@ -341,10 +355,20 @@ function applyThemeModesLayoutPatch(templateRoot) {
     content = readFileSync(layoutPath, "utf8");
   }
 
-  if (!content.includes("suppressHydrationWarning")) {
+  if (!/<html[^>]*suppressHydrationWarning/.test(content)) {
     content = content.replace(/<html([^>]*)>/, "<html$1 suppressHydrationWarning>");
     writeFileSync(layoutPath, content, "utf8");
     console.log("  ✓ added suppressHydrationWarning on <html> for theme mode init");
+    content = readFileSync(layoutPath, "utf8");
+  }
+
+  if (!/<body[^>]*suppressHydrationWarning/.test(content)) {
+    content = content.replace(/<body([^>]*)>/, (match, attrs) => {
+      if (attrs.includes("suppressHydrationWarning")) return match;
+      return `<body${attrs} suppressHydrationWarning>`;
+    });
+    writeFileSync(layoutPath, content, "utf8");
+    console.log("  ✓ added suppressHydrationWarning on <body> for theme mode init");
   }
 }
 
