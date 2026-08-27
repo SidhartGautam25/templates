@@ -64,19 +64,46 @@
     {
       "type": "heading",
       "level": 2,
-      "text": "Public toggle"
+      "text": "Public Toggle Placement & Setup"
     },
     {
       "type": "paragraph",
-      "text": "Mount ThemeModeToggle in your navbar or sticky widgets after install:"
+      "text": "Although the theme-modes module configures the root layout and global styles automatically, you must manually mount the toggle component in your project's header or navigation bar. It is not placed automatically to avoid cluttering your bespoke design."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Step 1: Locate your Header or Navbar Component"
+    },
+    {
+      "type": "paragraph",
+      "text": "Open your main header/navigation component (e.g. app/components/Header.tsx or app/components/Navbar.tsx). This is typically where visitors expect to find the light/dark mode controls."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Step 2: Import and Mount the Toggle"
+    },
+    {
+      "type": "paragraph",
+      "text": "Import the ThemeModeToggle component and place it inside your header row. The component is fully typed and accepts classNames for positioning:"
     },
     {
       "type": "code",
-      "code": "import ThemeModeToggle from \"@/app/components/ThemeModeToggle\";\n\n// e.g. in AgencyNavbar header row\n<ThemeModeToggle className=\"ml-2\" />"
+      "code": "import { ThemeModeToggle } from \"@/app/components/ThemeModeToggle\";\n\nexport function Navbar() {\n  return (\n    <nav className=\"flex items-center justify-between p-4\">\n      <Logo />\n      <div className=\"flex items-center gap-4\">\n        <NavLinks />\n        {/* Render the theme selection toggle button */}\n        <ThemeModeToggle className=\"w-9 h-9 flex items-center justify-center rounded-lg border\" />\n      </div>\n    </nav>\n  );\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Step 3: Verification"
     },
     {
       "type": "paragraph",
-      "text": "Visitor choice is stored in localStorage (tempjs-theme-mode). First visit uses theme.appearance from site.ts (system, light, or dark) before system preference."
+      "text": "Start your development server (pnpm dev) and click the toggle button. You should see the HTML data attribute update to data-theme=\"dark\" or data-theme=\"light\", and the global tailwind variable colors shift to reflect your colorsDark values from constants/site.ts."
+    },
+    {
+      "type": "paragraph",
+      "text": "Visitor choice is stored in localStorage (tempjs-theme-mode). First visit uses theme.appearance from site.ts (system, light, or dark) before fallback to system preferences."
     },
     {
       "type": "heading",
