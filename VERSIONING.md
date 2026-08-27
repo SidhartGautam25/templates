@@ -79,18 +79,21 @@ pnpm sync-templates
 # 3. Document
 #    Edit templates/hotel-website-template/CHANGELOG.md
 
-# 4. Check unreleased changes
+# 4. Validate before bump
+pnpm template:validate hotel
+
+# 5. Check unreleased changes
 tempjs version check
 
-# 5. Bump versions (if check reported changes)
+# 6. Bump versions (if check reported changes)
 tempjs version inc minor hotel      # template feature release
 tempjs version inc patch cli        # CLI-only fix
 
-# 6. Commit
+# 7. Commit
 git add package.json templates.json .tempjs-version.json CHANGELOG.md
 git commit -m "chore: hotel template v1.4.0, cli v2.1.1"
 
-# 7. Publish CLI (when ready)
+# 8. Publish CLI (when ready)
 npm publish
 ```
 

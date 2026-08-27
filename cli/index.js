@@ -35,6 +35,7 @@ import {
   runVersionCheck,
   runVersionInc,
 } from "./version-manager.js";
+import { runAddModule, printAvailableModules } from "./module-manager.js";
 
 const HELP_TEXT = `
 tempjs — instantiate project templates from GitHub
@@ -50,6 +51,8 @@ USAGE
   tempjs brand                    Configure brand & contact info
   tempjs init-db                  Configure .env and sync database schema
   tempjs doctor                   Check if this project can run (env, DB, deps)
+  tempjs add-module <ids>         Add optional core modules (seo, gallery, reviews, …)
+  tempjs add-module list          List available core modules
   tempjs version check [cli|all|<template-id>]
   tempjs version inc <patch|minor|major> [cli|all|<template-id>]
   tempjs --help
@@ -83,6 +86,9 @@ EXAMPLES
   tempjs update --merge --yes
 
   tempjs doctor
+
+  tempjs add-module seo,gallery,reviews
+  tempjs add-module list
 
 ENVIRONMENT
   TEMPLATES_REPO_URL       GitHub repo URL or owner/repo
@@ -299,6 +305,34 @@ async function main(argv) {
       return;
     }
     printTemplateInfo(templateId, entry, repo);
+    return;
+  }
+
+  if (command === "add-module") {
+    const targetDir = process.cwd();
+    const sub = positionals[1];
+
+    if (sub === "list" || flags.list) {
+      console.log("Available core modules:\n");
+      await printAvailableModules(repo);
+      return;
+    }
+
+    const moduleArg = sub ?? positionals.slice(1).join(",");
+    const moduleIds = moduleArg
+      ? moduleArg.split(",").map((s) => s.trim()).filter(Boolean)
+      : [];
+
+    if (moduleIds.length === 0) {
+      console.error("Usage: tempjs add-module <module-id>[,<module-id>...]");
+      console.error("       tempjs add-module list");
+      process.exitCode = 1;
+      return;
+    }
+
+    await runAddModule(targetDir, moduleIds, repo, {
+      useRemote: flags.remote,
+    });
     return;
   }
 

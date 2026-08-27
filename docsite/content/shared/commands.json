@@ -125,6 +125,27 @@
         { "label": "Run inside generated project", "command": "tempjs doctor" }
       ]
     },
+    "add-module": {
+      "syntax": "tempjs add-module <module-id>[,<module-id>...]",
+      "title": "Add optional core modules",
+      "description": "Installs core modules from packages/core/modules.json into an existing client project. Merges Prisma, enables SITE.features flags, records .tempjs-modules.json. Gallery/reviews update app/admin/registry.ts on the unified /admin dashboard. Does not overwrite app/page.tsx.",
+      "audience": ["developers"],
+      "examples": [
+        { "label": "Blog with sidebar", "command": "tempjs add-module blog-compose+sidebar" },
+        { "label": "Light & dark themes", "command": "tempjs add-module theme-modes" },
+        { "label": "SEO + gallery + reviews", "command": "tempjs add-module seo,gallery,reviews" },
+        { "label": "Footer and hero only", "command": "tempjs add-module footer,hero-simple" }
+      ]
+    },
+    "add-module-list": {
+      "syntax": "tempjs add-module list",
+      "title": "List core modules",
+      "description": "Shows all optional core module ids and descriptions from packages/core/modules.json.",
+      "audience": ["developers"],
+      "examples": [
+        { "label": "Available modules", "command": "tempjs add-module list" }
+      ]
+    },
     "update-check": {
       "syntax": "tempjs update --check",
       "title": "Check template updates",
@@ -154,6 +175,27 @@
         { "label": "Propagate to all templates", "command": "pnpm sync-templates" },
         { "label": "One template only", "command": "pnpm sync-templates --template hotel-website-template" },
         { "label": "Check without writing", "command": "pnpm sync-templates:check" }
+      ]
+    },
+    "template-diff-core": {
+      "syntax": "pnpm template:diff-core [template-id|directory]",
+      "title": "Diff template vs core",
+      "description": "Reports which core-owned paths match, differ, or are missing — plus template-only files sync would not touch. Exit code 1 if propagate would change files.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "Hotel template", "command": "pnpm template:diff-core hotel" },
+        { "label": "All templates", "command": "pnpm template:diff-core" }
+      ]
+    },
+    "template-validate": {
+      "syntax": "pnpm template:validate [template-id|directory] [--skip-install]",
+      "title": "Validate template",
+      "description": "Runs prisma validate, TypeScript (tsc --noEmit), and ESLint in the template folder. Installs deps if node_modules is missing.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "Validate hotel", "command": "pnpm template:validate hotel" },
+        { "label": "All templates", "command": "pnpm template:validate" },
+        { "label": "Skip install step", "command": "pnpm template:validate hotel --skip-install" }
       ]
     },
     "dev-hotel": {
@@ -187,16 +229,51 @@
       ]
     },
     "new-template": {
-      "syntax": "pnpm new-template <id> [directory] [--name \"Display Name\"]",
+      "syntax": "pnpm new-template <id> [directory] [--name \"Display Name\"] [--modules <ids>] [--with-docs]",
       "title": "Create new template",
-      "description": "Copies packages/core + scaffold into templates/<directory>/, merges Prisma, updates templates.json, adds pnpm dev:<id>. One-time core copy — no sync needed afterward.",
+      "description": "Copies packages/core + scaffold into templates/<directory>/, merges Prisma, updates templates.json, adds pnpm dev:<id>. Use --modules to copy optional pieces from packages/core/modules/. Use --with-docs to add docsite registry stubs.",
       "audience": ["maintainers"],
       "arguments": [
         { "name": "id", "required": true, "description": "CLI id (e.g. bakery)" },
-        { "name": "directory", "required": false, "description": "Defaults to <id>-website-template" }
+        { "name": "directory", "required": false, "description": "Defaults to <id>-website-template" },
+        { "name": "--modules", "required": false, "description": "Comma-separated core module ids (see Optional modules page)" },
+        { "name": "--with-docs", "required": false, "description": "Add docsite templates-registry.json + developers/templates/<id>.json stub" }
       ],
       "examples": [
-        { "label": "New bakery template", "command": "pnpm new-template bakery bakery-website-template --name \"Bakery Website\"" }
+        { "label": "Minimal scaffold", "command": "pnpm new-template bakery bakery-website-template --name \"Bakery Website\"" },
+        { "label": "Lean site with UI modules", "command": "pnpm new-template bakery bakery-website-template --name \"Bakery\" --modules enquiry-modal,footer,hero-simple,seo" },
+        { "label": "Full CMS slice", "command": "pnpm new-template bakery --modules enquiry-modal,footer,hero-simple,seo,gallery,reviews,legal-pages" }
+      ]
+    },
+    "template-add-module": {
+      "syntax": "pnpm template:add-module <template-id|directory> <module-id>[,<module-id>...]",
+      "title": "Add core module to template",
+      "description": "Copies optional module files from packages/core/modules/ into an existing template in the monorepo, enables SITE.features flags, merges Prisma, updates .tempjs-modules.json.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "Add footer to bakery template", "command": "pnpm template:add-module bakery footer" },
+        { "label": "Adopt SEO stack on hotel", "command": "pnpm template:add-module hotel seo,gallery,reviews" },
+        { "label": "Blog + sidebar on dev-agency", "command": "pnpm template:add-module dev-agency blog-compose+sidebar" }
+      ]
+    },
+    "template-assemble": {
+      "syntax": "pnpm template:assemble <template-id|directory> [module-id[,module-id...]]",
+      "title": "Assemble template vertical modules",
+      "description": "Copies paths from templates/<dir>/modules/<id>/ into the template root per template-modules.json. With no module ids, assembles all registered vertical modules.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "Assemble all hotel vertical modules", "command": "pnpm template:assemble hotel" },
+        { "label": "Room types only", "command": "pnpm template:assemble hotel room-types,facilities" }
+      ]
+    },
+    "template-extract-modules": {
+      "syntax": "pnpm template:extract-modules <template-id|directory> [module-id[,module-id...]]",
+      "title": "Extract into modules/",
+      "description": "Copies template root paths into templates/<dir>/modules/<id>/ for maintainer source-of-truth workflow. Bootstrap or refresh module folders from assembled template files.",
+      "audience": ["maintainers"],
+      "examples": [
+        { "label": "Extract all hotel modules", "command": "pnpm template:extract-modules hotel" },
+        { "label": "Extract slug-pages only", "command": "pnpm template:extract-modules hotel slug-pages" }
       ]
     }
   }

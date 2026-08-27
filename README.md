@@ -17,7 +17,7 @@ git add .
 git commit -m "Initial project"
 ```
 
-**Documentation site:** [`webdoc/`](webdoc/) — JSON-driven docs for developers and maintainers. Run `pnpm docs:dev` from repo root.
+**Documentation site:** [`docsite/`](docsite/) — JSON-driven docs for developers and maintainers. Run `pnpm docs:dev` from repo root.
 
 ## Available templates
 
@@ -497,12 +497,32 @@ tempjs brand --yes --name "Mi Plaza" --base-url "https://miplaza.com"
 tempjs init-db --yes --db-host localhost --db-name my_db --skip-db-push
 tempjs real-estate --force   # overwrite existing files
 tempjs doctor                # readiness check (generated projects)
+tempjs add-module list       # optional core modules available
+tempjs add-module seo,gallery,reviews  # add modules to existing project
 tempjs --help                # show help
 ```
+
+### Optional core modules (client projects)
+
+After `tempjs hotel`, add cross-vertical features without re-copying the template:
+
+```bash
+tempjs add-module list
+tempjs add-module seo,gallery,reviews
+pnpm prisma db push && pnpm dev
+```
+
+Modules: `enquiry-modal`, `footer`, `hero-simple`, `seo`, `gallery`, `reviews`, `legal-pages`. See `packages/core/modules.json` and docsite → Developers → Optional modules.
+
+Shipped **hotel** and **real-estate** templates already include vertical features and adopted core modules where they overlapped bespoke code.
 
 ### Maintainer commands (monorepo root)
 
 ```bash
+pnpm new-template bakery --name "Bakery" --modules enquiry-modal,footer,hero-simple,seo
+pnpm template:add-module hotel gallery,reviews
+pnpm template:assemble hotel          # vertical modules → template root
+pnpm template:extract-modules hotel   # template root → modules/
 pnpm sync-templates
 pnpm dev:hotel
 tempjs version check         # unreleased CLI/template changes?
@@ -681,7 +701,7 @@ A normal Next.js project with organized `lib/`:
 - `lib/database/` — Prisma client
 - `lib/features/leads/` — shared lead module
 - `lib/storage/` — FTP uploads
-- `lib/features/<domain>/` — template-specific modules (rooms, projects, …) in overlay
+- `lib/features/<domain>/` — template-specific modules (rooms, projects, …)
 - `app/` — routes and UI
 
 All source is on disk; no submodule, no `@tempjs/core` npm dependency in client projects.
@@ -690,7 +710,7 @@ All source is on disk; no submodule, no `@tempjs/core` npm dependency in client 
 
 | Approach | User gets full source? | Maintained in this repo |
 |----------|------------------------|-------------------------|
-| **Option 1 — pre-merge sync** (current) | Yes | `packages/core` + overlays |
+| **Copy-once core** (current) | Yes | `packages/core` starter + `templates/<name>/` |
 | CLI merge at copy time | Yes | `packages/core` only in git |
 | npm `@tempjs/core` package | Partial (core in node_modules) | Published package |
 

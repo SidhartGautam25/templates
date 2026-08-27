@@ -1,0 +1,122 @@
+{
+  "posts": [
+    {
+      "slug": "compose-engine-live-demo",
+      "title": "Compose Blog Engine — live demo",
+      "excerpt": "This article is rendered by the same JSON block interpreter used in the blog-compose core module. Browse /blog on this docsite to preview every block type.",
+      "publishedAt": "2026-08-27",
+      "author": "tempjs",
+      "content": {
+        "engine": "compose",
+        "version": 1,
+        "blocks": [
+          {
+            "type": "callout",
+            "variant": "tip",
+            "title": "You are viewing the real engine",
+            "text": "These blocks are stored as JSON in docsite/content/blog/posts.json and rendered with DocComposeRenderer — the same Compose document shape client sites use with ComposeBlogRenderer."
+          },
+          {
+            "type": "heading",
+            "level": "h2",
+            "variant": "underline-bar",
+            "text": "Declarative blocks"
+          },
+          {
+            "type": "explain",
+            "text": "Each article is an ordered list of typed blocks. Explanation blocks support highlight and underline phrases — for example tempjs add-module and compose interpreter.",
+            "highlight": ["tempjs add-module"],
+            "underline": ["compose interpreter"]
+          },
+          {
+            "type": "list",
+            "style": "bullet",
+            "items": [
+              "Headings with multiple design variants",
+              "Code and terminal command blocks with copy",
+              "Callouts, lists, quotes, and images"
+            ]
+          },
+          {
+            "type": "heading",
+            "level": "h3",
+            "variant": "default",
+            "text": "Install on a client project"
+          },
+          {
+            "type": "command",
+            "title": "Add module",
+            "description": "Copies engine files, Prisma model, /blog routes, and admin compose editor.",
+            "command": "tempjs add-module blog-compose\npnpm prisma db push"
+          },
+          {
+            "type": "code",
+            "language": "typescript",
+            "code": "import { ComposeBlogRenderer } from '@/lib/blog/compose';\n\n<ComposeBlogRenderer document={post.content} />"
+          },
+          {
+            "type": "quote",
+            "text": "Blog posts as data — compose visually in admin or author JSON by hand.",
+            "attribution": "Compose Blog Engine"
+          },
+          {
+            "type": "image",
+            "src": "/globe.svg",
+            "alt": "Globe icon from docsite assets",
+            "caption": "Image block — use any public path or CDN URL."
+          },
+          {
+            "type": "callout",
+            "variant": "info",
+            "text": "Read the full module guide at /developers/blog-compose or open the maintainer architecture page at /maintainers/blog-compose."
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "paragraph",
+            "text": "Future blog engines (rich-text editors) will use a different engine id and interpreter. This compose variant is the first building block for template blogging."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "sitemap-and-seo",
+      "title": "Blog posts in your sitemap",
+      "excerpt": "When blog-compose and seo modules are installed together, /blog and every published slug are registered for sitemap.xml automatically.",
+      "publishedAt": "2026-08-20",
+      "author": "tempjs",
+      "content": {
+        "engine": "compose",
+        "version": 1,
+        "blocks": [
+          {
+            "type": "heading",
+            "level": "title",
+            "variant": "default",
+            "text": "Sitemap integration"
+          },
+          {
+            "type": "paragraph",
+            "text": "The SEO module adds a static /blog route when SITE.features.blogCompose is true. Dynamic post URLs come from lib/blog/register-sitemap.ts, which registers each published slug with buildAppSitemap()."
+          },
+          {
+            "type": "list",
+            "style": "number",
+            "items": [
+              "Install seo and blog-compose (or install blog-compose after seo)",
+              "add-module patches app/sitemap.ts to import register-sitemap",
+              "Publish posts in admin — slugs appear on next sitemap build"
+            ]
+          },
+          {
+            "type": "callout",
+            "variant": "warning",
+            "title": "Requires database",
+            "text": "Dynamic slugs are read from BlogPost rows. This docsite demo uses static JSON instead of Prisma."
+          }
+        ]
+      }
+    }
+  ]
+}

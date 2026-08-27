@@ -173,6 +173,14 @@
       "description": "Property listings with slug pages, admin CRM, and new-launch badges.",
       "tags": ["admin", "properties", "leads"],
       "features": ["Property grid & detail pages", "RERA fields", "Lead export", "Promo banner", "LeadRat optional"]
+    },
+    {
+      "id": "dev-agency",
+      "name": "Dev Agency Website",
+      "version": "1.0.0",
+      "description": "Lean freelance dev agency landing — expertise, team, CTA, work carousel; enquiry + SEO only by default.",
+      "tags": ["admin", "agency", "portfolio", "leads", "seo"],
+      "features": ["Expertise & team CMS", "Featured work carousel", "Optional blog-compose+sidebar add-on", "Lead capture", "SEO pack"]
     }
   ]
 }

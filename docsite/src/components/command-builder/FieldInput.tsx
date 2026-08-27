@@ -37,7 +37,7 @@ export function FieldInput({
     );
   }
 
-  if (field.type === "select") {
+  if (field.type === "select" || (field.type === "arg" && options?.length)) {
     return (
       <div>
         <label className="block text-sm font-medium text-[var(--color-doc-text)]" htmlFor={fieldKey}>
@@ -55,6 +55,32 @@ export function FieldInput({
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
+        {field.type === "arg" ? (
+          <span className="text-xs text-[var(--color-doc-muted)] mt-1 block">Positional argument</span>
+        ) : (
+          <code className="text-xs text-[var(--color-doc-accent)] mt-1 block">{field.flag}</code>
+        )}
+      </div>
+    );
+  }
+
+  if (field.type === "arg") {
+    return (
+      <div>
+        <label className="block text-sm font-medium text-[var(--color-doc-text)]" htmlFor={fieldKey}>
+          {field.label}
+          <span className="text-[var(--color-doc-muted)] font-normal"> (optional)</span>
+        </label>
+        <p className="text-sm text-[var(--color-doc-muted)] mt-0.5 mb-2">{field.description}</p>
+        <input
+          id={fieldKey}
+          type="text"
+          value={value}
+          placeholder={field.placeholder ?? "Leave empty to skip"}
+          onChange={(e) => onChange(fieldKey, e.target.value)}
+          className="w-full rounded-md border border-[var(--color-doc-border)] bg-[var(--color-doc-surface)] px-3 py-2 text-sm text-[var(--color-doc-text)] placeholder:text-[var(--color-doc-muted)]"
+        />
+        <span className="text-xs text-[var(--color-doc-muted)] mt-1 block">Positional argument</span>
       </div>
     );
   }

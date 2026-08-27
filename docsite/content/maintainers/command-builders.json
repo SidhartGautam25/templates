@@ -1,0 +1,84 @@
+{
+  "title": "Command builders",
+  "description": "JSON-driven command generators on docsite pages — how to add segments, fields, and presets without React changes.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Command builders render the Quick commands + Build custom command UI on docsite pages. Maintainers configure them entirely in JSON: field definitions, option lists, presets, wizard steps, and per-page placement. Template generation builders live in templates-registry.json; all other segments use content/shared/command-builders-registry.json."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Full maintainer guide",
+      "text": "See docsite/COMMAND_BUILDERS.md in the repo for step-by-step examples: adding a new builder segment, new field keys, option sets, and wiring a page block."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Implemented command builders"
+    },
+    {
+      "type": "table",
+      "headers": ["Builder id", "Segment", "Page", "Command focus"],
+      "rows": [
+        ["template-hotel (templates-registry)", "Templates", "Developers → Hotel", "tempjs hotel — generate, theme, brand, database"],
+        ["template-real-estate (templates-registry)", "Templates", "Developers → Real estate", "tempjs real-estate — generate + RERA brand fields"],
+        ["developer-add-module", "Developers", "Optional modules", "tempjs add-module"],
+        ["developer-project-theme", "Developers", "Customization", "tempjs theme / tempjs font"],
+        ["developer-project-brand", "Developers", "Customization", "tempjs brand"],
+        ["developer-project-database", "Developers", "Docker & database", "tempjs init-db"],
+        ["developer-update", "Developers", "Updates & doctor", "tempjs update --check / --merge"],
+        ["maintainer-new-template", "Maintainers", "New template", "pnpm new-template"],
+        ["maintainer-template-add-module", "Maintainers", "Optional modules", "pnpm template:add-module"],
+        ["maintainer-template-assemble", "Maintainers", "Optional modules", "pnpm template:assemble"],
+        ["maintainer-sync-templates", "Maintainers", "Daily workflow", "pnpm sync-templates"],
+        ["maintainer-template-validate", "Maintainers", "Validate & diff-core", "pnpm template:validate"],
+        ["maintainer-version-inc", "Maintainers", "Versioning", "tempjs version inc"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Show a builder on a page"
+    },
+    {
+      "type": "paragraph",
+      "text": "Add a command-builder block to any page JSON under docsite/content/. For segment builders, set builderId to a key from command-builders-registry.json. On template pages, omit builderId to use the template entry from templates-registry.json."
+    },
+    {
+      "type": "code",
+      "code": "{\n  \"type\": \"command-builder\",\n  \"builderId\": \"developer-add-module\"\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "JSON files involved"
+    },
+    {
+      "type": "table",
+      "headers": ["File", "Purpose"],
+      "rows": [
+        ["content/shared/command-builders-registry.json", "Segment builders: presets, modes, wizardSteps, fieldKeys"],
+        ["content/templates-registry.json", "Per-template commandBuilder (hotel, real-estate)"],
+        ["content/shared/command-builder-fields.json", "Reusable field defs: flags, toggles, positional args"],
+        ["content/shared/command-builder-options.json", "Dropdown option sets (themes, fonts, coreModules, …)"],
+        ["content/<audience>/<page>.json", "Page content — insert { \"type\": \"command-builder\", \"builderId\": \"…\" }"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Add a new segment builder (summary)"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Add field keys to command-builder-fields.json if you need new flags or positional args",
+        "Add option sets to command-builder-options.json if fields use type select/arg with optionSet",
+        "Add an entry under builders in command-builders-registry.json with presets, modes, wizardSteps",
+        "Insert a command-builder block with builderId on the target page JSON",
+        "No React changes required unless you need a new field type or option set shape"
+      ]
+    }
+  ]
+}

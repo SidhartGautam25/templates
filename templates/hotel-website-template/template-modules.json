@@ -1,0 +1,55 @@
+{
+  "modules": {
+    "room-types": {
+      "label": "Room types",
+      "description": "Hotel room inventory, homepage grid, admin CRUD, and room image gallery page.",
+      "paths": [
+        "lib/features/room-types/",
+        "app/api/room-types/",
+        "constants/default-room-types.ts",
+        "app/components/ProjectGrid.tsx",
+        "app/components/ProjectCard.tsx",
+        "app/admin/hooks/useRoomTypes.ts",
+        "app/admin/components/RoomTypesList.tsx",
+        "app/admin/components/RoomTypeFormModal.tsx",
+        "app/admin/panels/RoomTypesPanel.tsx",
+        "lib/controllers/RoomTypeController.ts",
+        "lib/services/RoomTypeService.ts",
+        "lib/repositories/RoomTypeRepository.ts",
+        "app/gallery/page.tsx"
+      ],
+      "prismaFragment": "prisma/room-types.prisma"
+    },
+    "facilities": {
+      "label": "Facilities",
+      "description": "Hotel facilities section, API, and admin CRUD.",
+      "paths": [
+        "lib/features/facilities/",
+        "app/api/facilities/",
+        "app/components/FacilitiesSection.tsx",
+        "app/admin/hooks/useFacilities.ts",
+        "app/admin/components/FacilitiesList.tsx",
+        "app/admin/components/FacilityFormModal.tsx",
+        "lib/controllers/FacilityController.ts",
+        "lib/services/FacilityService.ts",
+        "lib/repositories/FacilityRepository.ts"
+      ],
+      "prismaFragment": "prisma/facilities.prisma"
+    },
+    "slug-pages": {
+      "label": "Room detail pages",
+      "description": "Dynamic /[slug] room detail pages and SEO sitemap registration for rooms.",
+      "paths": [
+        "app/[slug]/page.tsx",
+        "app/[slug]/ProjectDetailsClient.tsx",
+        "lib/hotel/register-sitemap.ts",
+        "lib/features/hotel-config/",
+        "app/api/hotel-config/route.ts",
+        "lib/controllers/HotelConfigController.ts",
+        "lib/services/HotelConfigService.ts",
+        "lib/repositories/HotelConfigRepository.ts"
+      ],
+      "prismaFragment": "prisma/hotel-config.prisma"
+    }
+  }
+}

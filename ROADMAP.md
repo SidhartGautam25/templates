@@ -4,89 +4,63 @@ Priorities after the **copy-once core starter kit** architecture. Ordered by imp
 
 ---
 
-## Near term (high value, low risk)
+## Completed recently ✅
 
-### 1. Maintainer docs & tooling clarity ✅ (in progress)
+### Optional core modules
 
-- Root [MAINTAINERS.md](./MAINTAINERS.md), updated docsite Maintainers section
-- `pnpm dev:<id>` without forced sync
+- `packages/core/modules.json` — enquiry-modal, footer, hero-simple, seo, gallery, reviews, legal-pages
+- `pnpm new-template --modules …` and `pnpm template:add-module`
+- `tempjs add-module` / `tempjs add-module list` for client projects
+- `.tempjs-modules.json` tracks `coreModules` (and `templateModules` on shipped templates)
+
+### Template vertical modules
+
+- `templates/<name>/modules/<id>/` + `template-modules.json`
+- Hotel: `room-types`, `facilities`, `slug-pages`
+- Real-estate: `projects`, `slug-pages`
+- `pnpm template:assemble` / `pnpm template:extract-modules`
+
+### Shipped template adoption
+
+- Hotel: core `seo`, `gallery`, `reviews` (keeps bespoke room `app/gallery/page.tsx`)
+- Real-estate: core `seo`
+- Dynamic sitemap via `registerDynamicSitemapProvider` + `buildAppSitemap()`
+
+### Maintainer docs & tooling
+
+- Docsite Maintainers section, validate & diff-core, module pages
 - `pnpm sync-templates --template <directory>` for single-template propagate
 
-### 2. `tempjs doctor` + `GETTING_STARTED` in every template
+### Admin tab registry & docs scaffolding
 
-Already in generated projects — ensure each template’s checklist is accurate after architecture change.
+- Unified `app/admin/page.tsx` dashboard with `getAdminTabs()` registry (`lib/admin/AdminShell`, core + template panels)
+- Gallery/reviews modules update `registry.ts` and remove legacy `/admin/content` when installed
+- `pnpm new-template --with-docs` — `docsite-stub.mjs` adds `templates-registry.json` + `developers/templates/<id>.json`
+- Hotel admin naming — `useRoomTypes`, `RoomTypesList`, `RoomTypeFormModal`, `RoomTypesPanel`
+- Real-estate Hero/Footer aligned with `hero-simple` / `footer` core modules (`listingsApiPath`, `singleProject` alias)
 
-### 3. Template scaffolding CLI improvements
+### Manifest & tooling
 
-```bash
-pnpm new-template bakery --name "Bakery" --with-docs
-```
-
-- Auto-add docsite registry stub
-- Optional `--description` for `templates.json`
-- Validate template folder builds (`pnpm install && pnpm exec tsc --noEmit`)
-
-### 4. Reduce duplication inside templates
-
-Hotel and real-estate still share similar Hero/Footer/admin shell. Move **truly identical** UI into core; keep vertical overrides in template only.
-
-### 5. Hotel naming cleanup
-
-Rename hotel admin `useProjects` / `ProjectsList` to room-type naming for maintainability.
+- `templates.json` declares `coreModules` and `templateModules` for hotel and real-estate (`tempjs info`)
+- `pnpm template:diff-core` reports optional core/template module drift
+- Visual theme editor — admin **Theme & Colors** tab → `constants/site.ts` + `app/globals.css`
 
 ---
 
-## Medium term — optional core modules
+## Near term (high value, low risk)
 
-**Goal:** Core features that are **not always needed** can be omitted at template creation or added later.
+### 5. `tempjs doctor` + `GETTING_STARTED` audit
 
-### Concept: `core-modules` manifest
-
-```json
-// packages/core/modules.json (future)
-{
-  "gallery": {
-    "label": "Gallery CMS",
-    "paths": ["app/gallery/", "lib/features/gallery/"],
-    "prisma": "modules/gallery.prisma",
-    "default": false
-  },
-  "leadrat": {
-    "label": "LeadRat CRM hook",
-    "paths": ["lib/integrations/leadrat/"],
-    "default": false
-  }
-}
-```
-
-### CLI (future)
-
-```bash
-# At template creation (monorepo)
-pnpm new-template hotel --modules gallery,leadrat
-
-# In generated project (future tempjs)
-tempjs add-module gallery
-```
-
-### Design rules
-
-| Always in core | Optional module |
-|----------------|-----------------|
-| Auth, leads, health, DB client | Gallery, blog, CRM integrations |
-| Navbar, sticky widgets | Extra admin tabs |
-| Lead + PromoBanner models | Domain-specific is template, not module |
-
-Modules copy files from `packages/core/modules/<name>/` into the template and append Prisma fragments to `domain.prisma`.
+Ensure each template’s checklist reflects copy-once core, optional modules, and adopted core modules.
 
 ---
 
 ## Medium term — tempjs for client developers
 
-| Feature | Benefit |
-|---------|---------|
-| `tempjs add-module <name>` | Add optional features to existing client site |
-| `tempjs init` wizard in CLI | Same as docsite command builder, offline |
+| Feature | Status |
+|---------|--------|
+| `tempjs add-module` | ✅ |
+| `tempjs init` wizard in CLI | Planned — offline command builder parity with docsite |
 | `tempjs update --merge` UX | Clearer conflict report + dry-run summary |
 | Per-template `tempjs info` | Show template-specific flags from manifest |
 | `tempjs scaffold page <name>` | Add admin CRUD page from template patterns |
@@ -95,20 +69,20 @@ Modules copy files from `packages/core/modules/<name>/` into the template and ap
 
 ## Medium term — template developer experience
 
-| Feature | Benefit |
-|---------|---------|
-| `pnpm template:validate hotel` | Lint + typecheck + prisma validate |
-| `pnpm template:diff-core hotel` | See what differs from `packages/core` before propagate |
+| Feature | Status |
+|---------|--------|
+| `pnpm template:validate hotel` | ✅ |
+| `pnpm template:diff-core hotel` | ✅ |
+| `pnpm template:assemble` / `extract-modules` | ✅ |
 | Hot reload core into one template | Safer than full sync (preview diff) |
 | Shared test fixtures in core | Seed helpers for leads/promo in all templates |
+| CI matrix on PR | `pnpm template:validate` for every template |
 
 ---
 
 ## Long term
 
 - **Plugin registry** — third-party modules versioned separately from core
-- **Visual theme editor** — export to `constants/site.ts` + CSS variables
-- **CI matrix** — build every template in `templates.json` on PR
 - **Template preview URLs** — deploy demo instances per release
 
 ---

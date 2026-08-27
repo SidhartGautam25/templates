@@ -1,0 +1,104 @@
+{
+  "title": "Light & dark theme modes",
+  "description": "Optional visitor light/dark toggle, dual palettes in admin, and data-theme CSS variables — not enabled by default.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "By default every template ships a single light-oriented palette in SITE.theme.colors and the admin Theme & Colors tab edits that palette only. The theme-modes optional core module adds a second dark palette, a public toggle, and [data-theme=\"dark\"] CSS variable overrides so visitors can switch without breaking Tailwind semantic tokens (bg-primary, text-text-main, etc.)."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "Not installed by default",
+      "text": "Hotel, real-estate, and dev-agency templates do not include theme-modes unless you add it with tempjs add-module or pnpm template:add-module. Templates that are dark-styled only (e.g. dev-agency) can still use theme-modes to offer a light mode alongside the dark palette."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Install"
+    },
+    {
+      "type": "command-builder",
+      "builderId": "developer-add-module"
+    },
+    {
+      "type": "paragraph",
+      "text": "Run from a generated client project root (with .tempjs.json):"
+    },
+    {
+      "type": "code",
+      "code": "tempjs add-module theme-modes\npnpm prisma db push   # no-op if no new models — safe to run\npnpm dev"
+    },
+    {
+      "type": "paragraph",
+      "text": "Monorepo template development:"
+    },
+    {
+      "type": "code",
+      "code": "pnpm template:add-module dev-agency theme-modes\npnpm dev:dev-agency"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What install does"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Sets SITE.features.themeModes to true",
+        "Adds theme.appearance (default system) and theme.colorsDark to constants/site.ts",
+        "Appends [data-theme=\"dark\"] { … } CSS variables to app/globals.css",
+        "Copies ThemeModeInit and ThemeModeToggle components",
+        "Wires ThemeModeInit in app/layout.tsx (FOUC-safe beforeInteractive script)",
+        "Adds suppressHydrationWarning on <html> and <body> (docsite hydration pattern)",
+        "Removes inline SITE.theme.colors styles on <html> when present (hotel template) so CSS vars can switch",
+        "Extends admin Theme & Colors tab with Light / Dark palette editors and default appearance selector"
+      ]
+    },
+    {
+      "type": "callout",
+      "variant": "warning",
+      "title": "Avoid hydration errors",
+      "text": "Match the docsite pattern: (1) ThemeModeInit with strategy=\"beforeInteractive\" sets data-theme and color-scheme on <html> before React hydrates. (2) suppressHydrationWarning on both <html> and <body> in app/layout.tsx — the installer adds these automatically. (3) ThemeModeToggle renders a placeholder until mount, then reads data-theme from the DOM (never localStorage during SSR). Do not set data-theme from React state on the root layout without these guards."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Public toggle"
+    },
+    {
+      "type": "paragraph",
+      "text": "Mount ThemeModeToggle in your navbar or sticky widgets after install:"
+    },
+    {
+      "type": "code",
+      "code": "import ThemeModeToggle from \"@/app/components/ThemeModeToggle\";\n\n// e.g. in AgencyNavbar header row\n<ThemeModeToggle className=\"ml-2\" />"
+    },
+    {
+      "type": "paragraph",
+      "text": "Visitor choice is stored in localStorage (tempjs-theme-mode). First visit uses theme.appearance from site.ts (system, light, or dark) before system preference."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "New template with theme modes"
+    },
+    {
+      "type": "code",
+      "code": "pnpm new-template studio studio-site --name \"Studio\" --modules enquiry-modal,seo,theme-modes"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Related"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Customization — tempjs theme for CLI color presets (light palette)",
+        "Optional modules — other add-on core modules",
+        "Dev Agency template — optional theme-modes + blog-compose+sidebar examples"
+      ]
+    }
+  ]
+}

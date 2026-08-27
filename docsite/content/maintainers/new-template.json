@@ -11,15 +11,38 @@
       "id": "new-template"
     },
     {
+      "type": "command-builder",
+      "builderId": "maintainer-new-template"
+    },
+    {
       "type": "heading",
       "level": 2,
-      "text": "What you get"
+      "text": "Optional core modules (--modules)"
+    },
+    {
+      "type": "paragraph",
+      "text": "Copy optional UI and features from packages/core/modules/ instead of hand-building Hero, Footer, SEO, etc. All module ids: enquiry-modal, footer, hero-simple, seo, gallery, reviews, legal-pages."
+    },
+    {
+      "type": "code",
+      "code": "pnpm new-template bakery bakery-website-template --name \"Bakery\" --modules enquiry-modal,footer,hero-simple,seo\npnpm template:add-module bakery gallery,reviews,legal-pages"
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "--with-docs",
+      "text": "pnpm new-template bakery --with-docs auto-creates docsite/content/templates-registry.json entry and docsite/content/developers/templates/<id>.json stub (patches docsite/src/lib/content.ts imports). Use when adding a template that should appear in the docsite generator."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "What you get (default, no --modules)"
     },
     {
       "type": "list",
       "items": [
         "Full Next.js tree with auth, leads API, storage, health, Docker, admin login",
-        "constants/site.ts stub (replace with your brand)",
+        "constants/site.ts stub with SITE.features flags (all false until modules installed)",
         "prisma/domain.prisma stub + merged prisma/schema.prisma",
         "Minimal app/layout.tsx and app/page.tsx placeholder",
         "package.json, GETTING_STARTED.md, CHANGELOG.md",
@@ -36,13 +59,14 @@
       "items": [
         "Customize constants/site.ts (brand, SEO, theme, hero copy)",
         "Add models to prisma/domain.prisma — run pnpm prisma db push",
-        "Create lib/features/<domain>/ (controller, service, repository)",
+        "Create lib/features/<domain>/ or template modules under modules/<id>/",
         "Add app/ pages, components, and app/api/<domain>/ routes",
         "Write prisma/seed.ts for demo data",
         "Add GETTING_STARTED.md, ARCHITECTURE.md for client developers",
         "pnpm dev:<id> — iterate locally",
         "Test: mkdir /tmp/test && cd /tmp/test && tempjs <id> --yes",
-        "Register docsite: templates-registry.json + developers/templates/<id>.json"
+        "Register docsite: pnpm new-template <id> --with-docs (or add templates-registry.json + developers/templates/<id>.json manually)",
+        "Optional: template-modules.json + pnpm template:extract-modules / template:assemble for vertical slices"
       ]
     },
     {

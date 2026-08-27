@@ -4,7 +4,12 @@ import { CommandBlock } from "./CommandBlock";
 import { TemplateCardGrid } from "./TemplateCard";
 import { TemplateCommandBlock } from "./TemplateCommandBlock";
 import { CommandBuilder } from "./command-builder/CommandBuilder";
-import { commandBuilderFieldDefs, commandBuilderOptionSets } from "@/lib/content";
+import {
+  commandBuilderFieldDefs,
+  commandBuilderOptionSets,
+  getCommandBuilderConfig,
+  getCommandBuilderLabel,
+} from "@/lib/content";
 import { slugify } from "@/lib/slugify";
 
 function Block({
@@ -72,15 +77,25 @@ function Block({
       return <CommandBlock id={block.id} />;
     case "template-command":
       return templateEntry ? <TemplateCommandBlock entry={templateEntry} /> : null;
-    case "command-builder":
-      return templateEntry?.commandBuilder ? (
+    case "command-builder": {
+      const builderId = block.builderId;
+      const config = getCommandBuilderConfig(
+        builderId ?? (templateEntry ? "template" : undefined),
+        templateEntry
+      );
+      const label = getCommandBuilderLabel(
+        builderId ?? (templateEntry ? "template" : undefined),
+        templateEntry
+      );
+      return config ? (
         <CommandBuilder
-          config={templateEntry.commandBuilder}
+          config={config}
           fieldRegistry={commandBuilderFieldDefs}
           optionSets={commandBuilderOptionSets}
-          templateLabel={templateEntry.label}
+          label={label}
         />
       ) : null;
+    }
     case "template-cards":
       return null;
     default:

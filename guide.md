@@ -203,8 +203,8 @@ tempjs update --merge
 
 When shipping template fixes:
 
-1. Edit `packages/core/` or `templates/overlays/<template>/`.
-2. `pnpm sync-templates`
+1. Edit `packages/core/` (optional propagate) or `templates/<directory>/` directly.
+2. `pnpm template:validate <id>` before release; `pnpm template:diff-core <id>` if you changed core.
 3. Bump `"version"` in `templates.json` for affected templates.
 4. Commit, push, publish CLI if needed.
 5. Clients run `tempjs update --check` then `tempjs update --merge`.
@@ -214,5 +214,5 @@ When shipping template fixes:
 ## Related docs
 
 - [README.md](./README.md) — usage examples for developers
-- [ARCHITECTURE.md](./ARCHITECTURE.md) — monorepo core + overlay sync model
+- [ARCHITECTURE.md](./ARCHITECTURE.md) — copy-once core + standalone templates
 - [packages/core/README.md](./packages/core/README.md) — shared library layout in generated projects

@@ -18,6 +18,8 @@ const packageRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
  *   tags?: string[],
  *   features?: string[],
  *   docs?: string,
+ *   coreModules?: string[],
+ *   templateModules?: string[],
  *   init?: {
  *     flagGroups?: string[],
  *     brandFields?: string[],

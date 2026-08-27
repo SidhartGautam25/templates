@@ -1,0 +1,131 @@
+{
+  "title": "Dev Agency Website",
+  "description": "Dark-themed freelance dev agency landing page — expertise, team, CTA, and featured work carousel with admin CMS.",
+  "templateId": "dev-agency",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "The dev-agency template is a lean studio site: hero, expertise cards, team grid, contact CTA, and an auto-scrolling featured-work carousel. Content is editable from /admin (expertise, team, portfolio rows) with seed defaults until you add database rows. Core modules enquiry-modal and seo are included; gallery, reviews, blog-compose, and footer module are not — add them later with tempjs add-module if needed."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Sections"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Hero — SITE.agency.hero copy in constants/site.ts",
+        "Expertise — skill cards (title, description, icon) via admin or defaults",
+        "Team — member cards with roles and avatar colors",
+        "Contact CTA — gradient headline + enquiry button",
+        "Featured work — continuous carousel with client URL, category, review",
+        "Header & footer — agency nav links and contact columns from SITE.agency"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Optional modules"
+    },
+    {
+      "type": "paragraph",
+      "text": "This template ships with enquiry-modal and seo only. Gallery, reviews, blog-compose, footer, and legal-pages are not installed by default — add them later with tempjs add-module (client project) or pnpm template:add-module dev-agency … (monorepo)."
+    },
+    {
+      "type": "code",
+      "code": "tempjs add-module gallery,reviews,footer"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Example: Light & dark theme modes"
+    },
+    {
+      "type": "paragraph",
+      "text": "Dev Agency defaults to a dark landing palette. Install theme-modes to let visitors switch to a light palette, edit both palettes in admin Theme & Colors, and mount ThemeModeToggle in the navbar."
+    },
+    {
+      "type": "code",
+      "code": "tempjs add-module theme-modes\n# Monorepo:\npnpm template:add-module dev-agency theme-modes"
+    },
+    {
+      "type": "paragraph",
+      "text": "See Developers → Light & dark themes for full install steps and ThemeModeToggle wiring."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Example: Compose blog with sidebar"
+    },
+    {
+      "type": "paragraph",
+      "text": "Dev Agency is a good lean base if you want studio landing sections first and a technical blog later. Install blog-compose with the +sidebar suffix to get /blog routes, an admin compose editor, and a docs-style left sidebar (article list + on-page H2 table of contents). The +sidebar suffix sets SITE.features.blogSidebar — see Compose blog module for block types and JSON shape."
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "title": "Full module guide",
+      "text": "Developers → Blog → Compose module (/developers/blog-compose) — live articles, playground, and Compose document reference."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Client project (after tempjs dev-agency)"
+    },
+    {
+      "type": "code",
+      "code": "tempjs dev-agency config\n# from generated project root:\ntempjs add-module blog-compose+sidebar\npnpm prisma db push\npnpm dev"
+    },
+    {
+      "type": "paragraph",
+      "text": "add-module copies blog-compose files, merges BlogPost into Prisma, enables SITE.features.blogCompose and blogSidebar, and adds a Blog articles tab on /admin. It does not edit app/HomePage.tsx — add a homepage teaser and nav link yourself when you want blog on the landing page:"
+    },
+    {
+      "type": "code",
+      "code": "// app/HomePage.tsx — after blog-compose is installed\nimport BlogSection from \"./components/BlogSection\";\n// … inside <main>, e.g. before CTA:\n<BlogSection />\n\n// constants/site.ts — optional nav item\nSITE.agency.nav.push({ label: \"Blog\", href: \"/blog\" });"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Monorepo (template folder)"
+    },
+    {
+      "type": "code",
+      "code": "pnpm template:add-module dev-agency blog-compose+sidebar\npnpm prisma db push\npnpm dev:dev-agency"
+    },
+    {
+      "type": "paragraph",
+      "text": "Same module install as client projects; use this when developing the template in the monorepo without generating a separate client copy."
+    },
+    {
+      "type": "command-builder",
+      "builderId": "developer-add-module"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Monorepo dev"
+    },
+    {
+      "type": "code",
+      "code": "pnpm dev:dev-agency\npnpm template:validate dev-agency"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Generate your command"
+    },
+    {
+      "type": "command-builder"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Flag reference"
+    },
+    {
+      "type": "template-command"
+    }
+  ]
+}

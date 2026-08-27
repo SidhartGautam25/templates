@@ -34,6 +34,17 @@ This overwrites core-owned files in the template. Template-only files (`app/page
 
 You do **not** need sync for normal template work.
 
+## Maintainer tooling
+
+From monorepo root:
+
+```bash
+pnpm template:diff-core hotel       # preview core drift before propagate
+pnpm template:validate hotel          # prisma validate + tsc + lint
+```
+
+See [MAINTAINERS.md](../../MAINTAINERS.md) and docsite **Maintainers → Validate & diff-core**.
+
 ## Typecheck
 
 ```bash

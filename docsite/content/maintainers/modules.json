@@ -1,0 +1,162 @@
+{
+  "title": "Optional modules",
+  "description": "Core modules (packages/core/modules/), template vertical modules (templates/<name>/modules/), and how to install them.",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "The monorepo has two module layers. Core modules are cross-vertical features (SEO, gallery, footer) copied from packages/core/modules/. Template modules are vertical slices (hotel room-types, real-estate projects) maintained under templates/<directory>/modules/ with a template-modules.json registry."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Core module registry"
+    },
+    {
+      "type": "paragraph",
+      "text": "Defined in packages/core/modules.json. Each module lists paths to copy, an optional prismaFragment, and a SITE.features flag."
+    },
+    {
+      "type": "table",
+      "headers": ["Module id", "What it adds", "Feature flag"],
+      "rows": [
+        ["enquiry-modal", "Lead capture modal → /api/leads", "enquiryModal"],
+        ["footer", "Site footer from SITE.footer and SITE.legal", "footer"],
+        ["hero-simple", "Carousel hero from SITE.hero + hero assets", "heroSimple"],
+        ["seo", "sitemap.xml, robots.txt, JSON-LD, Open Graph helpers", "seo"],
+        ["gallery", "GalleryImage CMS, /gallery, GallerySection, admin CRUD", "gallery"],
+        ["reviews", "Review testimonials, ReviewsSection, admin CRUD", "reviews"],
+        ["legal-pages", "Privacy + terms pages from SITE config", "legalPages"],
+        ["blog-compose", "Compose Blog Engine, BlogPost CMS, /blog, admin compose editor", "blogCompose"],
+        ["theme-modes", "Light/dark toggle, theme.colorsDark, dual admin palette editor", "themeModes"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Install core modules (monorepo)"
+    },
+    {
+      "type": "code",
+      "code": "# At template creation\npnpm new-template bakery --name \"Bakery\" --modules enquiry-modal,footer,hero-simple,seo\n\n# Add to existing template\npnpm template:add-module bakery gallery,reviews\npnpm template:add-module list   # via scripts — see Maintainer commands"
+    },
+    {
+      "type": "command-ref",
+      "id": "new-template"
+    },
+    {
+      "type": "command-ref",
+      "id": "template-add-module"
+    },
+    {
+      "type": "paragraph",
+      "text": "On install: copies module files, appends Prisma fragments to prisma/domain.prisma, merges prisma/schema.prisma, sets SITE.features.<flag> to true, writes .tempjs-modules.json (coreModules array). Scaffold templates get app/page.tsx wired; gallery/reviews also update app/admin/registry.ts on the unified dashboard."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Client projects (tempjs add-module)"
+    },
+    {
+      "type": "paragraph",
+      "text": "After tempjs hotel in a client folder, add optional core modules with the same registry — no monorepo required."
+    },
+    {
+      "type": "command-ref",
+      "id": "add-module"
+    },
+    {
+      "type": "command-ref",
+      "id": "add-module-list"
+    },
+    {
+      "type": "callout",
+      "variant": "tip",
+      "text": "Published CLI ships packages/core/modules/ and fetches from GitHub when not running from the monorepo. Client add-module updates registry.ts for gallery/reviews and does not overwrite app/page.tsx — add homepage sections manually or use scaffold patterns."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Template vertical modules"
+    },
+    {
+      "type": "paragraph",
+      "text": "Shipped templates keep assembled files at the template root (what tempjs copies). Maintainers edit source under modules/<module-id>/ and sync with assemble/extract."
+    },
+    {
+      "type": "table",
+      "headers": ["Template", "Module ids", "Purpose"],
+      "rows": [
+        ["hotel", "room-types", "Room inventory, grid, admin CRUD, room gallery page"],
+        ["hotel", "facilities", "Facilities section, API, admin"],
+        ["hotel", "slug-pages", "/[slug] room details, hotel-config API, dynamic sitemap registration"],
+        ["real-estate", "projects", "Project inventory, grid, admin CRUD"],
+        ["real-estate", "slug-pages", "/[slug] project details, dynamic sitemap registration"]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Monorepo: add core module to template"
+    },
+    {
+      "type": "command-builder",
+      "builderId": "maintainer-template-add-module"
+    },
+    {
+      "type": "command-ref",
+      "id": "template-add-module"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Assemble / extract vertical modules"
+    },
+    {
+      "type": "command-builder",
+      "builderId": "maintainer-template-assemble"
+    },
+    {
+      "type": "command-ref",
+      "id": "template-extract-modules"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Shipped template adoption"
+    },
+    {
+      "type": "paragraph",
+      "text": "Hotel adopts core seo, gallery, and reviews where they overlapped bespoke code. Real-estate adopts core seo. Dynamic listing URLs register via lib/hotel/register-sitemap.ts and lib/real-estate/register-sitemap.ts with buildAppSitemap(). Hotel keeps its bespoke app/gallery/page.tsx (room images) while homepage GallerySection uses the CMS module."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Admin tab registry"
+    },
+    {
+      "type": "paragraph",
+      "text": "Gallery and reviews modules register tabs on the unified app/admin/page.tsx dashboard via app/admin/registry.ts (generated on scaffold install, merged on shipped templates). Scaffold templates get LeadsPanel, Theme & Colors, promo, and logo tabs from core. Hotel and real-estate add vertical tabs (room types, projects, facilities). Legacy app/admin/content/page.tsx is removed when gallery/reviews are installed."
+    },
+    {
+      "type": "callout",
+      "variant": "info",
+      "title": "How it works",
+      "text": "lib/admin/AdminShell.tsx renders sidebar tabs from getAdminTabs(). Gallery/reviews tabs appear when SITE.features.gallery or SITE.features.reviews is true. pnpm new-template wires the dashboard and registry; tempjs add-module updates registry.ts for gallery/reviews on client projects (merges into vertical registries on hotel/real-estate copies)."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "Planned improvements"
+    },
+    {
+      "type": "list",
+      "items": [
+        "tempjs doctor + GETTING_STARTED audit — copy-once core and optional modules in every checklist"
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": "See ROADMAP.md and Validate & diff-core → Next tasks for priority ordering."
+    }
+  ]
+}

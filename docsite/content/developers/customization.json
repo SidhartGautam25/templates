@@ -35,6 +35,10 @@
       "text": "CLI brand setup"
     },
     {
+      "type": "command-builder",
+      "builderId": "developer-project-brand"
+    },
+    {
       "type": "command-ref",
       "id": "brand"
     },
@@ -44,8 +48,12 @@
       "text": "Theme & typography"
     },
     {
-      "type": "command-ref",
-      "id": "theme"
+      "type": "paragraph",
+      "text": "tempjs theme applies CLI color presets to the light palette. For a visitor light/dark toggle and separate dark palette in admin, install the optional theme-modes module — see Light & dark themes in the sidebar."
+    },
+    {
+      "type": "command-builder",
+      "builderId": "developer-project-theme"
     },
     {
       "type": "command-ref",

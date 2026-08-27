@@ -1,0 +1,140 @@
+{
+  "modules": {
+    "enquiry-modal": {
+      "label": "Enquiry modal",
+      "description": "Lead capture modal wired to /api/leads. Uses SITE.enquiry.selectionOptions or optional listings API.",
+      "paths": ["app/components/EnquiryModal.tsx"],
+      "featureFlag": "enquiryModal",
+      "default": false
+    },
+    "footer": {
+      "label": "Site footer",
+      "description": "Footer with legal disclaimer and optional RERA blocks from SITE.footer and SITE.legal.",
+      "paths": ["app/components/Footer.tsx"],
+      "featureFlag": "footer",
+      "default": false
+    },
+    "hero-simple": {
+      "label": "Simple hero",
+      "description": "Carousel hero driven by SITE.hero and SITE.assets.heroDesktop / heroMobile.",
+      "paths": ["app/components/Hero.tsx"],
+      "featureFlag": "heroSimple",
+      "default": false
+    },
+    "seo": {
+      "label": "SEO pack",
+      "description": "Production sitemap.xml, robots.txt, JSON-LD (Organization + WebSite), canonical URLs, and Open Graph metadata helpers.",
+      "paths": [
+        "lib/seo/types.ts",
+        "lib/seo/urls.ts",
+        "lib/seo/json-ld.ts",
+        "lib/seo/metadata.ts",
+        "lib/seo/sitemap.ts",
+        "lib/seo/index.ts",
+        "app/components/SiteJsonLd.tsx",
+        "app/sitemap.ts",
+        "app/robots.ts"
+      ],
+      "featureFlag": "seo",
+      "default": false
+    },
+    "gallery": {
+      "label": "Gallery CMS",
+      "description": "Gallery images with admin CRUD, public /gallery page, and homepage GallerySection.",
+      "paths": [
+        "lib/features/gallery/gallery.types.ts",
+        "lib/features/gallery/gallery.repository.ts",
+        "lib/features/gallery/gallery.service.ts",
+        "lib/features/gallery/gallery.controller.ts",
+        "lib/features/gallery/index.ts",
+        "lib/controllers/GalleryController.ts",
+        "app/api/gallery/route.ts",
+        "app/api/gallery/[id]/route.ts",
+        "app/components/GallerySection.tsx",
+        "app/gallery/page.tsx",
+        "app/gallery/layout.tsx",
+        "app/admin/hooks/useGallery.ts",
+        "app/admin/components/GalleryList.tsx",
+        "app/admin/components/GalleryFormModal.tsx"
+      ],
+      "featureFlag": "gallery",
+      "prismaFragment": "prisma/gallery.prisma",
+      "default": false
+    },
+    "reviews": {
+      "label": "Reviews & testimonials",
+      "description": "Guest reviews with admin CRUD and homepage ReviewsSection carousel.",
+      "paths": [
+        "lib/features/reviews/review.repository.ts",
+        "lib/features/reviews/review.service.ts",
+        "lib/features/reviews/review.controller.ts",
+        "lib/features/reviews/index.ts",
+        "lib/controllers/ReviewController.ts",
+        "app/api/reviews/route.ts",
+        "app/api/reviews/[id]/route.ts",
+        "app/components/ReviewsSection.tsx",
+        "app/admin/hooks/useReviews.ts",
+        "app/admin/components/ReviewsList.tsx",
+        "app/admin/components/ReviewFormModal.tsx"
+      ],
+      "featureFlag": "reviews",
+      "prismaFragment": "prisma/reviews.prisma",
+      "default": false
+    },
+    "legal-pages": {
+      "label": "Legal pages",
+      "description": "Privacy policy and terms pages driven by SITE.privacyPage and SITE.termsPage.",
+      "paths": [
+        "app/components/LegalDocumentPage.tsx",
+        "app/privacy-policy/page.tsx",
+        "app/terms-and-conditions/page.tsx"
+      ],
+      "featureFlag": "legalPages",
+      "default": false
+    },
+    "blog-compose": {
+      "label": "Compose blog",
+      "description": "Declarative Compose Blog Engine — JSON block documents, /blog pages, homepage BlogSection, and admin compose editor.",
+      "paths": [
+        "lib/blog/compose/types.ts",
+        "lib/blog/compose/registry.ts",
+        "lib/blog/compose/annotate-text.tsx",
+        "lib/blog/compose/blocks/text-blocks.tsx",
+        "lib/blog/compose/blocks/media-blocks.tsx",
+        "lib/blog/compose/interpreter.tsx",
+        "lib/blog/compose/index.ts",
+        "lib/blog/register-sitemap.ts",
+        "lib/features/blog-compose/blog-compose.types.ts",
+        "lib/features/blog-compose/blog-compose.repository.ts",
+        "lib/features/blog-compose/blog-compose.service.ts",
+        "lib/features/blog-compose/blog-compose.controller.ts",
+        "lib/features/blog-compose/index.ts",
+        "lib/controllers/BlogComposeController.ts",
+        "app/api/blog-posts/route.ts",
+        "app/api/blog-posts/[id]/route.ts",
+        "app/components/BlogSection.tsx",
+        "app/blog/page.tsx",
+        "app/blog/[slug]/page.tsx",
+        "app/blog/layout.tsx",
+        "app/admin/hooks/useBlogPosts.ts",
+        "app/admin/components/blog-compose-form.ts",
+        "app/admin/panels/BlogComposePanel.tsx",
+        "app/components/BlogSidebar.tsx",
+        "app/components/BlogShell.tsx"
+      ],
+      "featureFlag": "blogCompose",
+      "prismaFragment": "prisma/blog-compose.prisma",
+      "default": false
+    },
+    "theme-modes": {
+      "label": "Light & dark theme modes",
+      "description": "Optional visitor light/dark toggle, dual palettes in admin Theme editor, and [data-theme] CSS variables.",
+      "paths": [
+        "app/components/ThemeModeToggle.tsx",
+        "app/components/ThemeModeInit.tsx"
+      ],
+      "featureFlag": "themeModes",
+      "default": false
+    }
+  }
+}
