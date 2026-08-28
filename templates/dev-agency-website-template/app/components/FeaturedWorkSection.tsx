@@ -37,15 +37,15 @@ export default function FeaturedWorkSection({ items }: { items: AgencyFeaturedWo
   const loop = [...items, ...items];
 
   return (
-    <section id="work" className="py-24 px-6 border-t border-white/5 overflow-hidden">
+    <section id="work" className="py-24 px-6 border-t border-primary/10 overflow-hidden">
       <div className="max-w-6xl mx-auto mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold text-white">
+        <h2 className="text-3xl md:text-4xl font-bold text-text-main">
           {section.title}{" "}
-          <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-primary to-accent-gold bg-clip-text text-transparent">
             {section.titleAccent}
           </span>
         </h2>
-        <p className="mt-3 text-slate-400 max-w-2xl">{section.subtitle}</p>
+        <p className="mt-3 text-text-muted max-w-2xl">{section.subtitle}</p>
       </div>
 
       <div className="relative">

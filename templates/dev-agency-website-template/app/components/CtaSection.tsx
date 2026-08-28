@@ -9,18 +9,18 @@ export default function CtaSection({
 
   return (
     <section id="contact" className="py-24 px-6">
-      <div className="max-w-4xl mx-auto rounded-3xl border border-white/10 bg-slate-900/50 p-10 md:p-14 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-white">
+      <div className="max-w-4xl mx-auto rounded-3xl border border-primary/10 bg-bg-card p-10 md:p-14 text-center transition-colors duration-200">
+        <h2 className="text-3xl md:text-4xl font-bold text-text-main">
           {cta.title}{" "}
-          <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-primary to-accent-gold bg-clip-text text-transparent">
             {cta.titleAccent}
           </span>
         </h2>
-        <p className="mt-4 text-slate-400 max-w-xl mx-auto leading-relaxed">{cta.subtitle}</p>
+        <p className="mt-4 text-text-muted max-w-xl mx-auto leading-relaxed">{cta.subtitle}</p>
         <button
           type="button"
           onClick={() => onOpenEnquiry(cta.buttonLabel)}
-          className="mt-8 px-8 py-3 rounded-full bg-white text-slate-950 font-bold text-sm shadow-[0_0_24px_rgba(255,255,255,0.25)] hover:scale-[1.02] transition-transform cursor-pointer"
+          className="mt-8 px-8 py-3 rounded-full bg-cta-primary text-text-main font-bold text-sm shadow-lg hover:opacity-90 hover:scale-[1.02] transition-all cursor-pointer"
         >
           {cta.buttonLabel}
         </button>

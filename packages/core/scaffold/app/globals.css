@@ -1,5 +1,43 @@
 @import "tailwindcss";
 
-body {
-  font-family: system-ui, sans-serif;
+:root {
+  color-scheme: light;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --accent-gold: #38bdf8;
+  --accent-gold-dark: #0284c7;
+  --accent-gold-light: #eff6ff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --bg-tan: #f8fafc;
+  --bg-light: #f1f5f9;
+  --bg-card: #ffffff;
+  --footer-bg: #e2e8f0;
+  --cta-primary: #2563eb;
+  --cta-primary-hover: #1d4ed8;
+}
+
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-gold-dark: var(--accent-gold-dark);
+  --color-accent-gold-light: var(--accent-gold-light);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-bg-tan: var(--bg-tan);
+  --color-bg-light: var(--bg-light);
+  --color-bg-card: var(--bg-card);
+  --color-footer-bg: var(--footer-bg);
+  --color-cta-primary: var(--cta-primary);
+  --color-cta-primary-hover: var(--cta-primary-hover);
+}
+
+@layer base {
+  body {
+    background-color: var(--bg-tan);
+    color: var(--text-main);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
 }

@@ -24,6 +24,7 @@ import {
   buildMergedPrismaSchema,
   propagateCoreIntoTemplate,
 } from "./template-core-utils.mjs";
+import { ensureTemplateThemeGlobals } from "./theme-globals-core.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const templatesDir = join(root, "templates");
@@ -114,6 +115,7 @@ function syncAll() {
     }
 
     propagateCoreIntoTemplate(destRoot);
+    ensureTemplateThemeGlobals(destRoot, { quiet: true });
     const fileCount = listFilesRecursive(destRoot).length;
     console.log(`✓ Propagated packages/core → ${templateDir} (${fileCount} files)`);
   }

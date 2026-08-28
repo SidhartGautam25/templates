@@ -79,21 +79,6 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${playfair.variable} ${outfit.variable} h-full antialiased`}
-      style={{
-        "--primary": SITE.theme.colors.primary,
-        "--primary-hover": SITE.theme.colors.primaryHover,
-        "--accent-gold": SITE.theme.colors.accent,
-        "--accent-gold-dark": SITE.theme.colors.accentDark,
-        "--accent-gold-light": SITE.theme.colors.accentLight,
-        "--text-main": SITE.theme.colors.textMain,
-        "--text-muted": SITE.theme.colors.textMuted,
-        "--bg-tan": SITE.theme.colors.bgMain,
-        "--bg-light": SITE.theme.colors.bgLight,
-        "--bg-card": SITE.theme.colors.bgCard,
-        "--footer-bg": SITE.theme.colors.footerBg,
-        "--cta-primary": SITE.theme.colors.ctaPrimary,
-        "--cta-primary-hover": SITE.theme.colors.ctaPrimaryHover,
-      } as React.CSSProperties}
     >
       <body className="min-h-full flex flex-col font-sans">
         <SiteJsonLd />

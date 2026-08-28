@@ -25,7 +25,9 @@
         ["pnpm template:diff-core", "Same for all templates listed in templates.json"],
         ["pnpm template:validate hotel", "prisma validate → tsc --noEmit → pnpm lint"],
         ["pnpm template:validate", "Validate all templates"],
-        ["pnpm template:validate hotel --skip-install", "Skip auto-install if node_modules is missing"]
+        ["pnpm template:validate hotel --skip-install", "Skip auto-install if node_modules is missing"],
+        ["pnpm template:theme-globals", "Repair theme CSS bridge (:root, @theme, body vars) for all templates"],
+        ["pnpm template:theme-globals dev-agency", "Repair theme globals for one template"]
       ]
     },
     {
