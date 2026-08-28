@@ -29,23 +29,23 @@ export default function AgencyNavbar({
   };
 
   return (
-    <header className="fixed top-0 inset-x-0 z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-md">
+    <header className="fixed top-0 inset-x-0 z-50 border-b border-primary/10 bg-bg-tan/80 backdrop-blur-md transition-colors duration-200">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
         <button
           type="button"
           onClick={() => scrollTo("top")}
-          className="text-lg font-bold text-white tracking-tight cursor-pointer"
+          className="text-lg font-bold text-text-main tracking-tight cursor-pointer"
         >
           {SITE.brand.name}
         </button>
 
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-6">
           {SITE.agency.nav.map((item) => (
             <button
               key={item.sectionId}
               type="button"
               onClick={() => scrollTo(item.sectionId)}
-              className="text-sm text-slate-300 hover:text-white transition-colors cursor-pointer"
+              className="text-sm text-text-muted hover:text-text-main transition-colors cursor-pointer"
             >
               {item.label}
             </button>
@@ -53,7 +53,7 @@ export default function AgencyNavbar({
           <button
             type="button"
             onClick={() => onOpenEnquiry(SITE.agency.cta.buttonLabel)}
-            className="text-sm font-semibold text-white bg-white/10 hover:bg-white/15 px-4 py-2 rounded-full cursor-pointer"
+            className="text-sm font-semibold text-text-main bg-primary/10 hover:bg-primary/15 px-4 py-2 rounded-full cursor-pointer transition-colors"
           >
             {SITE.navigation.contact}
           </button>
@@ -61,7 +61,7 @@ export default function AgencyNavbar({
 
         <button
           type="button"
-          className="md:hidden text-white p-2 cursor-pointer"
+          className="md:hidden text-text-main p-2 cursor-pointer"
           onClick={() => setOpen(!open)}
           aria-label="Menu"
         >
@@ -70,13 +70,13 @@ export default function AgencyNavbar({
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-white/5 bg-slate-950 px-6 py-4 space-y-3">
+        <div className="md:hidden border-t border-primary/10 bg-bg-tan px-6 py-4 space-y-3">
           {SITE.agency.nav.map((item) => (
             <button
               key={item.sectionId}
               type="button"
               onClick={() => scrollTo(item.sectionId)}
-              className="block w-full text-left text-sm text-slate-300 py-2 cursor-pointer"
+              className="block w-full text-left text-sm text-text-muted py-2 cursor-pointer"
             >
               {item.label}
             </button>
@@ -87,7 +87,7 @@ export default function AgencyNavbar({
               setOpen(false);
               onOpenEnquiry(SITE.agency.cta.buttonLabel);
             }}
-            className="w-full text-sm font-semibold text-white bg-white/10 py-2 rounded-lg cursor-pointer"
+            className="w-full text-sm font-semibold text-text-main bg-primary/10 py-2 rounded-lg cursor-pointer"
           >
             {SITE.navigation.contact}
           </button>

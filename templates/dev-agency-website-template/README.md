@@ -33,6 +33,16 @@ pnpm prisma db push
 pnpm dev
 ```
 
+### Example: Light & dark theme toggle
+
+One command — no manual globals.css or component refactors:
+
+```bash
+tempjs add-module theme-modes
+```
+
+The installer migrates palettes, registers Tailwind `@theme` tokens, patches CSS (including `tempjs-theme.css` if present), wires `ThemeModeInit` + navbar toggle, and sets default appearance to dark for this template.
+
 Monorepo:
 
 ```bash

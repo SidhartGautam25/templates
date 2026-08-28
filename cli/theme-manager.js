@@ -317,22 +317,22 @@ export async function applyThemeAndFont(targetDir, themeId, fontId) {
 @import url('${font.importUrl}');
 
 :root {
-  --primary: ${theme.colors.primary} !important;
-  --primary-hover: ${theme.colors.primaryHover} !important;
-  --accent-gold: ${theme.colors.accent} !important;
-  --accent-gold-dark: ${theme.colors.accentDark} !important;
-  --accent-gold-light: ${theme.colors.accentLight} !important;
-  --text-main: ${theme.colors.textMain} !important;
-  --text-muted: ${theme.colors.textMuted} !important;
-  --bg-tan: ${theme.colors.bgMain} !important;
-  --bg-light: ${theme.colors.bgLight} !important;
-  --bg-card: ${theme.colors.bgCard} !important;
-  --footer-bg: ${theme.colors.footerBg} !important;
-  --cta-primary: ${theme.colors.ctaPrimary} !important;
-  --cta-primary-hover: ${theme.colors.ctaPrimaryHover} !important;
+  --primary: ${theme.colors.primary};
+  --primary-hover: ${theme.colors.primaryHover};
+  --accent-gold: ${theme.colors.accent};
+  --accent-gold-dark: ${theme.colors.accentDark};
+  --accent-gold-light: ${theme.colors.accentLight};
+  --text-main: ${theme.colors.textMain};
+  --text-muted: ${theme.colors.textMuted};
+  --bg-tan: ${theme.colors.bgMain};
+  --bg-light: ${theme.colors.bgLight};
+  --bg-card: ${theme.colors.bgCard};
+  --footer-bg: ${theme.colors.footerBg};
+  --cta-primary: ${theme.colors.ctaPrimary};
+  --cta-primary-hover: ${theme.colors.ctaPrimaryHover};
 
-  --font-serif: ${font.serif} !important;
-  --font-sans: ${font.sans} !important;
+  --font-serif: ${font.serif};
+  --font-sans: ${font.sans};
 }
 `;
     await writeFile(themeCssPath, cssContent, "utf8");

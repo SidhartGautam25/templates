@@ -13,6 +13,8 @@
     "packages/core/modules/**",
     "packages/core/prisma/schema.prisma",
     "scripts/module-installer-core.mjs",
+    "scripts/theme-globals-core.mjs",
+    "scripts/theme-modes-globals.mjs",
     "scripts/template-modules-home.mjs",
     "scripts/template-modules-admin.mjs"
   ],
@@ -30,6 +32,7 @@
   "scripts": {
     "sync-templates": "node scripts/sync-templates.mjs",
     "sync-templates:check": "node scripts/sync-templates.mjs --check",
+    "template:theme-globals": "node scripts/template-theme-globals.mjs",
     "propagate-core": "node scripts/sync-templates.mjs",
     "new-template": "node scripts/new-template.mjs",
     "template:add-module": "node scripts/template-add-module.mjs",

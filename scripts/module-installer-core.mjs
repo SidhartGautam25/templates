@@ -11,10 +11,11 @@ import {
 import { dirname, join } from "node:path";
 
 import { buildModulesHomePageSource } from "./template-modules-home.mjs";
+import { ensureTemplateThemeGlobals } from "./theme-globals-core.mjs";
 import {
-  applyAdminTabRegistry,
-  applyAdminDashboard,
-} from "./template-modules-admin.mjs";
+  applyThemeModesAgencyNavbarPatch,
+  migrateThemeSiteForModes,
+} from "./theme-modes-globals.mjs";
 
 /**
  * @typedef {{
@@ -174,153 +175,6 @@ function applyBlogComposeSitemapPatch(templateRoot) {
   console.log("  ✓ wired blog post slugs into app/sitemap.ts");
 }
 
-const THEME_COLOR_KEYS = [
-  "primary",
-  "primaryHover",
-  "accent",
-  "accentDark",
-  "accentLight",
-  "textMain",
-  "textMuted",
-  "bgMain",
-  "bgLight",
-  "bgCard",
-  "footerBg",
-  "ctaPrimary",
-  "ctaPrimaryHover",
-];
-
-const THEME_CSS_VARS = [
-  "--primary",
-  "--primary-hover",
-  "--accent-gold",
-  "--accent-gold-dark",
-  "--accent-gold-light",
-  "--text-main",
-  "--text-muted",
-  "--bg-tan",
-  "--bg-light",
-  "--bg-card",
-  "--footer-bg",
-  "--cta-primary",
-  "--cta-primary-hover",
-];
-
-/**
- * @param {Record<string, string>} light
- */
-function deriveDarkColorsFromLight(light) {
-  return {
-    primary: light.primary ?? "#60a5fa",
-    primaryHover: light.primaryHover ?? "#3b82f6",
-    accent: light.accent ?? "#38bdf8",
-    accentDark: light.accentDark ?? "#0ea5e9",
-    accentLight: light.accentDark ?? "#1e3a5f",
-    textMain: "#f1f5f9",
-    textMuted: "#94a3b8",
-    bgMain: "#0f172a",
-    bgLight: "#1e293b",
-    bgCard: "#1e293b",
-    footerBg: "#020617",
-    ctaPrimary: light.ctaPrimary ?? "#60a5fa",
-    ctaPrimaryHover: light.ctaPrimaryHover ?? "#3b82f6",
-  };
-}
-
-/**
- * @param {string} siteContent
- */
-function parseLightColorsFromSiteTs(siteContent) {
-  const themeIdx = siteContent.indexOf("theme:");
-  if (themeIdx < 0) return null;
-  const slice = siteContent.slice(themeIdx);
-  const colorsMatch = slice.match(/colors:\s*\{([\s\S]*?)\n\s*\},/);
-  if (!colorsMatch?.[1]) return null;
-  const inner = colorsMatch[1];
-  /** @type {Record<string, string>} */
-  const colors = {};
-  for (const key of THEME_COLOR_KEYS) {
-    const match = inner.match(new RegExp(`${key}\\s*:\\s*"([^"]+)"`));
-    if (match?.[1]) colors[key] = match[1];
-  }
-  return Object.keys(colors).length > 0 ? colors : null;
-}
-
-/**
- * @param {string} templateRoot
- */
-function applyThemeModesSitePatch(templateRoot) {
-  const sitePath = join(templateRoot, "constants", "site.ts");
-  if (!existsSync(sitePath)) return;
-
-  let content = readFileSync(sitePath, "utf8");
-  if (content.includes("colorsDark:")) {
-    console.log("  · theme colorsDark already in site.ts");
-    return;
-  }
-
-  const light = parseLightColorsFromSiteTs(content) ?? {};
-  const dark = deriveDarkColorsFromLight(light);
-  const darkLines = THEME_COLOR_KEYS.map((key) => `      ${key}: "${dark[key]}",`).join("\n");
-
-  if (!content.includes("appearance:")) {
-    content = content.replace(
-      /(theme:\s*\{\s*\n)(\s*)colors:/,
-      `$1$2appearance: "system" as const,\n$2colors:`
-    );
-  }
-
-  const themeIdx = content.indexOf("theme:");
-  if (themeIdx < 0) return;
-  const before = content.slice(0, themeIdx);
-  const themeSlice = content.slice(themeIdx);
-  const patchedTheme = themeSlice.replace(
-    /(\n\s*colors:\s*\{[\s\S]*?\n\s*\},)(\n)/,
-    `$1\n    colorsDark: {\n${darkLines}\n    },$2`
-  );
-  content = before + patchedTheme;
-
-  writeFileSync(sitePath, content, "utf8");
-  console.log("  ✓ added theme.appearance and theme.colorsDark to constants/site.ts");
-}
-
-/**
- * @param {string} templateRoot
- * @param {Record<string, string>} dark
- */
-function applyThemeModesCssPatch(templateRoot, dark) {
-  const globalsPath = join(templateRoot, "app", "globals.css");
-  if (!existsSync(globalsPath)) return;
-
-  let css = readFileSync(globalsPath, "utf8");
-  if (css.includes("[data-theme=\"dark\"]")) {
-    console.log("  · [data-theme=\"dark\"] already in globals.css");
-  } else {
-    const lines = THEME_CSS_VARS.map((cssVar, index) => {
-      const key = THEME_COLOR_KEYS[index];
-      return `  ${cssVar}: ${dark[key]};`;
-    });
-    css = `${css.trim()}\n\n[data-theme="dark"] {\n${lines.join("\n")}\n}\n`;
-    console.log("  ✓ appended [data-theme=\"dark\"] CSS variables to app/globals.css");
-  }
-
-  if (!css.includes("color-scheme:")) {
-    css = css.replace(
-      /:root\s*\{/,
-      ":root {\n  color-scheme: light;"
-    );
-    if (css.includes("[data-theme=\"dark\"]")) {
-      css = css.replace(
-        /\[data-theme="dark"\]\s*\{/,
-        "[data-theme=\"dark\"] {\n  color-scheme: dark;"
-      );
-    }
-    console.log("  ✓ set color-scheme on :root and [data-theme=\"dark\"] for native UI");
-  }
-
-  writeFileSync(globalsPath, css, "utf8");
-}
-
 /**
  * @param {string} templateRoot
  */
@@ -376,14 +230,10 @@ function applyThemeModesLayoutPatch(templateRoot) {
  * @param {string} templateRoot
  */
 function applyThemeModesInstall(templateRoot) {
-  const sitePath = join(templateRoot, "constants", "site.ts");
-  const light = existsSync(sitePath)
-    ? parseLightColorsFromSiteTs(readFileSync(sitePath, "utf8")) ?? {}
-    : {};
-  const dark = deriveDarkColorsFromLight(light);
-  applyThemeModesSitePatch(templateRoot);
-  applyThemeModesCssPatch(templateRoot, dark);
+  migrateThemeSiteForModes(templateRoot);
+  ensureTemplateThemeGlobals(templateRoot);
   applyThemeModesLayoutPatch(templateRoot);
+  applyThemeModesAgencyNavbarPatch(templateRoot);
 }
 
 /**

@@ -40,7 +40,25 @@
     {
       "type": "heading",
       "level": 2,
-      "text": "What install does"
+      "text": "One command setup"
+    },
+    {
+      "type": "paragraph",
+      "text": "For dev-agency and similar templates, a single add-module run now wires everything needed for working light/dark toggle — no manual globals.css or component refactors:"
+    },
+    {
+      "type": "code",
+      "code": "tempjs add-module theme-modes\n# Monorepo:\npnpm template:add-module dev-agency theme-modes"
+    },
+    {
+      "type": "list",
+      "items": [
+        "Migrates dark-first palettes (moves current colors to colorsDark, adds light :root)",
+        "Registers Tailwind v4 @theme color tokens (bg-bg-tan, text-text-main, …)",
+        "Patches :root, body, and [data-theme=\"dark\"] !important overrides in globals.css",
+        "Fixes app/tempjs-theme.css (removes :root !important that blocked dark mode)",
+        "Wires ThemeModeInit, ThemeModeToggle in AgencyNavbar, and hydration guards"
+      ]
     },
     {
       "type": "list",
@@ -54,6 +72,10 @@
         "Removes inline SITE.theme.colors styles on <html> when present (hotel template) so CSS vars can switch",
         "Extends admin Theme & Colors tab with Light / Dark palette editors and default appearance selector"
       ]
+    },
+    {
+      "type": "paragraph",
+      "text": "All templates and new scaffolds use the shared theme CSS bridge (:root + Tailwind @theme + body vars). pnpm sync-templates and pnpm new-template run ensureTemplateThemeGlobals automatically. Use pnpm template:theme-globals to repair a single template."
     },
     {
       "type": "callout",

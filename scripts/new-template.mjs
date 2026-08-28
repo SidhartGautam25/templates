@@ -28,9 +28,8 @@ import {
   listModuleIds,
 } from "./template-modules.mjs";
 import { applyDocsiteStub } from "./docsite-stub.mjs";
-import {
-  applyScaffoldAdminRegistry,
-} from "./template-modules-admin.mjs";
+import { applyScaffoldAdminRegistry } from "./template-modules-admin.mjs";
+import { ensureTemplateThemeGlobals } from "./theme-globals-core.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const scaffoldDir = join(coreDir, "scaffold");
@@ -141,6 +140,7 @@ writeFileSync(
 );
 
 writeMergedPrismaSchema(templatePath);
+ensureTemplateThemeGlobals(templatePath);
 if (moduleIds.some((id) => id === "gallery" || id === "reviews")) {
   // copyModulesIntoTemplate already updated registry + dashboard
 } else {
