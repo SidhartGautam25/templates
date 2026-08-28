@@ -30,7 +30,7 @@
         ["Infra", "docker-compose.yml, Dockerfile, .env.example, next.config.ts"],
         ["Prisma base", "Lead + PromoBanner → merged into prisma/schema.prisma"],
         ["Site stub", "constants/site.ts (customize immediately after copy)"],
-        ["Scaffold", "Minimal app/layout.tsx, app/page.tsx, GETTING_STARTED.md from packages/core/scaffold/"]
+        ["Scaffold", "Minimal app/layout.tsx, app/page.tsx, app/globals.css (theme CSS bridge), THEME.md, GETTING_STARTED.md from packages/core/scaffold/"]
       ]
     },
     {
@@ -68,8 +68,18 @@
         ["seo", "sitemap, robots, JSON-LD, metadata helpers"],
         ["gallery", "GalleryImage CMS + /gallery + admin UI"],
         ["reviews", "Review testimonials + admin UI"],
-        ["legal-pages", "Privacy + terms pages"]
+        ["legal-pages", "Privacy + terms pages"],
+        ["theme-modes", "Light/dark toggle, colorsDark, globals [data-theme=dark], layout hydration guards"]
       ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": "Theme CSS bridge (all templates)"
+    },
+    {
+      "type": "paragraph",
+      "text": "New scaffolds and every sync/new-template run ensureTemplateThemeGlobals: :root vars from constants/site.ts, Tailwind v4 @theme tokens, body wired to CSS variables (no inline SITE.theme.colors on <html>). Repair one template with pnpm template:theme-globals <id> or all with pnpm template:theme-globals."
     },
     {
       "type": "paragraph",

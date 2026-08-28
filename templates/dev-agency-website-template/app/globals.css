@@ -1,6 +1,36 @@
 @import "tailwindcss";
 
+:root {
+  color-scheme: dark;
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --accent-gold: #38bdf8;
+  --accent-gold-dark: #0ea5e9;
+  --accent-gold-light: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --bg-tan: #020617;
+  --bg-light: #0f172a;
+  --bg-card: #1e293b;
+  --footer-bg: #020617;
+  --cta-primary: #f8fafc;
+  --cta-primary-hover: #e2e8f0;
+}
+
 @theme {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-gold-dark: var(--accent-gold-dark);
+  --color-accent-gold-light: var(--accent-gold-light);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-bg-tan: var(--bg-tan);
+  --color-bg-light: var(--bg-light);
+  --color-bg-card: var(--bg-card);
+  --color-footer-bg: var(--footer-bg);
+  --color-cta-primary: var(--cta-primary);
+  --color-cta-primary-hover: var(--cta-primary-hover);
   --animate-agency-marquee: agency-marquee 40s linear infinite;
 }
 
@@ -22,8 +52,11 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background-color: #020617;
-  color: #f8fafc;
+@layer base {
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-tan);
+    color: var(--text-main);
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
 }

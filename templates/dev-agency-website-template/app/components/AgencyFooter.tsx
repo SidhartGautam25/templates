@@ -9,30 +9,30 @@ export default function AgencyFooter() {
   ];
 
   return (
-    <footer className="border-t border-white/10 bg-slate-950 py-16 px-6">
+    <footer className="border-t border-primary/10 bg-footer-bg py-16 px-6 transition-colors duration-200">
       <div className="max-w-6xl mx-auto grid md:grid-cols-4 gap-10">
         <div className="md:col-span-2">
-          <p className="text-lg font-bold text-white">{SITE.brand.name}</p>
-          <p className="mt-2 text-sm text-slate-400 max-w-md">{SITE.brand.tagline}</p>
+          <p className="text-lg font-bold text-text-main">{SITE.brand.name}</p>
+          <p className="mt-2 text-sm text-text-muted max-w-md">{SITE.brand.tagline}</p>
         </div>
         {footer.columns.map((col) => (
           <div key={col.title}>
-            <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">
+            <p className="text-xs font-bold uppercase tracking-widest text-text-muted mb-3">
               {col.title}
             </p>
-            <ul className="space-y-2 text-sm text-slate-400">
+            <ul className="space-y-2 text-sm text-text-muted">
               {(col.title === "Contact" ? contactLinks : col.links).map((link) => (
                 <li key={link.label}>
                   {link.href.startsWith("#") ? (
-                    <a href={link.href} className="hover:text-white transition-colors">
+                    <a href={link.href} className="hover:text-text-main transition-colors">
                       {link.label}
                     </a>
                   ) : link.href.startsWith("tel:") || link.href.startsWith("mailto:") ? (
-                    <a href={link.href} className="hover:text-white transition-colors">
+                    <a href={link.href} className="hover:text-text-main transition-colors">
                       {link.label}
                     </a>
                   ) : (
-                    <Link href={link.href} className="hover:text-white transition-colors">
+                    <Link href={link.href} className="hover:text-text-main transition-colors">
                       {link.label}
                     </Link>
                   )}
@@ -42,9 +42,11 @@ export default function AgencyFooter() {
           </div>
         ))}
       </div>
-      <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-white/5 flex flex-wrap gap-4 justify-between text-xs text-slate-500">
+      <div className="max-w-6xl mx-auto mt-12 pt-8 border-t border-primary/10 flex flex-wrap gap-4 justify-between text-xs text-text-muted">
         <span>© {new Date().getFullYear()} {SITE.brand.copyright}</span>
-        <a href={getTelLink()} className="hover:text-slate-300">{SITE.contact.phoneDisplay}</a>
+        <a href={getTelLink()} className="hover:text-text-main transition-colors">
+          {SITE.contact.phoneDisplay}
+        </a>
       </div>
     </footer>
   );

@@ -8,15 +8,15 @@ function TeamCard({ member, className }: { member: AgencyTeamMember; className?:
   const color = TEAM_AVATAR_COLORS[member.avatarColor] ?? TEAM_AVATAR_COLORS.blue;
   return (
     <div
-      className={`rounded-2xl border border-white/10 bg-slate-900/80 p-6 flex flex-col ${className ?? ""}`}
+      className={`rounded-2xl border border-primary/10 bg-bg-card p-6 flex flex-col transition-colors duration-200 ${className ?? ""}`}
     >
       <div
         className={`w-12 h-12 rounded-full ring-2 flex items-center justify-center mb-4 ${color}`}
       >
         <User className="w-6 h-6" />
       </div>
-      <p className="font-bold text-white">{member.name}</p>
-      <p className="text-sm text-slate-400 mt-1">{member.role}</p>
+      <p className="font-bold text-text-main">{member.name}</p>
+      <p className="text-sm text-text-muted mt-1">{member.role}</p>
     </div>
   );
 }
@@ -27,23 +27,23 @@ export default function TeamSection({ members }: { members: AgencyTeamMember[] }
   const bottomRow = members.slice(2);
 
   return (
-    <section id="team" className="py-24 px-6 border-t border-white/5">
+    <section id="team" className="py-24 px-6 border-t border-primary/10">
       <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-start">
         <div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+          <h2 className="text-3xl md:text-4xl font-bold text-text-main leading-tight">
             {section.title}{" "}
-            <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-primary to-accent-gold bg-clip-text text-transparent">
               {section.titleAccent}
             </span>
           </h2>
-          <div className="mt-6 space-y-4 text-slate-400 leading-relaxed">
+          <div className="mt-6 space-y-4 text-text-muted leading-relaxed">
             {section.paragraphs.map((p) => (
               <p key={p}>{p}</p>
             ))}
           </div>
           <Link
             href={`#${section.ctaSectionId}`}
-            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-violet-300 transition-colors"
+            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-text-main hover:text-primary transition-colors"
           >
             {section.ctaLabel} →
           </Link>
